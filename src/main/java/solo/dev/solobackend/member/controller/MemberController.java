@@ -19,4 +19,9 @@ public class MemberController {
         model.addAttribute("userID", userID);
         return "/index";
     }
+
+    @GetMapping("/mypage")
+    public String mypage() {
+        return "myPage";
+    }
 }

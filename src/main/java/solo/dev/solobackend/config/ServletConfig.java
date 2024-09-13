@@ -1,39 +1,48 @@
 package solo.dev.solobackend.config;
 
-// (초기화)등록
-
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import javax.servlet.Filter;
-
+@Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "solo.dev.solobackend")
-public class ServletConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
+@ComponentScan(basePackages = "solo.dev.solobackend")  // controller
+public class ServletConfig implements WebMvcConfigurer {
 
-    @Override
-    protected Class<?>[] getRootConfigClasses() {
-        return new Class[] { RootConfig.class };
+    @Bean   // <- object 생성
+    public InternalResourceViewResolver viewResolver() {
+        System.out.println("WebConfig viewResolver() ~~~");
+
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+
+        viewResolver.setPrefix("/WEB-INF/views/");
+        viewResolver.setSuffix(".jsp");
+        return viewResolver;
     }
 
     @Override
-    protected Class<?>[] getServletConfigClasses() {    // == servlet-context.xml
-        return new Class[] { WebConfig.class };
-    }
-
-    @Override
-    protected String[] getServletMappings() {   //   '/'
-        return new String[] { "/" };
-    }
-
-    @Override
-    protected Filter[] getServletFilters() {
-        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-        characterEncodingFilter.setEncoding("UTF-8");
-        characterEncodingFilter.setForceEncoding(true);
-        return new Filter[] { characterEncodingFilter };
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/resources/**")
+                .addResourceLocations("/resources/");
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
