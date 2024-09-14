@@ -11,5 +11,4 @@ public class RootController {
         return "index";
     }
 
-
 }
