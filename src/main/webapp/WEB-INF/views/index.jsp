@@ -21,13 +21,15 @@
   <a href="/logout">로그아웃</a>
   <h2>${userInfo.name}님 반갑습니다!</h2>
   <br/>
-  <a href="asset">자산관리 페이지로 돌아가기</a>
+  <a href="/mypage">마이 페이지로 돌아가기</a>
   <br/>
-  <a href="board">게시판 페이지로 돌아가기</a>
+  <a href="/asset">자산관리 페이지로 돌아가기</a>
   <br/>
-  <a href="policy">금융 정책 페이지로 돌아가기</a>
+  <a href="/board">게시판 페이지로 돌아가기</a>
   <br/>
-  <a href="news">금융 뉴스 페이지로 돌아가기</a>
+  <a href="/policy">금융 정책 페이지로 돌아가기</a>
+  <br/>
+  <a href="/news">금융 뉴스 페이지로 돌아가기</a>
 </c:if>
 
 </body>

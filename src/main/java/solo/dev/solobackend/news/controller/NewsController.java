@@ -1,15 +1,15 @@
-package solo.dev.solobackend.asset.controller;
+package solo.dev.solobackend.news.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/asset")
-public class AssetController {
+@RequestMapping("/news")
+public class NewsController {
 
     @GetMapping({"","/"})
-    public String asset() {
-        return "asset";
+    public String news() {
+        return "news";
     }
 }
