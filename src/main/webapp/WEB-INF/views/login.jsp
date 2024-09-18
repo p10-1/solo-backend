@@ -2,19 +2,6 @@
 <html>
 <head>
     <title>로그인 페이지</title>
-    <script>
-        function handleLogin(event) {
-            // 기본 폼 제출 방지
-            event.preventDefault();
-
-            // 사용자 ID를 로컬 스토리지에 저장
-            const userID = document.getElementById('userID').value;
-            localStorage.setItem('userID', userID);
-
-            // 폼을 서버로 제출
-            document.getElementById('loginForm').submit();
-        }
-    </script>
 </head>
 <body>
 <h1>로그인</h1>
@@ -29,7 +16,7 @@
     }
 %>
 
-<form id="loginForm" action="/loginAf" method="post" onsubmit="handleLogin(event)">
+<form id="loginForm" action="/loginAf" method="post">
     <label for="userID">사용자 ID:</label>
     <input type="text" id="userID" name="userID" required>
     <br/>
