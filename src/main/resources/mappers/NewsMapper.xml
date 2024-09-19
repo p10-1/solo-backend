@@ -1,0 +1,5 @@
+<mapper namespace="org.solo.news.mapper.NewsMapper">
+    <select id="getAllNews" resultType="org.solo.news.domain.newsVO">
+        SELECT * FROM news;
+    </select>
+</mapper>
