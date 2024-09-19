@@ -1,5 +1,6 @@
 package org.solo.mypage.service;
 
+import org.solo.mypage.domain.MypageVO;
 import org.solo.mypage.mapper.MypageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,4 +15,11 @@ public class MypageServiceImpl implements MypageService {
     public MypageServiceImpl(MypageMapper mypageMapper) {
         this.mypageMapper = mypageMapper;
     }
+
+    @Override
+    public void insertUserData(MypageVO userData) {
+        mypageMapper.insertUserData(userData);
+    }
+
+
 }

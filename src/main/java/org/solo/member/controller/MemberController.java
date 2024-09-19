@@ -71,7 +71,7 @@ public class MemberController {
 
         if (member == null) {
             session.setAttribute("newUserInfo", userInfoMap);
-            return "redirect:/InsertFirstUserInfo"; // 첫 방문 사용자 개인정보 입력
+            return "redirect:/member/InsertFirstUserInfo"; // 첫 방문 사용자 개인정보 입력
         } else {
             session.setAttribute("userInfo", member);
             return "redirect:/";
@@ -200,5 +200,6 @@ public class MemberController {
         session.setAttribute("userInfo", newUser);
         return "redirect:/";
     }
+
 
 }

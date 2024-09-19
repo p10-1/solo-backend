@@ -58,7 +58,6 @@ dependencies {
 
   // 데이터베이스
   implementation 'com.mysql:mysql-connector-j:8.1.0'
-  //implementation 'org.apache.commons:commons-dbcp2:2.9.0'
   implementation 'com.zaxxer:HikariCP:2.7.4'
 
   implementation "org.springframework:spring-tx:${springVersion}"
