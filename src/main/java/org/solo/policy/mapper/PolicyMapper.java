@@ -1,4 +1,9 @@
 package org.solo.policy.mapper;
 
-public class PolicyMapper {
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+@Mapper
+@Repository
+public interface PolicyMapper {
 }

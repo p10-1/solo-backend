@@ -1,4 +1,4 @@
 package org.solo.policy.service;
 
-public class PolicyService {
+public interface PolicyService {
 }

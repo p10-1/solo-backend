@@ -1,4 +1,4 @@
 package org.solo.board.service;
 
-public class BoardService {
+public interface BoardService {
 }

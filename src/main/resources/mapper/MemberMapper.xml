@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.solo.member.mapper.MemberMapper">
+
+    <select id="findByKakaoId" parameterType="String" resultType="org.solo.member.domain.MemberVO">
+        SELECT * FROM kakaoMember WHERE kakaoId = #{kakaoId}
+    </select>
+
+    <insert id="insertNewUserInfo" parameterType="org.solo.member.domain.MemberVO">
+        INSERT INTO kakaoMember (kakaoId, nickName, profileImage, name, email, birthDate)
+        VALUES (#{kakaoId}, #{nickName}, #{profileImage}, #{name}, #{email}, #{birthDate})
+    </insert>
+
+</mapper>

@@ -1,4 +1,9 @@
 package org.solo.board.mapper;
 
-public class BoardMapper {
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@Mapper
+public interface BoardMapper {
 }
