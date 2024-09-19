@@ -58,7 +58,7 @@ public class MemberController {
         Map<String, Object> userInfoMap = getKakaoUserInfo(accessToken, session);
         if (userInfoMap == null) {
             System.err.println("Failed to retrieve user info.");
-            return "redirect:/login"; // 로그인 페이지로 리다이렉트
+            return "redirect:/member/login"; // 로그인 페이지로 리다이렉트
         }
 
         // Kakao ID를 Long으로 가져오기
@@ -71,7 +71,7 @@ public class MemberController {
 
         if (member == null) {
             session.setAttribute("newUserInfo", userInfoMap);
-            return "redirect:/InsertFirstUserInfo"; // 첫 방문 사용자 개인정보 입력
+            return "redirect:/member/InsertFirstUserInfo"; // 첫 방문 사용자 개인정보 입력
         } else {
             session.setAttribute("userInfo", member);
             return "redirect:/";
