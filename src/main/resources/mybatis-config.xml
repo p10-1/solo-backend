@@ -9,6 +9,12 @@
     </settings>
 
     <typeAliases>
-        <package name="org.solo.board.domain"/>
+        <package name="org.solo.board.domain" />
+        <package name="org.solo.member.domain" />
+        <package name="org.solo.news.domain" />
+        <package name="org.solo.policy.domain" />
+        <package name="org.solo.asset.domain" />
+        <package name="org.solo.mypage.domain" />
+        <!-- 추가하면 됨.-->
     </typeAliases>
 </configuration>

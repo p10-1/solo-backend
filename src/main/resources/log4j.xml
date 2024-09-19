@@ -12,7 +12,7 @@
     </appender>
 
     <!-- Application Loggers -->
-    <logger name="org.sole.back">
+    <logger name="org.solo">
         <level value="info"/>
     </logger>
 

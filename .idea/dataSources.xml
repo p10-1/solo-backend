@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="solo" uuid="4d30e80f-4df2-4088-b381-50714f5a9972">
+    <data-source source="LOCAL" name="solo_db" uuid="09b70e60-badc-4e03-87ca-17cea88ba557">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>

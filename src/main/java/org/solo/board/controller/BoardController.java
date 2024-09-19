@@ -3,8 +3,9 @@ package org.solo.board.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.solo.board.domain.BoardAttachmentVO;
-import org.solo.board.dto.BoardDTO;
-import org.solo.board.service.BoardService;
+
+import org.solo.board.domain.BoardVO;
+import org.solo.board.service.BoardServiceImpl;
 import org.solo.common.util.UploadFiles;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,12 +20,12 @@ import java.io.File;
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
-    final private BoardService service;
+    final private BoardServiceImpl boardServiceImpl;
 
     @GetMapping("/list")
     public void list(Model model) {
         log.info("list");
-        model.addAttribute("list", service.getList());
+        model.addAttribute("list", boardServiceImpl.getList());
     }
 
     @GetMapping("/create")
@@ -34,11 +35,11 @@ public class BoardController {
     }
 
     @PostMapping("/create")
-    public String create(BoardDTO board, RedirectAttributes ra) {
-        log.info("create: " + board);
+    public String create(BoardVO boardVO, RedirectAttributes ra) {
+        log.info("create: " + boardVO);
 
-        service.create(board);
-        ra.addFlashAttribute("result", board.getBoardNo());
+        boardServiceImpl.create(boardVO);
+        ra.addFlashAttribute("result", boardVO.getBoardNo());
         // localhost:8080/board/list + GET
         return "redirect:/board/list";
     }
@@ -46,13 +47,13 @@ public class BoardController {
     @GetMapping({"/get", "/update"})
     public void get(@RequestParam("boardNo") Long boardNo, Model model) {
         log.info("/get or update");
-        model.addAttribute("board", service.get(boardNo));
+        model.addAttribute("boardVO", boardServiceImpl.get(boardNo));
     }
 
     @PostMapping("/update")
-    public String update(BoardDTO board, RedirectAttributes ra) {
-        log.info("update: " + board);
-        if(service.update(board)) {
+    public String update(BoardVO boardVO, RedirectAttributes ra) {
+        log.info("update: " + boardVO);
+        if(boardServiceImpl.update(boardVO)) {
             ra.addFlashAttribute("result", "success");
         }
         return "redirect:/board/list";
@@ -61,7 +62,7 @@ public class BoardController {
     @PostMapping("/delete")
     public String delete(@RequestParam("boardNo") Long boardNo, RedirectAttributes ra) {
         log.info("delete......" + boardNo);
-        if(service.delete(boardNo)) {
+        if(boardServiceImpl.delete(boardNo)) {
             ra.addFlashAttribute("result", "success");
         }
         return "redirect:/board/list";
@@ -70,7 +71,7 @@ public class BoardController {
     @GetMapping("/download/{boardNo}")
     @ResponseBody   // view를 사용하지 않고, 직접 내보냄
     public void download(@PathVariable("boardNo") Long boardNo, HttpServletResponse response) throws Exception {
-        BoardAttachmentVO attach = service.getAttachment(boardNo);
+        BoardAttachmentVO attach = boardServiceImpl.getAttachment(boardNo);
 
         File file = new File(attach.getPath());
 

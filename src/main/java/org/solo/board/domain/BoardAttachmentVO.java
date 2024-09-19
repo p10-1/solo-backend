@@ -13,7 +13,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Log4j
 public class BoardAttachmentVO {
     private Long no;
@@ -24,17 +23,13 @@ public class BoardAttachmentVO {
     private Long size;
     private Date regDate;
 
-    public static BoardAttachmentVO of(MultipartFile part, Long boardNo, String path) {
-        return builder()
-                .boardNo(boardNo)
-                .filename(part.getOriginalFilename())
-                .path(path)
-                .contentType(part.getContentType())
-                .size(part.getSize())
-                .build();
-    }
-
-    public String getFileSize() {
-        return UploadFiles.getFormatSize(size);
-    }
+//    public BoardAttachmentVO boardAttachmentVO (MultipartFile part, Long boardNo, String path) {
+//        String filename = part.getOriginalFilename();
+//        String contentType = part.getContentType();
+//        Long size = part.getSize();
+//        this.boardNo = getBoardNo();
+//        this.path = getPath();
+//
+//        return ;
+//    }
 }

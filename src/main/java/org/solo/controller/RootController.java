@@ -15,6 +15,4 @@ public class RootController {
         log.info("=================> BoardController /");
         return "redirect:/board/list";
     }
-
-
 }

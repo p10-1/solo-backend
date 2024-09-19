@@ -1,4 +1,5 @@
 package org.solo.asset.service;
 
-public class AssetService {
+public interface AssetService {
+
 }

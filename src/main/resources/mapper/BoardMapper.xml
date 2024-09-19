@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="org.solo.board.mapper.BoardMapper">
     <!-- 조회 -->
     <select id="getList" resultType="BoardVO" >
         <![CDATA[
-            select * from board
-            order by boardNo desc
+        select * from board
+        order by boardNo desc
         ]]>
     </select>
 
-<!--    <select id="get" resultType="BoardVO">-->
-<!--        select * from board where boardNo = #{boardNo}-->
-<!--    </select>-->
+    <!--    <select id="get" resultType="BoardVO">-->
+    <!--        select * from board where boardNo = #{boardNo}-->
+    <!--    </select>-->
     <select id="get" resultMap="boardMap">
         SELECT b.*, ba.no as baNo, ba.boardNo, ba.filename, ba.path, ba.content_type, ba.size, ba.reg_date as ba_reg_date
-            FROM board b left outer join board_attachment ba
-            on b.boardNo = ba.boardNo
+        FROM board b left outer join board_attachment ba
+                                     on b.boardNo = ba.boardNo
         where b.boardNo = 23
         order by filename
     </select>
@@ -35,12 +36,12 @@
     <!-- 수정 -->
     <update id="update">
         update board set
-            title = #{title},
-            content = #{content},
-            userID = #{userID},
-            modDate = now(),
-            likes = #{likes},
-            views = #{views}
+             title = #{title},
+             content = #{content},
+             userID = #{userID},
+             modDate = now(),
+             likes = #{likes},
+             views = #{views}
         where boardNo = #{boardNo}
     </update>
 

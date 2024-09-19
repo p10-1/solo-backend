@@ -1,16 +1,21 @@
 package org.solo.config;
 
+// (초기화)등록
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletRegistration;
 
+@Slf4j
+@EnableWebMvc
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
-
-    final String LOCATION = "C:/upload/solo";
+    final String LOCATION = "";
     final long MAX_FILE_SIZE = 1024 * 1024 * 10L;
     final long MAX_REQUEST_SIZE = 1024 * 1024 * 20L;
     final int FILE_SIZE_THRESHOLD = 1024 * 1024 * 5;
@@ -21,22 +26,21 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
     }
 
     @Override
-    protected Class<?>[] getServletConfigClasses() {
+    protected Class<?>[] getServletConfigClasses() {    // == servlet-context.xml
         return new Class[] { ServletConfig.class };
     }
 
     @Override
-    protected String[] getServletMappings() {
+    protected String[] getServletMappings() {   //   '/'
         return new String[] { "/" };
     }
 
+    @Override
     protected Filter[] getServletFilters() {
-        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter(); // 스프링이 만들어둔 인코딩 객체 사용하겠다.
-
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
         characterEncodingFilter.setForceEncoding(true);
-
-        return new Filter[] {characterEncodingFilter};
+        return new Filter[] { characterEncodingFilter };
     }
 
     @Override
@@ -52,19 +56,3 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
         registration.setMultipartConfig(multipartConfig);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

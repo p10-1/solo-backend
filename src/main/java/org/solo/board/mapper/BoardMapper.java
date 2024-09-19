@@ -1,10 +1,14 @@
 package org.solo.board.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.solo.board.domain.BoardAttachmentVO;
 import org.solo.board.domain.BoardVO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Mapper
+@Repository
 public interface BoardMapper {
     public List<BoardVO> getList();
 
@@ -25,5 +29,5 @@ public interface BoardMapper {
 
     public int deleteAttachment(Long no);
 
-    public int deleteAttachment_boardNo(Long boardNo);
+//    public int deleteAttachment_boardNo(Long boardNo);
 }

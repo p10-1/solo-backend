@@ -3,6 +3,7 @@ package org.solo.board.service;
 import lombok.extern.log4j.Log4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.solo.board.domain.BoardVO;
 import org.solo.board.dto.BoardDTO;
 import org.solo.config.RootConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ class BoardServiceTest {
 
     @Test
     void getList() {
-        for(BoardDTO board : service.getList()) {
-            log.info(board);
+        for(BoardVO boardVO : service.getList()) {
+            log.info(boardVO);
         }
     }
 
@@ -33,22 +34,22 @@ class BoardServiceTest {
 
     @Test
     void create() {
-        BoardDTO board = new BoardDTO();
-        board.setTitle("새로 작성하는 글111");
-        board.setContent("새로 작성하는 내용111");
-        board.setUserID("user1");
+        BoardVO boardVO = new BoardVO();
+        boardVO.setTitle("새로 작성하는 글111");
+        boardVO.setContent("새로 작성하는 내용111");
+        boardVO.setUserID("user1");
 
-        service.create(board);
+        service.create(boardVO);
 
-        log.info("생성된 게시물의 번호: " + board.getBoardNo());
+        log.info("생성된 게시물의 번호: " + boardVO.getBoardNo());
     }
 
     @Test
     void update() {
-        BoardDTO board = service.get(6L);
+        BoardVO boardVO = service.get(6L);
 
-        board.setTitle("제목 수정합니다.");
-        log.info("update RESULT: " + service.update(board));
+        boardVO.setTitle("제목 수정합니다.");
+        log.info("update RESULT: " + service.update(boardVO));
     }
 
     @Test
