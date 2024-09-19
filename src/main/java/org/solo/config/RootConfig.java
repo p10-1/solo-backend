@@ -1,0 +1,93 @@
+package org.solo.config;
+
+import com.zaxxer.hikari.HikariDataSource;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.web.filter.CharacterEncodingFilter;
+
+import javax.sql.DataSource;
+
+@Configuration
+@PropertySource({"classpath:/application.properties"})
+@MapperScan(basePackages = {
+        "org.solo.member.mapper",
+        "org.solo.board.mapper",
+        "org.solo.news.mapper",
+        "org.solo.mypage.mapper",
+        "org.solo.policy.mapper",
+        "org.solo.asset.mapper"
+})
+@ComponentScan(basePackages = {
+        "org.solo.member.service",
+        "org.solo.board.service",
+        "org.solo.news.service",
+        "org.solo.mypage.service",
+        "org.solo.policy.service",
+        "org.solo.asset.service"
+})
+public class RootConfig {
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+
+    @Value("${jdbc.driver}") String driver;
+    @Value("${jdbc.url}") String url;
+    @Value("${jdbc.username}") String username;
+    @Value("${jdbc.password}") String password;
+
+
+    @Bean
+    public DataSource dataSource() {
+        HikariDataSource config = new HikariDataSource();
+        config.setDriverClassName(driver);
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+        HikariDataSource dataSource = new HikariDataSource(config);
+        return dataSource;
+    }
+
+    @Bean
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+        SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource);
+        sessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
+        sessionFactory.setMapperLocations(
+                new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml")
+        );
+        return sessionFactory.getObject();
+    }
+
+    @Bean
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    // 트랜잭션 관리를 위한 DataSourceTransactionManager
+    @Bean
+    public DataSourceTransactionManager transactionManager() {
+        DataSourceTransactionManager manager = new DataSourceTransactionManager(dataSource());
+        return manager;
+    }
+
+    // 한글 설정을 위한 CharacterEncodingFilter
+    @Bean
+    public CharacterEncodingFilter characterEncodingFilter() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return characterEncodingFilter;
+    }
+}
