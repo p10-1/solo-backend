@@ -1,6 +1,7 @@
 package org.solo.mypage.controller;
 
 import org.solo.mypage.domain.MypageVO;
+import org.solo.mypage.service.MypageService;
 import org.solo.mypage.service.MypageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,14 +18,15 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/mypage")
 public class MypageController {
 
-    private MypageServiceImpl mypageServiceImpl;
+    //private MypageServiceImpl mypageServiceImpl;
+    private MypageService mypageService;
 
     // MypageVO 객체 생성
     MypageVO userData = new MypageVO();
 
     @Autowired
-    public MypageController(MypageServiceImpl mypageServiceImpl) {
-        this.mypageServiceImpl = mypageServiceImpl;
+    public MypageController(MypageService mypageService) {
+        this.mypageService = mypageService;
     }
 
     @GetMapping({"", "/"})
@@ -59,13 +61,13 @@ public class MypageController {
 
         // DB 저장
         // 존재여부 체크
-        if (mypageServiceImpl.findUserData(userID)) {
+        if (mypageService.findUserData(userID)) {
             session.setAttribute("message", "이미 저장된 데이터가 있습니다."); // 중복 메시지 설정
             return "redirect:/mypage"; // 마이페이지로 리다이렉트
         }
 
         // 서비스 메서드 호출하여 DB에 저장
-        mypageServiceImpl.insertUserData(userData);
+        mypageService.insertUserData(userData);
 
         // DB에 저장된 데이터 콘솔에 출력
         System.out.println("DB에 저장된 데이터:");
@@ -101,7 +103,7 @@ public class MypageController {
             userData.setProperty(property != null ? property : 0);
             userData.setDeposit(deposit != null ? deposit : 0);
 
-            mypageServiceImpl.updateUserData(userData);
+            mypageService.updateUserData(userData);
 
             session.setAttribute("message", "정보가 성공적으로 수정되었습니다.");
         } else {
