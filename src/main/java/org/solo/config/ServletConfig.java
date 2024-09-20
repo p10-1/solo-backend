@@ -19,8 +19,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
         "org.solo.board.controller",
         "org.solo.news.controller",
         "org.solo.mypage.controller",
+        "org.solo.asset.controller",
         "org.solo.policy.controller",
-        "org.solo.asset.controller"
+        "org.solo.policy.scheduler"
+
 })  // <- 공통 팩키지
 public class ServletConfig implements WebMvcConfigurer {
 

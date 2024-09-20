@@ -5,7 +5,7 @@
 
 <mapper namespace="org.solo.member.mapper.MemberMapper">
 
-    <select id="findByKakaoId" parameterType="String" resultType="org.solo.member.domain.MemberVO">
+    <select id="findByKakaoId" parameterType="java.lang.String" resultType="org.solo.member.domain.MemberVO">
         SELECT * FROM kakaoMember WHERE kakaoId = #{kakaoId}
     </select>
 

@@ -14,6 +14,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.sql.DataSource;
@@ -29,17 +32,29 @@ import javax.sql.DataSource;
         "org.solo.asset.mapper"
 })
 @ComponentScan(basePackages = {
+//        "org.solo"
         "org.solo.member.service",
         "org.solo.board.service",
         "org.solo.news.service",
         "org.solo.mypage.service",
         "org.solo.policy.service",
         "org.solo.asset.service"
+
 })
 public class RootConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
+    }
+
+    @Bean
+    public RestTemplate restTemplate() { return new RestTemplate(); }
+
+    @Bean
+    public TaskScheduler taskScheduler() {
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        scheduler.setPoolSize(2);
+        return scheduler;
     }
 
     @Value("${jdbc.driver}") String driver;
