@@ -1,5 +1,6 @@
 package org.solo.mypage.controller;
 
+import org.solo.asset.domain.AssetVO;
 import org.solo.mypage.domain.MypageVO;
 import org.solo.mypage.service.MypageService;
 import org.solo.mypage.service.MypageServiceImpl;
@@ -18,11 +19,12 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/mypage")
 public class MypageController {
 
-    //private MypageServiceImpl mypageServiceImpl;
-    private MypageService mypageService;
+    private final MypageService mypageService;
 
     // MypageVO 객체 생성
-    MypageVO userData = new MypageVO();
+    //MypageVO userData = new MypageVO();
+    AssetVO userData = new AssetVO();
+
 
     @Autowired
     public MypageController(MypageService mypageService) {

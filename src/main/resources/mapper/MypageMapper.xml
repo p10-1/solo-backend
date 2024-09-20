@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.solo.mypage.mapper.MypageMapper">
 
-    <insert id="insertUserData" parameterType="org.solo.mypage.domain.MypageVO">
+    <insert id="insertUserData" parameterType="org.solo.asset.domain.AssetVO">
         INSERT INTO userData (userID, cash, stock, property, deposit, consume)
         VALUES (#{userID}, #{cash}, #{stock}, #{property}, #{deposit}, #{consume})
     </insert>
@@ -15,7 +15,7 @@
         WHERE userID = #{userID}
     </select>
 
-    <update id="updateUserData" parameterType="org.solo.mypage.domain.MypageVO">
+    <update id="updateUserData" parameterType="org.solo.asset.domain.AssetVO">
         UPDATE userdata
         SET consume = #{consume},
             cash = #{cash},

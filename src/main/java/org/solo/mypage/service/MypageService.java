@@ -1,9 +1,12 @@
 package org.solo.mypage.service;
 
-import org.solo.mypage.domain.MypageVO;
+import org.solo.asset.domain.AssetVO;
 
 public interface MypageService {
-    void insertUserData(MypageVO mypageVO);
+    void insertUserData(AssetVO assetVO);
     boolean findUserData(String userID);
-    void updateUserData(MypageVO userData);
+    void updateUserData(AssetVO userData);
+
+    // asset
+    //List<Asset> getAssets(String userID);
 }
