@@ -9,4 +9,20 @@
         VALUES (#{userID}, #{cash}, #{stock}, #{property}, #{deposit}, #{consume})
     </insert>
 
+    <select id="findUserData" parameterType="String" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM userdata
+        WHERE userID = #{userID}
+    </select>
+
+    <update id="updateUserData" parameterType="org.solo.mypage.domain.MypageVO">
+        UPDATE userdata
+        SET consume = #{consume},
+            cash = #{cash},
+            stock = #{stock},
+            property = #{property},
+            deposit = #{deposit}
+        WHERE userID = #{userID}
+    </update>
+
 </mapper>

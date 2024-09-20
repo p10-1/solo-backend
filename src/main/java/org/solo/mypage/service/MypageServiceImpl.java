@@ -21,5 +21,16 @@ public class MypageServiceImpl implements MypageService {
         mypageMapper.insertUserData(userData);
     }
 
+    @Override
+    public boolean findUserData(String userID){
+        return mypageMapper.findUserData(userID);
+    }
+
+    @Override
+    public void updateUserData(MypageVO userData) {
+        mypageMapper.updateUserData(userData);
+    }
+
+
 
 }

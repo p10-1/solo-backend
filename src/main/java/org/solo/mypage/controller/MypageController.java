@@ -19,6 +19,9 @@ public class MypageController {
 
     private MypageServiceImpl mypageServiceImpl;
 
+    // MypageVO 객체 생성
+    MypageVO userData = new MypageVO();
+
     @Autowired
     public MypageController(MypageServiceImpl mypageServiceImpl) {
         this.mypageServiceImpl = mypageServiceImpl;
@@ -29,32 +32,37 @@ public class MypageController {
         return "mypage";
     }
 
-    // 저장 , 수정만
-    @PostMapping("/saveUserData")
+    // create
+    @PostMapping("/insert")
     public String saveUserData(HttpSession session,
+                               @RequestParam(required = false) String consume,
                                @RequestParam(required = false) Integer cash,
                                @RequestParam(required = false) Integer stock,
                                @RequestParam(required = false) Integer property,
-                               @RequestParam(required = false) Integer deposit,
-                               @RequestParam(required = false) Integer consume) {
+                               @RequestParam(required = false) Integer deposit) {
 
         // 세션에서 userID 가져오기
-        String userID = (String) session.getAttribute("kakaoId"); // 세션에서 userID를 직접 가져옵니다.
+        String userID = (String) session.getAttribute("kakaoId");
+        //확인용
+        System.out.println("insert 수행중" + userID);
 
-        System.out.println("세션에서 가져온 값" + userID);
-        // MypageVO 객체 생성
-        MypageVO userData = new MypageVO();
-
-        // userID 설정
+        // 세션에서 받아온 값 userID로 설정
         if (userID != null) {
-            userData.setUserID(userID); // userID 설정
+            userData.setUserID(userID);
         }
 
         userData.setCash(cash != null ? cash : 0);
         userData.setStock(stock != null ? stock : 0);
         userData.setProperty(property != null ? property : 0);
         userData.setDeposit(deposit != null ? deposit : 0);
-        userData.setConsume(consume != null ? consume : 0);
+        userData.setConsume(consume);
+
+        // DB 저장
+        // 존재여부 체크
+        if (mypageServiceImpl.findUserData(userID)) {
+            session.setAttribute("message", "이미 저장된 데이터가 있습니다."); // 중복 메시지 설정
+            return "redirect:/mypage"; // 마이페이지로 리다이렉트
+        }
 
         // 서비스 메서드 호출하여 DB에 저장
         mypageServiceImpl.insertUserData(userData);
@@ -66,10 +74,44 @@ public class MypageController {
         System.out.println("Stock: " + userData.getStock());
         System.out.println("Property: " + userData.getProperty());
         System.out.println("Deposit: " + userData.getDeposit());
-        System.out.println("Consume: " + userData.getConsume());
+        System.out.println("소비유형: " + userData.getConsume());
 
         session.setAttribute("message", "DB 저장 완료");
         // 저장 후 마이페이지로 리다이렉트
         return "redirect:/mypage";
     }
+
+    //update
+    @PostMapping("/update")
+    public String updateUserData(HttpSession session,
+                                 @RequestParam String consume,
+                                 @RequestParam(required = false) Integer cash,
+                                 @RequestParam(required = false) Integer stock,
+                                 @RequestParam(required = false) Integer property,
+                                 @RequestParam(required = false) Integer deposit){
+
+        String userID = (String) session.getAttribute("kakaoId");
+        System.out.println("update 수행중:" + userID);
+
+        if (userID != null) {
+            userData.setUserID(userID);
+            userData.setConsume(consume);
+            userData.setCash(cash != null ? cash : 0);
+            userData.setStock(stock != null ? stock : 0);
+            userData.setProperty(property != null ? property : 0);
+            userData.setDeposit(deposit != null ? deposit : 0);
+
+            mypageServiceImpl.updateUserData(userData);
+
+            session.setAttribute("message", "정보가 성공적으로 수정되었습니다.");
+        } else {
+
+            session.setAttribute("message", "사용자 정보를 찾을 수 없습니다.");
+        }
+
+        return "redirect:/mypage";
+
+    }
+
+
 }

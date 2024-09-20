@@ -14,6 +14,6 @@ public class MypageVO {
     private int stock;
     private int property;
     private int deposit;
-    private int consume;
+    private String consume;
     //private String job;
 }

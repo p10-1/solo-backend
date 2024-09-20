@@ -8,4 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MypageMapper {
     void insertUserData(MypageVO mypageVO);
+
+    boolean findUserData(String userID);
+
+    void updateUserData(MypageVO userData);
 }
