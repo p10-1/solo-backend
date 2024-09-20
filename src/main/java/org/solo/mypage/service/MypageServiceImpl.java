@@ -1,6 +1,7 @@
 package org.solo.mypage.service;
 
 import org.solo.asset.domain.AssetVO;
+import org.solo.member.domain.MemberVO;
 import org.solo.mypage.domain.MypageVO;
 import org.solo.mypage.mapper.MypageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +19,23 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
-    public void insertUserData(AssetVO userData) {
-        mypageMapper.insertUserData(userData);
+    public void insertAssetData(AssetVO userData) {
+        mypageMapper.insertAssetData(userData);
     }
 
     @Override
-    public boolean findUserData(String userID){
-        return mypageMapper.findUserData(userID);
+    public boolean findAssetData(String userID){
+        return mypageMapper.findAssetData(userID);
     }
 
     @Override
-    public void updateUserData(AssetVO userData) {
-        mypageMapper.updateUserData(userData);
+    public void updateAssetData(AssetVO userData) {
+        mypageMapper.updateAssetData(userData);
     }
 
-
+    @Override
+    public void updateMember(MemberVO memberVO){
+        mypageMapper.updateMember(memberVO);
+    }
 
 }

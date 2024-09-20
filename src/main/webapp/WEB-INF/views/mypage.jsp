@@ -4,20 +4,19 @@
     <title>Mypage</title>
     <script type="text/javascript">
         function update() {
-            // 수정 폼으로 변경
             document.getElementById("cash").disabled = false;
             document.getElementById("stock").disabled = false;
             document.getElementById("property").disabled = false;
             document.getElementById("deposit").disabled = false;
             document.getElementById("consume").disabled = false;
 
-            // 버튼 상태 변경
-            document.getElementById("editButton").style.display = "none"; // 수정하기 버튼 숨김
-            document.getElementById("submitButton").style.display = "none"; // 제출 버튼 숨김
-            document.getElementById("updateButton").style.display = "inline"; // 수정 완료 버튼 보임
+            // 수정 완료 버튼 숨기기
+            document.getElementById("editButton").style.display = "none";
+            document.getElementById("submitButton").style.display = "none";
+            document.getElementById("updateButton").style.display = "inline";
 
             // controller에 요청
-            document.getElementById("userDataForm").action = "${pageContext.request.contextPath}/mypage/update";
+            document.getElementById("assetForm").action = "${pageContext.request.contextPath}/mypage/updateAsset";
         }
 
         window.onload = function() {
@@ -35,9 +34,9 @@
 <body>
 <h1>마이페이지 입니다!</h1><br/>
 
-<h2>개인정보 입력</h2>
+<h2>자산 등록하기</h2>
 <br/>
-<form id="userDataForm" action="${pageContext.request.contextPath}/mypage/insert" method="post">
+<form id="assetForm" action="${pageContext.request.contextPath}/mypage/insertAsset" method="post">
     <label for="consume">Consume 유형 선택 :</label>
     <select id="consume" name="consume">
         <option value="항목1">유형1</option>
@@ -45,27 +44,37 @@
         <option value="항목3">유형3</option>
         <option value="항목4">유형4</option>
     </select>
-    <br/><br/>
+    <br/>
 
-    <h2>자산 입력</h2>
-    <label for="cash">Cash:</label>
+    <label for="cash">현금:</label>
     <input type="number" id="cash" name="cash" value="0"><br/>
 
-    <label for="stock">Stock:</label>
+    <label for="stock">증권:</label>
     <input type="number" id="stock" name="stock" value="0"><br/>
 
-    <label for="property">Property:</label>
+    <label for="property">부동산:</label>
     <input type="number" id="property" name="property" value="0"><br/>
 
-    <label for="deposit">Deposit:</label>
+    <label for="deposit">예적금:</label>
     <input type="number" id="deposit" name="deposit" value="0"><br/>
 
-    <!-- 기본적으로 보여지는 제출 버튼 -->
+
     <input type="submit" id="submitButton" value="제출">
-    <!-- 수정하기 버튼 -->
     <input type="button" id="editButton" value="수정하기" onclick="update()">
-    <!-- 수정 완료 버튼, 초기에는 숨김 -->
     <input type="submit" id="updateButton" value="수정 완료" style="display:none;">
+
 </form>
+
+<h2>개인정보 수정</h2>
+<form id="userForm" action="${pageContext.request.contextPath}/mypage/updateMember" method="post">
+
+<%--    수정할 부분 추가--%>
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email" value="${mypage.email}" required /><br/>
+
+    <input type="submit" value="수정하기">
+
+</form>
+
 </body>
 </html>
