@@ -29,7 +29,8 @@ import javax.sql.DataSource;
         "org.solo.news.mapper",
         "org.solo.mypage.mapper",
         "org.solo.policy.mapper",
-        "org.solo.asset.mapper"
+        "org.solo.asset.mapper",
+        "org.solo.product.mapper"
 })
 @ComponentScan(basePackages = {
 //        "org.solo"
@@ -38,7 +39,8 @@ import javax.sql.DataSource;
         "org.solo.news.service",
         "org.solo.mypage.service",
         "org.solo.policy.service",
-        "org.solo.asset.service"
+        "org.solo.asset.service",
+        "org.solo.product.service"
 
 })
 public class RootConfig {

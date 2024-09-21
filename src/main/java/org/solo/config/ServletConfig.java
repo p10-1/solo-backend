@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -21,7 +22,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
         "org.solo.mypage.controller",
         "org.solo.asset.controller",
         "org.solo.policy.controller",
-        "org.solo.policy.scheduler"
+        "org.solo.policy.scheduler",
+        "org.solo.product.controller"
 
 })  // <- 공통 팩키지
 public class ServletConfig implements WebMvcConfigurer {
@@ -48,10 +50,15 @@ public class ServletConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/img/**")
                 .addResourceLocations("/img/");
     }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:5173") // 프론트엔드 주소
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowCredentials(true);
+    }
 }
-
-
-
 
 
 

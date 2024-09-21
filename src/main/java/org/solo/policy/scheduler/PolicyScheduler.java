@@ -22,6 +22,6 @@ public class PolicyScheduler {
         taskScheduler.scheduleAtFixedRate(() -> {
             policyController.fetchPolicies();
             System.out.println("Fetched policies at: " + System.currentTimeMillis());
-        }, 60 * 1000);
+        }, 60 * 60 * 1000);
     }
 }
