@@ -90,8 +90,6 @@ public class MemberController {
         }
 
     }
-
-
     private String getKakaoAccessToken(String code) {
 
         RestTemplate restTemplate = new RestTemplate();
@@ -212,6 +210,7 @@ public class MemberController {
         System.out.println("kakaoId: " + kakaoId);
         MemberVO newUser = memberService.insertNewUserInfo(kakaoId, nickName, profileImage, name, email, birthDate);
         session.setAttribute("userInfo", newUser);
+        System.out.println("새로 추가된 userInfo: " + newUser);
         return ResponseEntity.ok(newUser); // 새 사용자 정보 반환
     }
 
