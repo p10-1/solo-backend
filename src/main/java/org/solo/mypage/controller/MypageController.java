@@ -5,22 +5,20 @@ import org.solo.member.domain.MemberVO;
 import org.solo.member.service.MemberService;
 import org.solo.mypage.service.MypageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/mypage")
 public class MypageController {
 
     private final MypageService mypageService;
-
-    // VO객체생성
-    AssetVO assetData = new AssetVO();
-
 
 
     @Autowired
@@ -35,40 +33,59 @@ public class MypageController {
 
     // create
     @PostMapping("/insertAsset")
-
-    public String saveUserData(HttpSession session,
-                               @RequestParam(required = false) String consume,
-                               @RequestParam(required = false) Integer cash,
-                               @RequestParam(required = false) Integer stock,
-                               @RequestParam(required = false) Integer property,
-                               @RequestParam(required = false) Integer deposit) {
-
-        // 세션에서 userID 가져오기
+    public ResponseEntity<String> saveUserData(HttpSession session, @RequestBody Map<String, Object> data) {
         String userID = (String) session.getAttribute("kakaoId");
-        //확인용
-        System.out.println("insert 수행중" + userID);
+        System.out.println("insert 수행중: " + userID);
 
-        // 세션에서 받아온 값 userID로 설정
+        AssetVO assetData = new AssetVO();
+
         if (userID != null) {
             assetData.setUserID(userID);
         }
 
-        assetData.setCash(cash != null ? cash : 0);
-        assetData.setStock(stock != null ? stock : 0);
-        assetData.setProperty(property != null ? property : 0);
-        assetData.setDeposit(deposit != null ? deposit : 0);
-        assetData.setConsume(consume);
+        // 데이터 매핑
+        if (data.get("assets") instanceof Map) {
+            Map<String, Object> assets = (Map<String, Object>) data.get("assets");
+
+            if (assets.get("현금자산") instanceof List) {
+                List<Map<String, Object>> cashAssets = (List<Map<String, Object>>) assets.get("현금자산");
+                if (!cashAssets.isEmpty()) {
+                    assetData.setCash((int) cashAssets.get(0).get("amount"));
+                }
+            }
+
+            if (assets.get("증권자산") instanceof List) {
+                List<Map<String, Object>> stockAssets = (List<Map<String, Object>>) assets.get("증권자산");
+                if (!stockAssets.isEmpty()) {
+                    assetData.setStock((int) stockAssets.get(0).get("amount"));
+                }
+            }
+
+            if (assets.get("부동산자산") instanceof List) {
+                List<Map<String, Object>> propertyAssets = (List<Map<String, Object>>) assets.get("부동산자산");
+                if (!propertyAssets.isEmpty()) {
+                    assetData.setProperty((int) propertyAssets.get(0).get("amount"));
+                }
+            }
+
+            if (assets.get("예적금자산") instanceof List) {
+                List<Map<String, Object>> depositAssets = (List<Map<String, Object>>) assets.get("예적금자산");
+                if (!depositAssets.isEmpty()) {
+                    assetData.setDeposit((int) depositAssets.get(0).get("amount"));
+                }
+            }
+        }
+        // 소비 유형 설정
+        assetData.setConsume((String) data.get("consumeType"));
 
         // DB 저장
-        // 존재여부 체크
         if (mypageService.findAssetData(userID)) {
-            session.setAttribute("message", "이미 저장된 데이터가 있습니다."); // 중복 메시지 설정
-            return "redirect:/mypage"; // 마이페이지로 리다이렉트
+            session.setAttribute("message", "이미 저장된 데이터가 있습니다.");
+            return ResponseEntity.status(409).body("이미 저장된 데이터가 있습니다.");
         }
-
         mypageService.insertAssetData(assetData);
 
-        // DB에 저장된 데이터 콘솔에 출력
+        // DB에 저장된 데이터 콘솔에 출력 (확인용)
         System.out.println("DB에 저장된 데이터:");
         System.out.println("userID: " + assetData.getUserID());
         System.out.println("Cash: " + assetData.getCash());
@@ -79,10 +96,11 @@ public class MypageController {
 
         session.setAttribute("message", "DB 저장 완료");
 
-        return "redirect:/mypage";
+        return ResponseEntity.ok("저장 완료");
     }
 
-    //update
+
+    // update
     @PostMapping("/updateAsset")
     public String updateUserData(HttpSession session,
                                  @RequestParam String consume,
@@ -94,6 +112,8 @@ public class MypageController {
         String userID = (String) session.getAttribute("kakaoId");
         System.out.println("update 수행중:" + userID);
 
+        // AssetVO 객체 생성
+        AssetVO assetData = new AssetVO();
         if (userID != null) {
             assetData.setUserID(userID);
             assetData.setConsume(consume);
@@ -103,18 +123,15 @@ public class MypageController {
             assetData.setDeposit(deposit != null ? deposit : 0);
 
             mypageService.updateAssetData(assetData);
-
             session.setAttribute("message", "정보가 성공적으로 수정되었습니다.");
         } else {
-
             session.setAttribute("message", "사용자 정보를 찾을 수 없습니다.");
         }
 
         return "redirect:/mypage";
-
     }
 
-//    member수정
+    // member 수정
     @PostMapping("/updateMember")
     public String updateUser(MemberVO memberVO, Model model, HttpSession session){
 
@@ -126,14 +143,10 @@ public class MypageController {
             mypageService.updateMember(memberVO);
             session.setAttribute("message", "정보가 성공적으로 수정되었습니다.");
         } else {
-
             session.setAttribute("message", "사용자 정보를 찾을 수 없습니다.");
         }
 
         model.addAttribute("userData", memberVO);
         return "redirect:/mypage";
-
     }
-
-
 }
