@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/mypage")
+@RequestMapping("/api/mypage")
 public class MypageController {
 
     private final MypageService mypageService;
@@ -35,6 +35,7 @@ public class MypageController {
 
     // create
     @PostMapping("/insertAsset")
+
     public String saveUserData(HttpSession session,
                                @RequestParam(required = false) String consume,
                                @RequestParam(required = false) Integer cash,
