@@ -6,6 +6,7 @@ import org.solo.member.domain.MemberVO;
 import org.solo.member.service.MemberService;
 import org.solo.member.service.MemberServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,15 +30,15 @@ public class MemberController {
 
     private MemberService memberService;
 
+    @Value("${kakaoAPI.tokenUrl}") String KAKAO_TOKEN_URL;
+    @Value("${kakaoAPI.clientId}") String CLIENT_ID;
+    @Value("${kakaoAPI.redirectUrl}") String REDIRECT_URI;
+    @Value("${kakaoAPI.logoutUrl}") String LOGOUT_REDIRECT_URI;
+
     @Autowired
     public MemberController(MemberServiceImpl memberServiceImpl) {
         this.memberService = memberServiceImpl;
     }
-
-    private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-    private final String CLIENT_ID = "a06454d494477b90c006ff1ad7f3de15"; // 카카오 REST API 키
-    private final String REDIRECT_URI = "http://localhost:5173/callback"; // 리다이렉트 URI
-    private final String LOGOUT_REDIRECT_URI = "http://localhost:5173/";
 
     @GetMapping("/login")
     public ResponseEntity<String> login(HttpSession session) {
