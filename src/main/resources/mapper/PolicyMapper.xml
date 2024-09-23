@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.solo.policy.mapper.PolicyMapper">
+
+    <insert id="fetchPolicies" parameterType="org.solo.policy.domain.PolicyVO">
+        INSERT INTO policy (bizId, polyBizTy, polyBizSjnm, polyItcnCn, sporCn, rqutUrla)
+        VALUES (#{bizId}, #{polyBizTy}, #{polyBizSjnm}, #{polyItcnCn}, #{sporCn}, #{rqutUrla})
+    </insert>
+
+    <select id="findByToken" parameterType="map" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM policy
+        WHERE bizId = #{bizID}
+           AND sporCn = #{sporCn}
+    </select>
+
+    <select id="getAllPolicies" resultType="org.solo.policy.domain.PolicyVO">
+        SELECT *
+        FROM policy
+    </select>
+
+    <select id="getTotalCnt" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM policy
+    </select>
+
+    <select id="getTotalCntByKeyword" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(*)
+        FROM policy
+        WHERE polyBizSjnm LIKE CONCAT('%', #{keyword}, '%')
+           OR polyItcnCn LIKE CONCAT('%', #{keyword}, '%')
+           OR sporCn LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="getPoliciesByPage" parameterType="java.lang.Integer" resultType="org.solo.policy.domain.PolicyVO">
+        SELECT *
+        FROM policy LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getPoliciesByPageAndKeyword" parameterType="map" resultType="org.solo.policy.domain.PolicyVO">
+        SELECT *
+        FROM policy
+        WHERE polyBizSjnm LIKE CONCAT('%', #{keyword}, '%')
+           OR polyItcnCn LIKE CONCAT('%', #{keyword}, '%')
+           OR sporCn LIKE CONCAT('%', #{keyword}, '%')
+            LIMIT #{offset}, #{limit}
+    </select>
+
+</mapper>
