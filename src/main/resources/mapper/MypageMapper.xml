@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.solo.mypage.mapper.MypageMapper">
+
+<!--    userAsset-->
+    <insert id="insertAssetData" parameterType="org.solo.asset.domain.AssetVO">
+        INSERT INTO userData (userID, cash, stock, property, deposit, consume)
+        VALUES (#{userID}, #{cash}, #{stock}, #{property}, #{deposit}, #{consume})
+    </insert>
+
+    <select id="findAssetData" parameterType="String" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM userdata
+        WHERE userID = #{userID}
+    </select>
+
+    <update id="updateAssetData" parameterType="org.solo.asset.domain.AssetVO">
+        UPDATE userdata
+        SET consume = #{consume},
+            cash = #{cash},
+            stock = #{stock},
+            property = #{property},
+            deposit = #{deposit}
+        WHERE userID = #{userID}
+    </update>
+
+
+<!--    userData-->
+    <update id="updateMember" parameterType="org.solo.member.domain.MemberVO">
+        UPDATE kakaoMember
+        SET email = #{email}
+        WHERE kakaoId = #{kakaoId}
+    </update>
+
+</mapper>
