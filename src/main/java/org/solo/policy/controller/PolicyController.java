@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/policies")
+@RequestMapping("/api/policy")
 public class PolicyController {
 
     private final PolicyService policyService;
@@ -24,7 +24,7 @@ public class PolicyController {
         this.policyService = policyService;
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> getPolicies(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(required = false) String keyword) {
@@ -39,10 +39,12 @@ public class PolicyController {
                 : policyService.getTotalCnt();
         int totalPages = (int) Math.ceil((double) totalPoliciesCount / pageSize);
 
+        System.out.println("currentPage: " + page + ", totalPages: " + totalPages + "정책 리스트 수: "+ policies.size());
         Map<String, Object> response = new HashMap<>();
-        response.put("policies", policies);
-        response.put("totalPages", totalPages);
-        response.put("currentPage", page);
+        response.put("policies", policies); // 정책 리스트
+        response.put("totalPages", totalPages); // 총 페이지 수
+        response.put("currentPage", page); // 현재 페이지
+        response.put("totalPoliciesCount", totalPoliciesCount); // 총 정책 수
 
         return ResponseEntity.ok(response);
     }
