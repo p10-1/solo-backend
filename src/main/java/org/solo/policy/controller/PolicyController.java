@@ -39,7 +39,7 @@ public class PolicyController {
                 : policyService.getTotalCnt();
         int totalPages = (int) Math.ceil((double) totalPoliciesCount / pageSize);
 
-        System.out.println("currentPage: " + page + ", totalPages: " + totalPages + "정책 리스트 수: "+ policies.size());
+//        System.out.println("currentPage: " + page + ", totalPages: " + totalPages + "정책 리스트 수: "+ policies.size());
         Map<String, Object> response = new HashMap<>();
         response.put("policies", policies); // 정책 리스트
         response.put("totalPages", totalPages); // 총 페이지 수
