@@ -16,6 +16,8 @@
   <a href="/member/login">금융 정책 페이지로 돌아가기</a>
   <br/>
   <a href="/member/login">금융 뉴스 페이지로 돌아가기</a>
+  <br/>
+  <a href="/member/login">금융 상품 페이지로 돌아가기</a>
 </c:if>
 <c:if test="${not empty userInfo}">
   <a href="/member/logout">로그아웃</a>
@@ -30,6 +32,8 @@
   <a href="/policy">금융 정책 페이지로 돌아가기</a>
   <br/>
   <a href="/news">금융 뉴스 페이지로 돌아가기</a>
+  <br/>
+  <a href="/product/">금융 상품 페이지로 돌아가기</a>
 </c:if>
 
 </body>
