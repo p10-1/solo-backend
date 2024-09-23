@@ -14,7 +14,7 @@
         SELECT count(*)
         FROM policy
         WHERE bizId = #{bizId}
-           AND sporCn = #{sporCn}
+           OR (sporCn = #{sporCn} AND polyBizSjnm = #{polyBizSjnm})
     </select>
 
     <select id="getAllPolicies" resultType="org.solo.policy.domain.PolicyVO">
@@ -35,12 +35,12 @@
            OR sporCn LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
-    <select id="getPoliciesByPage" parameterType="java.lang.Integer" resultType="org.solo.policy.domain.PolicyVO">
+    <select id="getPoliciesByPage" resultType="org.solo.policy.domain.PolicyVO">
         SELECT *
         FROM policy LIMIT #{offset}, #{limit}
     </select>
 
-    <select id="getPoliciesByPageAndKeyword" parameterType="map" resultType="org.solo.policy.domain.PolicyVO">
+    <select id="getPoliciesByPageAndKeyword" resultType="org.solo.policy.domain.PolicyVO">
         SELECT *
         FROM policy
         WHERE polyBizSjnm LIKE CONCAT('%', #{keyword}, '%')

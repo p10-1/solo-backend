@@ -2,6 +2,7 @@ package org.solo.product.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.solo.product.domain.ProductVO;
 import org.solo.product.service.ProductService;
 import org.solo.product.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,22 +22,17 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/api/product")
 public class ProductController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final ProductServiceImpl productServiceImpl;
+    private final ProductService productService;
     private final RestTemplate restTemplate;
 
-    @Value("${productAPI.url}") String url;
-    @Value("${productAPI.auth}") String auth;
-    @Value("${productAPI.topFinGrpNo}") String topFinGrpNo;
-    @Value("${productAPI.pageNo}") String pageNo;
-
     @Autowired
-    public ProductController(ProductServiceImpl productServiceImpl, RestTemplate restTemplate) {
-        this.productServiceImpl = productServiceImpl;
+    public ProductController(ProductService productService, RestTemplate restTemplate) {
+        this.productService = productService;
         this.restTemplate = restTemplate;
     }
 
@@ -46,37 +42,9 @@ public class ProductController {
     }
 
     @GetMapping("fetch")
-    public void fetchProducts(){
-        System.out.println("api 호출 컨트롤러");
-        String requestUrl = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("auth", auth)
-                .queryParam("topFinGrpNo", topFinGrpNo)
-                .queryParam("pageNo", pageNo)
-                .toUriString();
-        System.out.println("requestUrl: " + requestUrl);
-        try {
-            ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestUrl, String.class);
-            System.out.println("Response Headers: " + responseEntity.getHeaders());
-
-            if (responseEntity.getStatusCode() == HttpStatus.OK) {
-                String jsonResponse = responseEntity.getBody();
-                Map<String, Object> responseMap = objectMapper.readValue(jsonResponse, new TypeReference<Map<String, Object>>() {});
-                Map<String, Object> results = (Map<String, Object>) responseMap.get("result");
-
-                List<Object> baseList = (List<Object>) results.get("baseList");
-//                List<Object> optionList = (List<Object>) results.get("optionList");
-
-                System.out.println("baseList size: " + baseList.size());
-//                System.out.println("optionList size: " + optionList.size());
-
-                for (Object o : baseList) {
-                    System.out.println(o.getClass());
-                }
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // 예외를 출력하여 문제를 확인
-        }
-
+    public ResponseEntity<Void> fetchProducts(){
+        productService.fetchDeposit();
+        productService.fetchSaving();
+        return ResponseEntity.ok().build();
     }
 }

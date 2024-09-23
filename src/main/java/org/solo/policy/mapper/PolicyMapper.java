@@ -16,5 +16,7 @@ public interface PolicyMapper {
     int getTotalCnt();
     int getTotalCntByKeyword(String keyword);
     List<PolicyVO> getPoliciesByPage(@Param("offset") int offset, @Param("limit") int limit);
-    List<PolicyVO> getPoliciesByPageAndKeyword(Map<String, Object> params);
+    List<PolicyVO> getPoliciesByPageAndKeyword(@Param("offset") int offset,
+                                               @Param("limit") int limit,
+                                               @Param("keyword") String keyword);
 }
