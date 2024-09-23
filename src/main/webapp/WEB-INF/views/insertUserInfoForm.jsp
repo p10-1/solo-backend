@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>User Info Form</h1>
-<form action="/firstUser" method="POST">
+<form action="/member/firstUser" method="POST">
     <label for="name">name:</label>
     <input type="text" id="name" name="name" required><br>
 
