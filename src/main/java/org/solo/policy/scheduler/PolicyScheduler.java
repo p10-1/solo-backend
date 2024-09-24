@@ -23,6 +23,6 @@ public class PolicyScheduler {
         taskScheduler.scheduleAtFixedRate(() -> {
             policyService.fetchPolicies();
             System.out.println("Fetched policies at: " + System.currentTimeMillis());
-        }, 24* 60 * 60 * 1000);
+        },  24 * 60 * 60 * 1000); // 1시간에 한번 패치
     }
 }
