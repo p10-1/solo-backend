@@ -3,4 +3,119 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.solo.board.mapper.BoardMapper"></mapper>
+<mapper namespace="org.solo.board.mapper.BoardMapper">
+    <insert id="create">
+        INSERT INTO board(title, content, userID)
+        VALUES (#{title}, #{content}, #{userID})
+        <selectKey resultType="Long" keyProperty="boardNo" keyColumn="boardNo" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="update">
+        UPDATE board
+        SET title = #{title}, content = #{content}, userID = #{userID}, modDate = now()
+        WHERE boardNo = #{boardNo}
+    </update>
+    <delete id="delete">
+        DELETE
+        FROM board
+        WHERE boardNo = #{boardNo}
+    </delete>
+
+    <select id="getTotalCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM board
+    </select>
+
+    <select id="getPage" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        ORDER BY boardNo DESC
+        LIMIT #{offset}, #{amount}
+    </select>
+    <select id="getList" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        ORDER BY boardNo DESC
+    </select>
+
+    <resultMap id="boardMap" type="org.solo.board.domain.BoardVO">
+        <id property="boardNo" column="no"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="userID" column="user_id"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modDate" column="mod_date"/>
+        <result property="likes" column="likes"/>
+        <result property="comments" column="comments"/>
+        <result property="views" column="views"/>
+
+        <collection property="attaches" ofType="org.solo.board.domain.BoardAttachmentVO">
+            <result property="attachmentNo" column="ano"/>
+            <result property="bno" column="bno"/>
+            <result property="filename" column="filename"/>
+            <result property="path" column="path"/>
+            <result property="contentType" column="contentType"/>
+            <result property="size" column="size"/>
+            <result property="regDate" column="a_regDate"/>
+        </collection>
+    </resultMap>
+
+    <select id="get" resultMap="boardMap">
+        SELECT b.*, a.attachmentNo, a.bno, a.filename, a.contentType, a.size, a.regDate as a_regDate
+        FROM board b
+            LEFT OUTER JOIN boardAttachment a
+            ON b.boardNo = a.bno
+        WHERE b.boardNo = #{boardNo}
+        ORDER BY filename
+    </select>
+    <select id="getAttachmentList" resultType="org.solo.board.domain.BoardAttachmentVO">
+        SELECT *
+        FROM boardAttachment
+        WHERE bno = #{bno}
+        ORDER BY filename
+    </select>
+    <select id="getAttachment" resultType="org.solo.board.domain.BoardAttachmentVO">
+        SELECT *
+        FROM boardAttachment
+        WHERE attachmentNo = #{attachmentNo}
+    </select>
+
+    <insert id="createAttachment">
+        INSERT INTO boardAttachment(filename, path, contentType, size, bno)
+        VALUES (#{filename}, #{path}, #{contentType}, #{size}, #{bno})
+    </insert>
+
+    <delete id="deleteAttachment">
+        DELETE
+        FROM boradAttachment
+        WHERE attachmentNo = #{attachmentNo}
+    </delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
