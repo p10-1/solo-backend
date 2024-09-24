@@ -17,4 +17,34 @@
           AND etcNote = #{etcNote}
           AND type = #{type}
     </select>
+    <select id="getKbProducts" resultType="org.solo.product.domain.ProductVO">
+        SELECT *
+        FROM product
+        WHERE korCoNm LIKE '%국민%'
+    </select>
+    <select id="getTotalCnt" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM product
+    </select>
+    <select id="getTotalCntByKeyword" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(*)
+        FROM product
+        WHERE korCoNm LIKE CONCAT('%', #{keyword}, '%')
+           OR finPrdtNm LIKE CONCAT('%', #{keyword}, '%')
+           OR mtrtInt LIKE CONCAT('%', #{keyword}, '%')
+           OR spclCnd LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+    <select id="getProductsByPage" resultType="org.solo.product.domain.ProductVO">
+        SELECT *
+        FROM product LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getProductsByPageAndKeyword" resultType="org.solo.product.domain.ProductVO">
+        SELECT *
+        FROM product
+        WHERE korCoNm LIKE CONCAT('%', #{keyword}, '%')
+           OR finPrdtNm LIKE CONCAT('%', #{keyword}, '%')
+           OR mtrtInt LIKE CONCAT('%', #{keyword}, '%')
+           OR spclCnd LIKE CONCAT('%', #{keyword}, '%')
+            LIMIT #{offset}, #{limit}
+    </select>
 </mapper>

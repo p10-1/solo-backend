@@ -2,6 +2,8 @@ package org.solo.product.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.solo.common.pagination.PageRequest;
+import org.solo.policy.domain.PolicyVO;
 import org.solo.product.domain.ProductVO;
 import org.solo.product.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,5 +133,25 @@ public class ProductServiceImpl implements ProductService {
                 productMapper.fetchProducts(productVO);
             }
         }
+    }
+
+    public List<ProductVO> getKbProducts() {
+        return productMapper.getKbProducts();
+    }
+
+    public int getTotalCnt() {
+        return productMapper.getTotalCnt();
+    }
+
+    public int getTotalCntByKeyword(String keyword) {
+        return productMapper.getTotalCntByKeyword(keyword);
+    }
+
+    public List<ProductVO> getProductsByPage(PageRequest pageRequest) {
+        return productMapper.getProductsByPage(pageRequest.getOffset(), pageRequest.getAmount());
+    }
+
+    public List<ProductVO> getProductsByPageAndKeyword(PageRequest pageRequest, String keyword) {
+        return productMapper.getProductsByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword);
     }
 }

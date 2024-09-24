@@ -17,11 +17,6 @@
            OR (sporCn = #{sporCn} AND polyBizSjnm = #{polyBizSjnm})
     </select>
 
-    <select id="getAllPolicies" resultType="org.solo.policy.domain.PolicyVO">
-        SELECT *
-        FROM policy
-    </select>
-
     <select id="getTotalCnt" resultType="java.lang.Integer">
         SELECT count(*)
         FROM policy
