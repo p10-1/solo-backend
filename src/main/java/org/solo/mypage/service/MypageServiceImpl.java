@@ -30,8 +30,8 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
-    public void updateAssetData(AssetVO userData) {
-        mypageMapper.updateAssetData(userData);
+    public void updateAssetData(AssetVO assetData) {
+        mypageMapper.updateAssetData(assetData);
     }
 
     @Override

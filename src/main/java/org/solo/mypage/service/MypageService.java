@@ -6,7 +6,7 @@ import org.solo.member.domain.MemberVO;
 public interface MypageService {
     void insertAssetData(AssetVO assetVO);
     boolean findAssetData(String userID);
-    void updateAssetData(AssetVO userData);
+    void updateAssetData(AssetVO assetData);
 
     void updateMember(MemberVO memberVO);
 

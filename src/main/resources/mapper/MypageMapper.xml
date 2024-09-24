@@ -17,12 +17,14 @@
 
     <update id="updateAssetData" parameterType="org.solo.asset.domain.AssetVO">
         UPDATE userAsset
-        SET consume = #{consume},
-        cash = #{cash},
+        SET cash = #{cash},
         stock = #{stock},
         property = #{property},
         deposit = #{deposit},
-        updateDate = NOW()  <!-- 마지막 업데이트 시간을 현재로 설정 -->
+        consume = #{consume},
+        loanAmount = #{loanAmount},
+        loanPurpose = #{loanPurpose},
+        period = #{period}
         WHERE userID = #{userID}
     </update>
 

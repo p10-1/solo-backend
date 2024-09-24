@@ -13,7 +13,7 @@ public interface MypageMapper {
 
     boolean findAssetData(String userID);
 
-    void updateAssetData(AssetVO userData);
+    void updateAssetData(AssetVO assetData);
 
     void updateMember(MemberVO memberVO);
 }
