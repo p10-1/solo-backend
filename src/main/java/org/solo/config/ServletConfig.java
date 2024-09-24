@@ -23,7 +23,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
         "org.solo.asset.controller",
         "org.solo.policy.controller",
         "org.solo.policy.scheduler",
-        "org.solo.product.controller"
+        "org.solo.product.controller",
+        "org.solo.product.scheduler"
 
 })  // <- 공통 팩키지
 public class ServletConfig implements WebMvcConfigurer {

@@ -1,5 +1,6 @@
 package org.solo.policy.service;
 
+import org.solo.common.pagination.PageRequest;
 import org.solo.policy.domain.PolicyVO;
 import org.solo.policy.mapper.PolicyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,13 +70,7 @@ public class PolicyServiceImpl implements PolicyService {
                 String sporCn = policyElement.getElementsByTagName("sporCn").item(0).getTextContent();
                 String rqutUrla = policyElement.getElementsByTagName("rqutUrla").item(0).getTextContent();
 
-                PolicyVO policyVO = new PolicyVO();
-                policyVO.setBizId(bizId);
-                policyVO.setPolyBizTy(polyBizTy);
-                policyVO.setPolyBizSjnm(polyBizSjnm);
-                policyVO.setPolyItcnCn(polyItcnCn);
-                policyVO.setSporCn(sporCn);
-                policyVO.setRqutUrla(rqutUrla);
+                PolicyVO policyVO = new PolicyVO(bizId, polyBizTy, polyBizSjnm, polyItcnCn, sporCn, rqutUrla);
                 policies.add(policyVO);
             }
             // 데이터베이스에 저장
@@ -90,6 +85,7 @@ public class PolicyServiceImpl implements PolicyService {
             Map<String, Object> policyToken = new HashMap<>();
             policyToken.put("bizId", policyVO.getBizId());
             policyToken.put("sporCn", policyVO.getSporCn());
+            policyToken.put("polyBizSjnm", policyVO.getPolyBizSjnm());
             if (policyMapper.findByToken(policyToken) == 0) {
                 policyMapper.fetchPolicies(policyVO);
             }
@@ -104,17 +100,11 @@ public class PolicyServiceImpl implements PolicyService {
         return policyMapper.getTotalCntByKeyword(keyword);
     }
 
-    public List<PolicyVO> getPoliciesByPage(int page, int pageSize) {
-        return policyMapper.getPoliciesByPage((page-1) * pageSize, pageSize);
+    public List<PolicyVO> getPoliciesByPage(PageRequest pageRequest) {
+        return policyMapper.getPoliciesByPage(pageRequest.getOffset(), pageRequest.getAmount());
     }
 
-    public List<PolicyVO> getPoliciesByPageAndKeyword(int page, int pageSize, String keyword) {
-        int offset = (page - 1) * pageSize;
-        Map<String, Object> params = new HashMap<>();
-        params.put("offset", offset);
-        params.put("limit", pageSize);
-        params.put("keyword", keyword);
-
-        return policyMapper.getPoliciesByPageAndKeyword(params);
+    public List<PolicyVO> getPoliciesByPageAndKeyword(PageRequest pageRequest, String keyword) {
+        return policyMapper.getPoliciesByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword);
     }
 }
