@@ -47,6 +47,7 @@ public class MypageController {
         if (data.get("assets") instanceof Map) {
             Map<String, Object> assets = (Map<String, Object>) data.get("assets");
 
+            // 현금 자산
             if (assets.get("현금자산") instanceof List) {
                 List<Map<String, Object>> cashAssets = (List<Map<String, Object>>) assets.get("현금자산");
                 if (!cashAssets.isEmpty()) {
@@ -54,6 +55,7 @@ public class MypageController {
                 }
             }
 
+            // 증권 자산
             if (assets.get("증권자산") instanceof List) {
                 List<Map<String, Object>> stockAssets = (List<Map<String, Object>>) assets.get("증권자산");
                 if (!stockAssets.isEmpty()) {
@@ -61,6 +63,7 @@ public class MypageController {
                 }
             }
 
+            // 부동산 자산
             if (assets.get("부동산자산") instanceof List) {
                 List<Map<String, Object>> propertyAssets = (List<Map<String, Object>>) assets.get("부동산자산");
                 if (!propertyAssets.isEmpty()) {
@@ -68,6 +71,7 @@ public class MypageController {
                 }
             }
 
+            // 예적금 자산
             if (assets.get("예적금자산") instanceof List) {
                 List<Map<String, Object>> depositAssets = (List<Map<String, Object>>) assets.get("예적금자산");
                 if (!depositAssets.isEmpty()) {
@@ -75,8 +79,24 @@ public class MypageController {
                 }
             }
         }
+
         // 소비 유형 설정
         assetData.setConsume((String) data.get("consumeType"));
+
+        // 대출
+        if (data.get("loan") instanceof Map) {
+            Map<String, Object> loanData = (Map<String, Object>) data.get("loan");
+            if (loanData != null) {
+                Integer loanAmount = (Integer) loanData.get("amount");
+                String loanPurpose = (String) loanData.get("purpose");
+                Integer period = (Integer) loanData.get("Period");
+
+                // 대출 정보를 AssetVO에 설정
+                assetData.setLoanAmount(loanAmount);
+                assetData.setLoanPurpose(loanPurpose);
+                assetData.setPeriod(period);
+            }
+        }
 
         // DB 저장
         if (mypageService.findAssetData(userID)) {
@@ -93,11 +113,15 @@ public class MypageController {
         System.out.println("Property: " + assetData.getProperty());
         System.out.println("Deposit: " + assetData.getDeposit());
         System.out.println("소비유형: " + assetData.getConsume());
+        System.out.println("대출액: " + assetData.getLoanAmount());
+        System.out.println("대출 목적: " + assetData.getLoanPurpose());
+        System.out.println("대출 기간: " + assetData.getPeriod());
 
         session.setAttribute("message", "DB 저장 완료");
 
         return ResponseEntity.ok("저장 완료");
     }
+
 
 
     // update
@@ -150,3 +174,4 @@ public class MypageController {
         return "redirect:/mypage";
     }
 }
+

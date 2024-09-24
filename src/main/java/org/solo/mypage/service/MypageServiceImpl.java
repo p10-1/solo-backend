@@ -19,9 +19,10 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
-    public void insertAssetData(AssetVO userData) {
-        mypageMapper.insertAssetData(userData);
+    public void insertAssetData(AssetVO assetData) {
+        mypageMapper.insertAssetData(assetData);
     }
+
 
     @Override
     public boolean findAssetData(String userID){
