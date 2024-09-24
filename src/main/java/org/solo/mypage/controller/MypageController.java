@@ -36,7 +36,6 @@ public class MypageController {
     public ResponseEntity<String> saveUserData(HttpSession session, @RequestBody Map<String, Object> data) {
         String userID = (String) session.getAttribute("kakaoId");
         System.out.println("insert 수행중: " + userID);
-        System.out.println(data);
 
         AssetVO assetData = new AssetVO();
 
@@ -82,7 +81,7 @@ public class MypageController {
         }
 
         // 소비 유형 설정
-        assetData.setConsume((String) data.get("consumeType"));
+        assetData.setConsume((String) data.get("consume"));
 
         // 대출
         if (data.get("loan") instanceof Map) {
@@ -122,7 +121,6 @@ public class MypageController {
 
         return ResponseEntity.ok("저장 완료");
     }
-
 
 
     // update
