@@ -8,10 +8,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductVO {
-    private String dcls_month; // 공시 제출월
-    private String kor_co_nm; // 금융회사 명
-    private String fin_prdt_nm; // 금융 상품명
-    private String join_way; // 가입 방법
-    private String mtrt_int; // 만기 후 이자율
-    private String spcl_cnd; // 우대 조건
+    private String dclsMonth; // 공시 제출월
+    private String korCoNm; // 금융회사 명
+    private String finPrdtNm; // 금융 상품명
+    private String joinWay; // 가입 방법
+    private String mtrtInt; // 만기 후 이자율
+    private String spclCnd; // 우대 조건
+    private String joinMember; // 가입 대상
+    private String etcNote; // 기타 유의사항
+    private String type; // 예금인지 적금인지
 }
+//
+//CREATE TABLE deposit
+//        (
+//    `depositNo`  INT          NOT NULL AUTO_INCREMENT,
+//    `dclsMonth`  VARCHAR(45)  NULL,
+//    `korCoNm`    VARCHAR(45)  NULL,
+//    `finPrdtNm`  VARCHAR(45)  NULL,
+//    `joinWay`    VARCHAR(100) NULL,
+//    `mtrtInt`    VARCHAR(300) NULL,
+//    `spclCnd`    VARCHAR(300) NULL,
+//    `joinMember` VARCHAR(45)  NULL,
+//    `etcNote`    VARCHAR(100) NULL,
+//PRIMARY KEY (`depositNo`)
+//);
