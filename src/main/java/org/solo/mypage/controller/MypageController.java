@@ -32,7 +32,6 @@ public class MypageController {
         return "mypage";
     }
 
-    // create
     @PostMapping("/insertAsset")
     public ResponseEntity<String> saveUserData(HttpSession session, @RequestBody Map<String, Object> data) {
         String userID = (String) session.getAttribute("kakaoId");
@@ -45,59 +44,16 @@ public class MypageController {
         }
 
         // 데이터 매핑
-        if (data.get("assets") instanceof Map) {
-            Map<String, Object> assets = (Map<String, Object>) data.get("assets");
-
-            // 현금 자산
-            if (assets.get("현금자산") instanceof List) {
-                List<Map<String, Object>> cashAssets = (List<Map<String, Object>>) assets.get("현금자산");
-                if (!cashAssets.isEmpty()) {
-                    assetData.setCash((int) cashAssets.get(0).get("amount"));
-                }
-            }
-
-            // 증권 자산
-            if (assets.get("증권자산") instanceof List) {
-                List<Map<String, Object>> stockAssets = (List<Map<String, Object>>) assets.get("증권자산");
-                if (!stockAssets.isEmpty()) {
-                    assetData.setStock((int) stockAssets.get(0).get("amount"));
-                }
-            }
-
-            // 부동산 자산
-            if (assets.get("부동산자산") instanceof List) {
-                List<Map<String, Object>> propertyAssets = (List<Map<String, Object>>) assets.get("부동산자산");
-                if (!propertyAssets.isEmpty()) {
-                    assetData.setProperty((int) propertyAssets.get(0).get("amount"));
-                }
-            }
-
-            // 예적금 자산
-            if (assets.get("예적금자산") instanceof List) {
-                List<Map<String, Object>> depositAssets = (List<Map<String, Object>>) assets.get("예적금자산");
-                if (!depositAssets.isEmpty()) {
-                    assetData.setDeposit((int) depositAssets.get(0).get("amount"));
-                }
-            }
-        }
-
-        // 소비 유형 설정
         assetData.setConsume((String) data.get("consume"));
+        assetData.setCash((Integer) data.get("cash"));
+        assetData.setStock((Integer) data.get("stock"));
+        assetData.setProperty((Integer) data.get("property"));
+        assetData.setDeposit((Integer) data.get("deposit"));
 
-        // 대출
-        if (data.get("loan") instanceof Map) {
-            Map<String, Object> loanData = (Map<String, Object>) data.get("loan");
-            if (loanData != null) {
-                Integer loanAmount = (Integer) loanData.get("amount");
-                String loanPurpose = (String) loanData.get("purpose");
-                Integer period = (Integer) loanData.get("period");
-
-                // 대출 정보를 AssetVO에 설정
-                assetData.setLoanAmount(loanAmount);
-                assetData.setLoanPurpose(loanPurpose);
-                assetData.setPeriod(period);
-            }
-        }
+        // 대출 정보 설정
+        assetData.setLoanAmount((Integer) data.get("loanAmount"));
+        assetData.setLoanPurpose((String) data.get("loanPurpose"));
+        assetData.setPeriod((Integer) data.get("period"));
 
         // DB 저장
         if (mypageService.findAssetData(userID)) {
@@ -106,23 +62,22 @@ public class MypageController {
         }
         mypageService.insertAssetData(assetData);
 
-        // DB에 저장된 데이터 콘솔에 출력 (확인용)
-        System.out.println("DB에 저장된 데이터:");
-        System.out.println("userID: " + assetData.getUserID());
-        System.out.println("Cash: " + assetData.getCash());
-        System.out.println("Stock: " + assetData.getStock());
-        System.out.println("Property: " + assetData.getProperty());
-        System.out.println("Deposit: " + assetData.getDeposit());
-        System.out.println("소비유형: " + assetData.getConsume());
-        System.out.println("대출액: " + assetData.getLoanAmount());
-        System.out.println("대출 목적: " + assetData.getLoanPurpose());
-        System.out.println("대출 기간: " + assetData.getPeriod());
+//        // DB에 저장된 데이터 콘솔에 출력 (확인용)
+//        System.out.println("DB에 저장된 데이터:");
+//        System.out.println("userID: " + assetData.getUserID());
+//        System.out.println("Cash: " + assetData.getCash());
+//        System.out.println("Stock: " + assetData.getStock());
+//        System.out.println("Property: " + assetData.getProperty());
+//        System.out.println("Deposit: " + assetData.getDeposit());
+//        System.out.println("소비유형: " + assetData.getConsume());
+//        System.out.println("대출액: " + assetData.getLoanAmount());
+//        System.out.println("대출 목적: " + assetData.getLoanPurpose());
+//        System.out.println("대출 기간: " + assetData.getPeriod());
 
         session.setAttribute("message", "DB 저장 완료");
 
         return ResponseEntity.ok("저장 완료");
     }
-
 
     // update
     @PutMapping("/updateAsset")
