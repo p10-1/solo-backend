@@ -36,6 +36,7 @@ public class MypageController {
     public ResponseEntity<String> saveUserData(HttpSession session, @RequestBody Map<String, Object> data) {
         String userID = (String) session.getAttribute("kakaoId");
         System.out.println("insert 수행중: " + userID);
+        System.out.println(data);
 
         AssetVO assetData = new AssetVO();
 
@@ -89,7 +90,7 @@ public class MypageController {
             if (loanData != null) {
                 Integer loanAmount = (Integer) loanData.get("amount");
                 String loanPurpose = (String) loanData.get("purpose");
-                Integer period = (Integer) loanData.get("Period");
+                Integer period = (Integer) loanData.get("period");
 
                 // 대출 정보를 AssetVO에 설정
                 assetData.setLoanAmount(loanAmount);

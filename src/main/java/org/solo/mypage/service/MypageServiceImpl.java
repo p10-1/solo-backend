@@ -25,7 +25,7 @@ public class MypageServiceImpl implements MypageService {
 
 
     @Override
-    public boolean findAssetData(String userID){
+    public boolean findAssetData(String userID) {
         return mypageMapper.findAssetData(userID);
     }
 
@@ -35,7 +35,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
-    public void updateMember(MemberVO memberVO){
+    public void updateMember(MemberVO memberVO) {
         mypageMapper.updateMember(memberVO);
     }
 

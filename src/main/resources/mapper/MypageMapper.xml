@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -6,10 +5,8 @@
 <mapper namespace="org.solo.mypage.mapper.MypageMapper">
 
     <insert id="insertAssetData" parameterType="org.solo.asset.domain.AssetVO">
-        INSERT INTO userAsset (userID, cash, stock, property, deposit, consume, loanAmount, loanPurpose, period,
-                               createDate, updateDate)
-        VALUES (#{userID}, #{cash}, #{stock}, #{property}, #{deposit}, #{consume}, #{loanAmount}, #{loanPurpose},
-                #{period}, NOW(), 0)
+        INSERT INTO userAsset (userID, cash, stock, property, deposit, consume, loanAmount, loanPurpose, period)
+        VALUES (#{userID}, #{cash}, #{stock}, #{property}, #{deposit}, #{consume}, #{loanAmount}, #{loanPurpose},#{period})
     </insert>
 
     <select id="findAssetData" parameterType="String" resultType="boolean">
