@@ -22,6 +22,7 @@ public class MypageController {
     private final MypageService mypageService;
 
 
+
     @Autowired
     public MypageController(MypageService mypageService) {
         this.mypageService = mypageService;
@@ -170,5 +171,38 @@ public class MypageController {
         model.addAttribute("userData", memberVO);
         return "redirect:/mypage";
     }
+
+    // == point ==
+
+    // 포인트 조회
+    @GetMapping("/points")
+    public ResponseEntity<Integer> getPoint(HttpSession session) {
+        String kakaoId = (String) session.getAttribute("kakaoId");
+
+        if (kakaoId != null) {
+            MemberVO memberData = mypageService.getPoint(kakaoId);
+            if (memberData != null) {
+                return ResponseEntity.ok(memberData.getPoint()); // 포인트만 반환
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+
+//    // 포인트 출금
+//    @PostMapping("/withdraw")
+//    public ResponseEntity<?> withdrawPoints(@RequestBody WithdrawRequest request) {
+//        // 출금 로직
+//        boolean success = /* 출금 처리 */;
+//        if (success) {
+//            return ResponseEntity.ok().build();
+//        } else {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//    }
+
 }
 

@@ -10,6 +10,8 @@ public interface MypageService {
 
     void updateMember(MemberVO memberVO);
 
+    MemberVO getPoint(String kakaoId);
+
 
 
     // asset

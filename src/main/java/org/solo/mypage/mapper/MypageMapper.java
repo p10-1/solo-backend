@@ -16,4 +16,6 @@ public interface MypageMapper {
     void updateAssetData(AssetVO assetData);
 
     void updateMember(MemberVO memberVO);
+
+    MemberVO getPoint(String kakaoId);
 }

@@ -35,4 +35,11 @@
         WHERE kakaoId = #{kakaoId}
     </update>
 
+<!--    point -->
+    <select id="getPoint" parameterType="String" resultType="int">
+        select point
+        FROM kakaoMember
+        WHERE kakaoId = #{kakaoId}
+    </select>
+
 </mapper>

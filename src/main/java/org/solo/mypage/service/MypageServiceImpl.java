@@ -39,4 +39,8 @@ public class MypageServiceImpl implements MypageService {
         mypageMapper.updateMember(memberVO);
     }
 
+    @Override
+    public MemberVO getPoint(String kakaoId){
+        return mypageMapper.getPoint(kakaoId);
+    }
 }
