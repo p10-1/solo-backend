@@ -14,4 +14,10 @@
         VALUES (#{kakaoId}, #{nickName}, #{profileImage}, #{name}, #{email}, #{birthDate}, 0)
     </insert>
 
+    <update id="updatePoint" parameterType="map">
+        UPDATE kakaoMember
+        SET points = #{newPoint}
+        WHERE kakaoId = #{kakaoId}
+    </update>
+
 </mapper>

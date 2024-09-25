@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/api/product")
 public class ProductController {
     @Autowired
     private ObjectMapper objectMapper;
@@ -45,7 +45,7 @@ public class ProductController {
         return "product";
     }
 
-    @GetMapping("fetch")
+    @GetMapping("list")
     public void fetchProducts(){
         System.out.println("api 호출 컨트롤러");
         String requestUrl = UriComponentsBuilder.fromHttpUrl(url)

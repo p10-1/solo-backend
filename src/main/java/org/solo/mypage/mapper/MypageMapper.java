@@ -6,6 +6,8 @@ import org.solo.member.domain.MemberVO;
 import org.solo.mypage.domain.MypageVO;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 @Mapper
 @Repository
 public interface MypageMapper {
@@ -13,9 +15,14 @@ public interface MypageMapper {
 
     boolean findAssetData(String userID);
 
+    AssetVO getAssetData(String kakaoId);
+
     void updateAssetData(AssetVO assetData);
 
     void updateMember(MemberVO memberVO);
 
-    MemberVO getPoint(String kakaoId);
+    int getPoint(String kakaoId);
+
+    void updateCash(Map<String, Object> params);
+
 }

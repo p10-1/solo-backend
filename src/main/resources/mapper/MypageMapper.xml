@@ -15,6 +15,10 @@
         WHERE userID = #{userID}
     </select>
 
+    <select id="getAssetData" parameterType="java.lang.String" resultType="org.solo.asset.domain.AssetVO">
+        SELECT * FROM userAsset WHERE userId = #{userId}
+    </select>
+
     <update id="updateAssetData" parameterType="org.solo.asset.domain.AssetVO">
         UPDATE userAsset
         SET cash = #{cash},
@@ -41,5 +45,11 @@
         FROM kakaoMember
         WHERE kakaoId = #{kakaoId}
     </select>
+
+    <update id="updateCash" parameterType="map">
+        UPDATE userAsset
+        SET cash = #{cashAmount}
+        WHERE userId = #{userId}
+    </update>
 
 </mapper>

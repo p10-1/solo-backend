@@ -33,6 +33,7 @@ public class MemberServiceImpl implements MemberService {
         memberMapper.insertNewUserInfo(newUser);
         return newUser;
     }
+
 }
 
 

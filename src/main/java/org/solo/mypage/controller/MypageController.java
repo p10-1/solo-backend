@@ -6,6 +6,7 @@ import org.solo.member.service.MemberService;
 import org.solo.mypage.service.MypageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +21,6 @@ import java.util.Map;
 public class MypageController {
 
     private final MypageService mypageService;
-
 
 
     @Autowired
@@ -152,10 +152,9 @@ public class MypageController {
     }
 
 
-
     // member 수정
     @PostMapping("/updateMember")
-    public String updateUser(MemberVO memberVO, Model model, HttpSession session){
+    public String updateUser(MemberVO memberVO, Model model, HttpSession session) {
 
         String kakaoId = (String) session.getAttribute("kakaoId");
         System.out.println("user update 수행중:" + kakaoId);
@@ -175,14 +174,16 @@ public class MypageController {
     // == point ==
 
     // 포인트 조회
-    @GetMapping("/points")
-    public ResponseEntity<Integer> getPoint(HttpSession session) {
+    @GetMapping(value = "/points", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> getPoints(HttpSession session) {
         String kakaoId = (String) session.getAttribute("kakaoId");
+        System.out.println("points controller들어옴");
 
         if (kakaoId != null) {
-            MemberVO memberData = mypageService.getPoint(kakaoId);
-            if (memberData != null) {
-                return ResponseEntity.ok(memberData.getPoint()); // 포인트만 반환
+            Integer point = mypageService.getPoint(kakaoId);
+            if (point != null) {
+                System.out.println(point);
+                return ResponseEntity.ok(point); // 포인트만 반환
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -192,17 +193,47 @@ public class MypageController {
     }
 
 
-//    // 포인트 출금
-//    @PostMapping("/withdraw")
-//    public ResponseEntity<?> withdrawPoints(@RequestBody WithdrawRequest request) {
-//        // 출금 로직
-//        boolean success = /* 출금 처리 */;
-//        if (success) {
-//            return ResponseEntity.ok().build();
-//        } else {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//    }
+    // 포인트 출금
+    @PostMapping("/withdraw")
+    public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data, HttpSession session) {
+        // 세션에서 사용자 ID 가져오기
+        String kakaoId = (String) session.getAttribute("kakaoId");
+
+
+        if (kakaoId != null) {
+            // 현재 포인트 조회
+            Integer point = mypageService.getPoint(kakaoId);
+
+            // 출금 처리 로직 data.getPoint() : 서버에서 요청한 출금 값
+            if (point != null && point >= data.getPoint()) {
+
+                // 출금 처리
+                boolean withdrawSuccess = mypageService.withdrawPoints(kakaoId, data.getPoint());
+                if (withdrawSuccess) {
+                    System.out.println("withdraw success");
+                    AssetVO assetData = new AssetVO();
+                    assetData.setUserID(kakaoId);
+                    assetData.setCash(data.getPoint());
+                    // AssetVO의 cash에 출금한 돈 추가
+
+                    // cash를 추가하는 메서드 호출
+                    boolean addCashSuccess = mypageService.updateCash(assetData.getUserID(), assetData.getCash());
+
+                    if (addCashSuccess) {
+                        return ResponseEntity.ok().build(); // 성공적으로 출금 및 추가됨
+                    } else {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // addCash 실패
+                    }
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 출금 실패
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("출금할 포인트가 부족하거나 유효하지 않음"); // 포인트 부족
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 인증되지 않은 사용자
+        }
+    }
 
 }
 
