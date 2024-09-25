@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.List;
 
 @RestController
-@RequestMapping("api/board")
+@RequestMapping("/api/board")
 public class BoardController {
     private final BoardService boardService;
 
@@ -23,8 +24,22 @@ public class BoardController {
     }
 
     @GetMapping({"", "/"})
-    public ResponseEntity<Page> getList(PageRequest pageRequest) {
-        return ResponseEntity.ok(boardService.getPage(pageRequest));
+    public ResponseEntity<Page> getList(@RequestParam(defaultValue = "1") int page,
+                                        @RequestParam(defaultValue = "10") int amount,
+                                        @RequestParam(required = false) String category,
+                                        @RequestParam(required = false) String keyword)  {
+        System.out.println("page: " + page + " amount: " + amount + " category: " + category + " keyword: " + keyword);
+        PageRequest pageRequest = PageRequest.of(page, amount);
+        List<BoardVO> boards = (keyword != null && !keyword.isEmpty())
+                ? boardService.getBoardsByPageAndKeyword(pageRequest, category, keyword)
+                : boardService.getBoardsByPage(pageRequest);
+
+        int totalBoardsCount = (keyword != null && !keyword.isEmpty())
+                ? boardService.getTotalCntByKeyword(category, keyword)
+                : boardService.getTotalCnt();
+
+        Page<BoardVO> boardsPage = Page.of(pageRequest, totalBoardsCount, boards);
+        return ResponseEntity.ok(boardsPage);
     }
 
     @GetMapping("/{no}")
@@ -39,6 +54,7 @@ public class BoardController {
 
     @PutMapping("/{no}")
     public ResponseEntity<BoardVO> update(@PathVariable Long no, BoardVO boardVO) {
+        System.out.println("update controller boardVO: " + boardVO);
         return ResponseEntity.ok(boardService.update(boardVO));
     }
     @DeleteMapping("/{no}")
@@ -51,5 +67,11 @@ public class BoardController {
         BoardAttachmentVO attachment = boardService.getAttachment(no);
         File file = new File(attachment.getPath());
         UploadFiles.download(response, file, attachment.getFilename());
+    }
+
+    @DeleteMapping("/deleteAttachment/{no}")
+    public ResponseEntity<Boolean> deleteAttachment(@PathVariable Long no) throws Exception {
+        return ResponseEntity.ok(boardService.deleteAttachment(no));
+
     }
 }

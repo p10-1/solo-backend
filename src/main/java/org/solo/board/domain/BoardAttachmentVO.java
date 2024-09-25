@@ -38,3 +38,15 @@ public class BoardAttachmentVO {
         return UploadFiles.getFormatSize(size);
     }
 }
+
+//CREATE TABLE boardAttachment
+//        (
+//                attachmentNo INTEGER AUTO_INCREMENT PRIMARY KEY,
+//                bno INTEGER NOT NULL,					-- 게시글 번호, FK
+//                        filename VARCHAR(256) NOT NULL,	   -- 원본 파일 명
+//path VARCHAR(256) NOT NULL,			-- 서버에서의 파일 경로
+//contentType VARCHAR(56),				-- content-type
+//size INTEGER,							-- 파일의 크기
+//regDate DATETIME DEFAULT now(),
+//CONSTRAINT FOREIGN KEY(bno) REFERENCES board(boardNo)
+//        );

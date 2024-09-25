@@ -3,7 +3,6 @@ package org.solo.board.service;
 import org.solo.board.domain.BoardAttachmentVO;
 import org.solo.board.domain.BoardVO;
 import org.solo.board.mapper.BoardMapper;
-import org.solo.common.pagination.Page;
 import org.solo.common.pagination.PageRequest;
 import org.solo.common.util.UploadFiles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import java.util.NoSuchElementException;
 @Transactional
 //@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    private final static String BASE_DIR = "junyoung/Documents/upload/board";
+    private final static String BASE_DIR = "/Users/junyoung/Documents/upload/board";
     private final BoardMapper boardMapper;
 
     @Autowired
@@ -29,21 +28,31 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Page<BoardVO> getPage(PageRequest pageRequest) {
-        List<BoardVO> boards = boardMapper.getPage(pageRequest);
-        int totalCount = boardMapper.getTotalCount();
-        return Page.of(pageRequest, totalCount, boards);
+    public int getTotalCnt() {
+        return boardMapper.getTotalCnt();
     }
 
     @Override
-    public List<BoardVO> getList() {
-        return boardMapper.getList();
+    public int getTotalCntByKeyword(String category, String keyword) {
+        return boardMapper.getTotalCntByKeyword(category, keyword);
+    }
+
+    @Override
+    public List<BoardVO> getBoardsByPage(PageRequest pageRequest) {
+        return boardMapper.getBoardsByPage(pageRequest.getOffset(), pageRequest.getAmount());
+    }
+
+    @Override
+    public List<BoardVO> getBoardsByPageAndKeyword(PageRequest pageRequest, String category, String keyword) {
+        System.out.println("category: " + category + " keyword: " + keyword);
+        return boardMapper.getBoardsByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
     }
 
     @Override
     public BoardVO get(Long boardNo) {
         System.out.println("Board get no: " + boardNo);
         BoardVO boardVO = boardMapper.get(boardNo);
+        System.out.println("boardVO: " + boardVO);
         if (boardVO == null) {
             System.out.println("No board found for boardNo: " + boardNo);
         } else {
@@ -62,6 +71,9 @@ public class BoardServiceImpl implements BoardService {
         // 파일 업로드 처리
         List<MultipartFile> files = boardVO.getFiles(); // BoardVO에 getFiles() 메서드가 있어야 함
         if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+//                System.out.println("Uploaded file: " + file.getOriginalFilename());
+            }
             upload(boardVO.getBoardNo(), files);
         }
         return get(boardVO.getBoardNo());
@@ -71,8 +83,11 @@ public class BoardServiceImpl implements BoardService {
         for (MultipartFile part : files) {
             if (part.isEmpty()) continue;
             try {
+                System.out.println("Uploaded file: " + part.getOriginalFilename());
                 String uploadPath = UploadFiles.upload(BASE_DIR, part);
+                System.out.println("uploadPath: " + uploadPath);
                 BoardAttachmentVO attach = BoardAttachmentVO.from(part, boardNo, uploadPath);
+                System.out.println("attach: " + attach);
                 boardMapper.createAttachment(attach);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -83,7 +98,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardVO update(BoardVO boardVO) {
-        boardMapper.update(boardVO);
+        System.out.println("update service boardVO: " + boardVO);
+        int result = boardMapper.update(boardVO);
+        System.out.println("result: " + result);
         // 파일 업로드 처리
         List<MultipartFile> files = boardVO.getFiles(); // BoardVO에 getFiles() 메서드가 있어야 함
         if (files != null && !files.isEmpty()) {
@@ -105,7 +122,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public boolean deleteAttachment(Long boardNo) {
-        return boardMapper.deleteAttachment(boardNo) == 1;
+    public boolean deleteAttachment(Long attachmentNo) {
+        return boardMapper.deleteAttachment(attachmentNo) == 1;
     }
 }

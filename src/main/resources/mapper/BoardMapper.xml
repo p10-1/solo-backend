@@ -14,45 +14,52 @@
 
     <update id="update">
         UPDATE board
-        SET title = #{title}, content = #{content}, userID = #{userID}, modDate = now()
+        SET title = #{title}, content = #{content}, userID = #{userID}, updateDate = now()
         WHERE boardNo = #{boardNo}
     </update>
+
     <delete id="delete">
         DELETE
         FROM board
         WHERE boardNo = #{boardNo}
     </delete>
 
-    <select id="getTotalCount" resultType="java.lang.Integer">
+    <select id="getTotalCnt" resultType="java.lang.Integer">
         SELECT count(*)
         FROM board
     </select>
 
-    <select id="getPage" resultType="org.solo.board.domain.BoardVO">
-        SELECT *
+    <select id="getTotalCntByKeyword" resultType="java.lang.Integer">
+        SELECT count(*)
         FROM board
-        ORDER BY boardNo DESC
-        LIMIT #{offset}, #{amount}
+        WHERE #{category} LIKE CONCAT('%', #{keyword}, '%')
     </select>
-    <select id="getList" resultType="org.solo.board.domain.BoardVO">
+
+    <select id="getBoardsByPage" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getBoardsByPageAndKeyword" resultType="org.solo.board.domain.BoardVO">
         SELECT *
         FROM board
-        ORDER BY boardNo DESC
+        WHERE content LIKE CONCAT('%', #{keyword}, '%')
+            LIMIT #{offset}, #{limit}
     </select>
 
     <resultMap id="boardMap" type="org.solo.board.domain.BoardVO">
-        <id property="boardNo" column="no"/>
+        <id property="boardNo" column="boardNo"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
-        <result property="userID" column="user_id"/>
-        <result property="regDate" column="reg_date"/>
-        <result property="modDate" column="mod_date"/>
+        <result property="userID" column="userId"/>
+        <result property="regDate" column="regDate"/>
+        <result property="modDate" column="modDate"/>
         <result property="likes" column="likes"/>
         <result property="comments" column="comments"/>
         <result property="views" column="views"/>
 
         <collection property="attaches" ofType="org.solo.board.domain.BoardAttachmentVO">
-            <result property="attachmentNo" column="ano"/>
+            <result property="attachmentNo" column="attachmentNo"/>
             <result property="bno" column="bno"/>
             <result property="filename" column="filename"/>
             <result property="path" column="path"/>
@@ -89,7 +96,7 @@
 
     <delete id="deleteAttachment">
         DELETE
-        FROM boradAttachment
+        FROM boardAttachment
         WHERE attachmentNo = #{attachmentNo}
     </delete>
 </mapper>
