@@ -2,6 +2,7 @@ package org.solo.board.controller;
 
 import org.solo.board.domain.BoardAttachmentVO;
 import org.solo.board.domain.BoardVO;
+import org.solo.board.domain.CommentVO;
 import org.solo.board.service.BoardService;
 import org.solo.common.pagination.Page;
 import org.solo.common.pagination.PageRequest;
@@ -47,6 +48,20 @@ public class BoardController {
         return ResponseEntity.ok(boardService.get(no));
     }
 
+    @GetMapping("/{no}/comments")
+    public ResponseEntity<List<CommentVO>> getComment(@PathVariable Long no) {
+        List<CommentVO> comments = boardService.getComments(no);
+        return ResponseEntity.ok(comments);
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<String> createComment(@RequestBody CommentVO commentVO) {
+//        commentVO.setBoardNo(no);
+        System.out.println("commentVO: " + commentVO);
+        boardService.createComment(commentVO);
+        return ResponseEntity.ok("댓글이 성공적으로 작성되었습니다.");
+    }
+
     @PostMapping({"","/"})
     public ResponseEntity<BoardVO> create(BoardVO boardVO) {
         return ResponseEntity.ok(boardService.create(boardVO));
@@ -72,6 +87,7 @@ public class BoardController {
     @DeleteMapping("/deleteAttachment/{no}")
     public ResponseEntity<Boolean> deleteAttachment(@PathVariable Long no) throws Exception {
         return ResponseEntity.ok(boardService.deleteAttachment(no));
-
     }
+
+
 }

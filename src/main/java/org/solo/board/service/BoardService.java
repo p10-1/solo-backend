@@ -2,6 +2,7 @@ package org.solo.board.service;
 
 import org.solo.board.domain.BoardAttachmentVO;
 import org.solo.board.domain.BoardVO;
+import org.solo.board.domain.CommentVO;
 import org.solo.common.pagination.Page;
 import org.solo.common.pagination.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,6 @@ public interface BoardService {
     BoardVO delete(Long boardNo);
     BoardAttachmentVO getAttachment(Long boardNo);
     boolean deleteAttachment(Long attachmentNo);
-
-
+    List<CommentVO> getComments(Long no);
+    void createComment(CommentVO commentVO);
 }

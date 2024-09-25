@@ -99,6 +99,17 @@
         FROM boardAttachment
         WHERE attachmentNo = #{attachmentNo}
     </delete>
+
+    <select id="getComments" resultType="org.solo.board.domain.CommentVO">
+        SELECT *
+        FROM comment
+        WHERE boardNo = #{boardNo}
+    </select>
+
+    <insert id="createComment">
+        INSERT INTO comment(boardNo, userId, commentText, regDate)
+        VALUES (#{boardNo}, #{userId}, #{commentText}, now())
+    </insert>
 </mapper>
 
 

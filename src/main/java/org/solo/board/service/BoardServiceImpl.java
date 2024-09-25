@@ -2,6 +2,7 @@ package org.solo.board.service;
 
 import org.solo.board.domain.BoardAttachmentVO;
 import org.solo.board.domain.BoardVO;
+import org.solo.board.domain.CommentVO;
 import org.solo.board.mapper.BoardMapper;
 import org.solo.common.pagination.PageRequest;
 import org.solo.common.util.UploadFiles;
@@ -60,6 +61,16 @@ public class BoardServiceImpl implements BoardService {
         }
         return Optional.ofNullable(boardVO)
                 .orElseThrow(NoSuchElementException::new);
+    }
+
+    @Override
+    public List<CommentVO> getComments(Long boardNo) {
+        return boardMapper.getComments(boardNo);
+    }
+
+    @Override
+    public void createComment(CommentVO commentVO) {
+        boardMapper.createComment(commentVO);
     }
 
     @Transactional // 2개 이상의 insert 문이 실행될 수 있으므로 트랜잭션 처리 필요

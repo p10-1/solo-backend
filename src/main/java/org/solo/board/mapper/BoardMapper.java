@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.solo.board.domain.BoardAttachmentVO;
 import org.solo.board.domain.BoardVO;
+import org.solo.board.domain.CommentVO;
 import org.solo.common.pagination.PageRequest;
 import org.springframework.stereotype.Repository;
 
@@ -28,9 +29,8 @@ public interface BoardMapper {
     List<BoardAttachmentVO> getAttachmentList(Long bno);
     BoardAttachmentVO getAttachment(Long boardNo);
     int deleteAttachment(Long attachmentNo);
-
-
-
+    List<CommentVO> getComments(Long boardNo);
+    void createComment(CommentVO commentVO);
 }
 
 
