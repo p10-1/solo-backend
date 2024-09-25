@@ -9,11 +9,10 @@ public interface MypageService {
     void insertAssetData(AssetVO assetVO);
     boolean findAssetData(String userID);
     void updateAssetData(AssetVO assetData);
-
     void updateMember(MemberVO memberVO);
 
     int getPoint(String kakaoId);
     boolean withdrawPoints(String kakaoId, int point);
-    boolean updateCash(String userId, double cashAmount);
+    boolean updateCash(String userId, int cashAmount);
 
 }

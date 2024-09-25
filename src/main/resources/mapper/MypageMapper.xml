@@ -48,7 +48,7 @@
 
     <update id="updateCash" parameterType="map">
         UPDATE userAsset
-        SET cash = #{cashAmount}
+        SET cash = #{updatedCash}
         WHERE userId = #{userId}
     </update>
 

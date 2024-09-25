@@ -16,7 +16,7 @@
 
     <update id="updatePoint" parameterType="map">
         UPDATE kakaoMember
-        SET points = #{newPoint}
+        SET point = #{newPoint}
         WHERE kakaoId = #{kakaoId}
     </update>
 

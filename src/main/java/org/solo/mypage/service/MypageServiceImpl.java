@@ -30,7 +30,6 @@ public class MypageServiceImpl implements MypageService {
         mypageMapper.insertAssetData(assetData);
     }
 
-
     @Override
     public boolean findAssetData(String userID) {
         return mypageMapper.findAssetData(userID);
@@ -54,36 +53,43 @@ public class MypageServiceImpl implements MypageService {
     @Override
     public boolean withdrawPoints(String kakaoId, int point) {
         MemberVO member = memberMapper.findByKakaoId(kakaoId);
+
+        System.out.println("withdrawPoints 서비스 실행");
         if (member != null && member.getPoint() >= point) {
-            // 포인트 차감
             int newPoint = member.getPoint() - point;
 
             Map<String, Object> params = new HashMap<>();
             params.put("kakaoId", kakaoId);
             params.put("newPoint", newPoint);
 
-            memberMapper.updatePoint(params); // 업데이트
-            return true; // 성공적으로 출금됨
+            memberMapper.updatePoint(params);
+            return true;
         }
-        return false; // 출금 실패
+
+        return false; // 출금 실패 (회원 정보가 없거나 포인트가 부족한 경우)
     }
 
     @Override
-    public boolean updateCash(String userId, double cashAmount) {
-        // 사용자 자산 정보를 가져옴
+    public boolean updateCash(String userId, int cashAmount) {
         AssetVO asset = mypageMapper.getAssetData(userId);
-        if (asset != null) {
-            double newCash = asset.getCash() + cashAmount; // 기존 현금에 추가 금액을 더함
+        System.out.println("updateCash service 들어옴"+asset);
 
-            // 매개변수를 담을 Map 생성
+        if (asset != null) {
+            // 기존 현금에 추가 금액을 더함
+            int currentCash = asset.getCash();
+            int updatedCash = currentCash + cashAmount; // 새로운 cash 값 계산
+
+            System.out.println("update: "+updatedCash+"cur: "+currentCash+"new: "+cashAmount);
+
             Map<String, Object> params = new HashMap<>();
             params.put("userId", userId);
-            params.put("newCash", newCash);
+            params.put("updatedCash", updatedCash);
 
-            // 현금 업데이트 호출
             mypageMapper.updateCash(params);
-            return true; // 성공적으로 업데이트됨
+            return true;
         }
-        return false; // 자산 데이터가 없거나 업데이트 실패
+
+        return false;
     }
+
 }

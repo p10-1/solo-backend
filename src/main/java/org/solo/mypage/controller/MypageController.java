@@ -177,7 +177,7 @@ public class MypageController {
     @GetMapping(value = "/points", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> getPoints(HttpSession session) {
         String kakaoId = (String) session.getAttribute("kakaoId");
-        System.out.println("points controller들어옴");
+        System.out.println("points 조회 들어옴");
 
         if (kakaoId != null) {
             Integer point = mypageService.getPoint(kakaoId);
@@ -192,46 +192,34 @@ public class MypageController {
         }
     }
 
-
-    // 포인트 출금
     @PostMapping("/withdraw")
     public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data, HttpSession session) {
-        // 세션에서 사용자 ID 가져오기
+
         String kakaoId = (String) session.getAttribute("kakaoId");
-
-
         if (kakaoId != null) {
-            // 현재 포인트 조회
             Integer point = mypageService.getPoint(kakaoId);
-
-            // 출금 처리 로직 data.getPoint() : 서버에서 요청한 출금 값
+            // 출금 처리 로직: data.getPoint() : 서버에서 요청한 출금 값
             if (point != null && point >= data.getPoint()) {
-
-                // 출금 처리
                 boolean withdrawSuccess = mypageService.withdrawPoints(kakaoId, data.getPoint());
                 if (withdrawSuccess) {
                     System.out.println("withdraw success");
-                    AssetVO assetData = new AssetVO();
-                    assetData.setUserID(kakaoId);
-                    assetData.setCash(data.getPoint());
-                    // AssetVO의 cash에 출금한 돈 추가
 
-                    // cash를 추가하는 메서드 호출
-                    boolean addCashSuccess = mypageService.updateCash(assetData.getUserID(), assetData.getCash());
+                    // cash를 업데이트하는 메서드 호출 (서비스에서 처리됨)
+                    boolean addCashSuccess = mypageService.updateCash(kakaoId, data.getPoint());
 
                     if (addCashSuccess) {
-                        return ResponseEntity.ok().build(); // 성공적으로 출금 및 추가됨
+                        return ResponseEntity.ok("출금 및 현금 추가가 성공적으로 완료되었습니다.");
                     } else {
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // addCash 실패
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("현금 추가 실패");
                     }
                 } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 출금 실패
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("출금 실패");
                 }
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("출금할 포인트가 부족하거나 유효하지 않음"); // 포인트 부족
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("출금할 포인트가 부족하거나 유효하지 않음");
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 인증되지 않은 사용자
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자");
         }
     }
 
