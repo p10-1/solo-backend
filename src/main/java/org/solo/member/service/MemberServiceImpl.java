@@ -20,12 +20,11 @@ public class MemberServiceImpl implements MemberService {
         return memberMapper.findByKakaoId(kakaoId);
     }
 
-    public MemberVO insertNewUserInfo(String kakaoId, String nickName, String profileImage, String name, String email, String birthDate) {
+    public MemberVO insertNewUserInfo(String kakaoId, String nickName, String name, String email, String birthDate) {
         System.out.println("inserting new user info");
         MemberVO newUser = new MemberVO();
         newUser.setKakaoId(kakaoId);
         newUser.setNickName(nickName);
-        newUser.setProfileImage(profileImage);
         newUser.setName(name);
         newUser.setEmail(email);
         newUser.setBirthDate(birthDate);

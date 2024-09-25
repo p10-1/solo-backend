@@ -10,8 +10,8 @@
     </select>
 
     <insert id="insertNewUserInfo" parameterType="org.solo.member.domain.MemberVO">
-        INSERT INTO kakaoMember (kakaoId, nickName, profileImage, name, email, birthDate)
-        VALUES (#{kakaoId}, #{nickName}, #{profileImage}, #{name}, #{email}, #{birthDate})
+        INSERT INTO kakaoMember (kakaoId, nickName, name, email, birthDate)
+        VALUES (#{kakaoId}, #{nickName}, #{name}, #{email}, #{birthDate})
     </insert>
 
 </mapper>
