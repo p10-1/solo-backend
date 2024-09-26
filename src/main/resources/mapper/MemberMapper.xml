@@ -10,8 +10,16 @@
     </select>
 
     <insert id="insertNewUserInfo" parameterType="org.solo.member.domain.MemberVO">
-        INSERT INTO kakaoMember (kakaoId, nickName, name, email, birthDate)
-        VALUES (#{kakaoId}, #{nickName}, #{name}, #{email}, #{birthDate})
+
+        INSERT INTO kakaoMember (kakaoId, nickName, name, email, birthDate, point)
+        VALUES (#{kakaoId}, #{nickName}, #{name}, #{email}, #{birthDate}, 0)
+
     </insert>
+
+    <update id="updatePoint" parameterType="map">
+        UPDATE kakaoMember
+        SET point = #{newPoint}
+        WHERE kakaoId = #{kakaoId}
+    </update>
 
 </mapper>

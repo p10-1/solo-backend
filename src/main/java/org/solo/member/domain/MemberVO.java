@@ -13,6 +13,7 @@ public class MemberVO {
     private String name; // 추가 입력된 이름
     private String email; // 추가 입력된 이메일
     private String birthDate; // 생년월일
+    private int point;
 }
 
 //CREATE TABLE `kakaoMember` (
