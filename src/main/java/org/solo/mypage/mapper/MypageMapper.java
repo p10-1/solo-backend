@@ -13,7 +13,7 @@ import java.util.Map;
 public interface MypageMapper {
     void insertAssetData(AssetVO assetVO);
 
-    boolean findAssetData(String userID);
+    boolean findAssetData(String kakaoId);
 
     AssetVO getAssetData(String kakaoId);
 

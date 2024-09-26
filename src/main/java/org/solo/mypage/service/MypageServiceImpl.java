@@ -46,6 +46,10 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
+    public AssetVO getAssetData(String kakaoId) {
+        return mypageMapper.getAssetData(kakaoId);
+    }
+    @Override
     public int getPoint(String kakaoId){
         return mypageMapper.getPoint(kakaoId);
     }
@@ -69,6 +73,7 @@ public class MypageServiceImpl implements MypageService {
         return false; // 출금 실패 (회원 정보가 없거나 포인트가 부족한 경우)
     }
 
+    // 자산의 cash update
     @Override
     public boolean updateCash(String userId, int cashAmount) {
         AssetVO asset = mypageMapper.getAssetData(userId);

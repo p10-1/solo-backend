@@ -11,6 +11,7 @@ public interface MypageService {
     void updateAssetData(AssetVO assetData);
     void updateMember(MemberVO memberVO);
 
+    AssetVO getAssetData(String userID);
     int getPoint(String kakaoId);
     boolean withdrawPoints(String kakaoId, int point);
     boolean updateCash(String userId, int cashAmount);

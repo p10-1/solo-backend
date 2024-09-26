@@ -43,7 +43,6 @@ public class MypageController {
         if (userID != null) {
             assetData.setUserID(userID);
         }
-
         // 데이터 매핑
         assetData.setConsume((String) data.get("consume"));
         assetData.setCash((Integer) data.get("cash"));
@@ -80,68 +79,34 @@ public class MypageController {
         return ResponseEntity.ok("저장 완료");
     }
 
-    // update
+    //update
     @PutMapping("/updateAsset")
     public ResponseEntity<String> updateUserData(HttpSession session, @RequestBody Map<String, Object> data) {
         String userID = (String) session.getAttribute("kakaoId");
         System.out.println("update 수행중:" + userID);
 
-        // AssetVO 객체 생성
+        // 넘어온 데이터 출력
+        System.out.println("수정될 데이터: " + data); // 추가된 부분
         AssetVO assetData = new AssetVO();
 
         if (userID != null) {
             assetData.setUserID(userID);
-            assetData.setConsume((String) data.get("consume"));
 
-            // 자산 금액 추출
-            Map<String, Object> assets = (Map<String, Object>) data.get("assets");
-            if (assets != null) {
-                // 현금 자산
-                List<Map<String, Object>> cashAssets = (List<Map<String, Object>>) assets.get("현금자산");
-                assetData.setCash(cashAssets != null && !cashAssets.isEmpty() ?
-                        ((Number) cashAssets.get(0).get("amount")).intValue() : 0);
+            // 기존 데이터 조회
+            AssetVO existingData = mypageService.getAssetData(userID); // 기존 데이터를 가져오는 서비스 메서드
 
-                // 증권 자산
-                List<Map<String, Object>> stockAssets = (List<Map<String, Object>>) assets.get("증권자산");
-                assetData.setStock(stockAssets != null && !stockAssets.isEmpty() ?
-                        ((Number) stockAssets.get(0).get("amount")).intValue() : 0);
+            // 데이터 매핑
+            assetData.setConsume(data.get("consume") != null ? (String) data.get("consume") : existingData.getConsume());
+            assetData.setCash(data.get("cash") != null ? (Integer) data.get("cash") : existingData.getCash());
+            assetData.setStock(data.get("stock") != null ? (Integer) data.get("stock") : existingData.getStock());
+            assetData.setProperty(data.get("property") != null ? (Integer) data.get("property") : existingData.getProperty());
+            assetData.setDeposit(data.get("deposit") != null ? (Integer) data.get("deposit") : existingData.getDeposit());
+            // 대출 정보 설정
+            assetData.setLoanAmount(data.get("loanAmount") != null ? (Integer) data.get("loanAmount") : existingData.getLoanAmount());
+            assetData.setLoanPurpose(data.get("loanPurpose") != null ? (String) data.get("loanPurpose") : existingData.getLoanPurpose());
+            assetData.setPeriod(data.get("period") != null ? (Integer) data.get("period") : existingData.getPeriod());
 
-                // 부동산 자산
-                List<Map<String, Object>> propertyAssets = (List<Map<String, Object>>) assets.get("부동산자산");
-                assetData.setProperty(propertyAssets != null && !propertyAssets.isEmpty() ?
-                        ((Number) propertyAssets.get(0).get("amount")).intValue() : 0);
-
-                // 예적금 자산
-                List<Map<String, Object>> depositAssets = (List<Map<String, Object>>) assets.get("예적금자산");
-                assetData.setDeposit(depositAssets != null && !depositAssets.isEmpty() ?
-                        ((Number) depositAssets.get(0).get("amount")).intValue() : 0);
-            } else {
-                // assets가 null인 경우 기본값 설정
-                assetData.setCash(0);
-                assetData.setStock(0);
-                assetData.setProperty(0);
-                assetData.setDeposit(0);
-            }
-
-            // 대출 정보 추출
-            Map<String, Object> loan = (Map<String, Object>) data.get("loan");
-            if (loan != null) {
-                int loanAmount = loan.get("amount") != null ? ((Number) loan.get("amount")).intValue() : 0;
-                String loanPurpose = (String) loan.get("purpose");
-                int period = loan.get("period") != null ? ((Number) loan.get("period")).intValue() : 0;
-
-                // 대출 정보는 AssetVO에 추가하여 설정
-                assetData.setLoanAmount(loanAmount);
-                assetData.setLoanPurpose(loanPurpose != null ? loanPurpose : "");
-                assetData.setPeriod(period);
-            } else {
-                // 대출 정보가 null인 경우 기본값 설정
-                assetData.setLoanAmount(0);
-                assetData.setLoanPurpose("");
-                assetData.setPeriod(0);
-            }
-
-            // DB 업데이트
+            System.out.println("assetData"+assetData);
             mypageService.updateAssetData(assetData);
             session.setAttribute("message", "정보가 성공적으로 수정되었습니다.");
             return ResponseEntity.ok("정보가 성공적으로 수정되었습니다.");
@@ -150,6 +115,7 @@ public class MypageController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보를 찾을 수 없습니다.");
         }
     }
+
 
 
     // member 수정
@@ -173,7 +139,7 @@ public class MypageController {
 
     // == point ==
 
-    // 포인트 조회
+    // point 조회
     @GetMapping(value = "/points", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> getPoints(HttpSession session) {
         String kakaoId = (String) session.getAttribute("kakaoId");
@@ -191,7 +157,7 @@ public class MypageController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-
+    // point 출금
     @PostMapping("/withdraw")
     public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data, HttpSession session) {
 
