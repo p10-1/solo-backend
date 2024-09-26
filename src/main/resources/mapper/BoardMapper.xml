@@ -77,6 +77,7 @@
         WHERE b.boardNo = #{boardNo}
         ORDER BY filename
     </select>
+
     <select id="getAttachmentList" resultType="org.solo.board.domain.BoardAttachmentVO">
         SELECT *
         FROM boardAttachment
