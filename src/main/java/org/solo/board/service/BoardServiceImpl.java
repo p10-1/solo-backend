@@ -40,6 +40,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardVO> getBoardsByPage(PageRequest pageRequest) {
+        System.out.println("service: " + boardMapper.getBoardsByPage(pageRequest.getOffset(), pageRequest.getAmount()));
         return boardMapper.getBoardsByPage(pageRequest.getOffset(), pageRequest.getAmount());
     }
 
@@ -51,9 +52,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardVO get(Long boardNo) {
-        System.out.println("Board get no: " + boardNo);
         BoardVO boardVO = boardMapper.get(boardNo);
-        System.out.println("boardVO: " + boardVO);
+        boardMapper.upViewCnt(boardNo);
         if (boardVO == null) {
             System.out.println("No board found for boardNo: " + boardNo);
         } else {
@@ -70,9 +70,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void createComment(CommentVO commentVO) {
+        Long boardNo = commentVO.getBoardNo();
+        boardMapper.upCommentCnt(boardNo);
         boardMapper.createComment(commentVO);
     }
-
 
 
     @Transactional // 2개 이상의 insert 문이 실행될 수 있으므로 트랜잭션 처리 필요
@@ -139,5 +140,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public boolean deleteAttachment(Long attachmentNo) {
         return boardMapper.deleteAttachment(attachmentNo) == 1;
+    }
+
+    @Override
+    public void upLikeCnt(Long boardNo) {
+        boardMapper.upLikeCnt(boardNo);
     }
 }

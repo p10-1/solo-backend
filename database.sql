@@ -60,29 +60,29 @@ CREATE TABLE `product`
 );
 
 DROP TABLE IF EXISTS board;
-CREATE TABLE board
+CREATE TABLE `board`
 (
-    boardNo    INTEGER AUTO_INCREMENT PRIMARY KEY,
-    title      VARCHAR(200) NOT NULL,
-    content    TEXT,
-    userId     VARCHAR(50)  NOT NULL,
-    regDate    DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updateDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    likes      INTEGER  DEFAULT 0,
-    contents   INTEGER  DEFAULT 0,
-    views      INTEGER  DEFAULT 0
+    `boardNo`    INTEGER AUTO_INCREMENT PRIMARY KEY,
+    `title`      VARCHAR(200) NOT NULL,
+    `content`    TEXT,
+    `userId`     VARCHAR(50)  NOT NULL,
+    `regDate`    DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updateDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `likes`      INTEGER  DEFAULT 0,
+    `comments`   INTEGER  DEFAULT 0,
+    `views`      INTEGER  DEFAULT 0
 );
 
 DROP TABLE IF EXISTS boardAttachment;
-CREATE TABLE boardAttachment
+CREATE TABLE `boardAttachment`
 (
-    attachmentNo INTEGER AUTO_INCREMENT PRIMARY KEY,
-    bno          INTEGER      NOT NULL, -- 게시글 번호, FK
-    filename     VARCHAR(256) NOT NULL, -- 원본 파일 명
-    path         VARCHAR(256) NOT NULL, -- 서버에서의 파일 경로
-    contentType  VARCHAR(56),           -- content-type
-    size         INTEGER,               -- 파일의 크기
-    regDate      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `attachmentNo` INTEGER AUTO_INCREMENT PRIMARY KEY,
+    `bno`          INTEGER      NOT NULL, -- 게시글 번호, FK
+    `filename`     VARCHAR(256) NOT NULL, -- 원본 파일 명
+    `path`         VARCHAR(256) NOT NULL, -- 서버에서의 파일 경로
+    `contentType`  VARCHAR(56),           -- content-type
+    `size`         INTEGER,               -- 파일의 크기
+    `regDate`      DATETIME DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT FOREIGN KEY (bno) REFERENCES board (boardNo)
 );
 
@@ -96,3 +96,14 @@ CREATE TABLE `comment`
     `regDate`     DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (boardNo) REFERENCES board (boardNo) ON DELETE CASCADE
 );
+
+
+
+# ------------------------------------------------------------------------
+
+SELECT *
+FROM board
+WHERE userId LIKE '%3%'
+ORDER BY regDate DESC
+
+select * from board;

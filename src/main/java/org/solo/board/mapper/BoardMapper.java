@@ -31,6 +31,9 @@ public interface BoardMapper {
     int deleteAttachment(Long attachmentNo);
     List<CommentVO> getComments(Long boardNo);
     void createComment(CommentVO commentVO);
+    void upCommentCnt(@Param("boardNo") Long boardNo);
+    void upViewCnt(@Param("boardNo") Long boardNo);
+    void upLikeCnt(@Param("boardNo") Long boardNo);
 }
 
 

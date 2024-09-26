@@ -38,7 +38,7 @@ public class BoardController {
         int totalBoardsCount = (keyword != null && !keyword.isEmpty())
                 ? boardService.getTotalCntByKeyword(category, keyword)
                 : boardService.getTotalCnt();
-
+        System.out.println("controller: " + boards);
         Page<BoardVO> boardsPage = Page.of(pageRequest, totalBoardsCount, boards);
         return ResponseEntity.ok(boardsPage);
     }
@@ -57,7 +57,7 @@ public class BoardController {
     @PostMapping("/comment")
     public ResponseEntity<String> createComment(@RequestBody CommentVO commentVO) {
 //        commentVO.setBoardNo(no);
-        System.out.println("commentVO: " + commentVO);
+//        System.out.println("commentVO: " + commentVO);
         boardService.createComment(commentVO);
         return ResponseEntity.ok("댓글이 성공적으로 작성되었습니다.");
     }
@@ -87,6 +87,12 @@ public class BoardController {
     @DeleteMapping("/deleteAttachment/{no}")
     public ResponseEntity<Boolean> deleteAttachment(@PathVariable Long no) throws Exception {
         return ResponseEntity.ok(boardService.deleteAttachment(no));
+    }
+
+    @PostMapping("/like/{no}")
+    public ResponseEntity<String> like(@PathVariable Long no) {
+        boardService.upLikeCnt(no);
+        return ResponseEntity.ok("좋아요가 증가되었습니다.");
     }
 
 }
