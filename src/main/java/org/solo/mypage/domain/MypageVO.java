@@ -8,7 +8,7 @@ import lombok.*;
 public class MypageVO {
 
     private int userNo;
-    private String userID;
+    private String userId;
     //private int salary;
     private int cash;
     private int stock;

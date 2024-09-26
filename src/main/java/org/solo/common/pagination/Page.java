@@ -18,7 +18,9 @@ public class Page<T> {
     private PageRequest pageRequest;
     private List<T> list;  // 데이터 목록
 
-    public static <T> Page of(PageRequest pageRequest, int totalCount, List<T> list) {
+    public static <T> Page of(PageRequest pageRequest,
+                              int totalCount,
+                              List<T> list) {
         int totalPage = (int)Math.ceil((double)totalCount / pageRequest.getAmount());	// 전체 페이지 수 계산
         return new Page(totalCount, totalPage, pageRequest, list);
     }

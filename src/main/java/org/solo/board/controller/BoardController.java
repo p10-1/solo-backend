@@ -1,75 +1,92 @@
 package org.solo.board.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import org.solo.board.domain.BoardAttachmentVO;
-
 import org.solo.board.domain.BoardVO;
-import org.solo.board.service.BoardServiceImpl;
+import org.solo.board.domain.CommentVO;
+import org.solo.board.service.BoardService;
+import org.solo.common.pagination.Page;
+import org.solo.common.pagination.PageRequest;
 import org.solo.common.util.UploadFiles;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.List;
 
-@RestController  // @Controller 대신 @RestController 사용
-@Log4j
-@RequestMapping("/api/board")  // API 경로로 변경
-@RequiredArgsConstructor
-public class BoardController  {
-    final private BoardServiceImpl boardServiceImpl;
+@RestController
+@RequestMapping("/api/board")
+public class BoardController {
+    private final BoardService boardService;
 
-    @GetMapping("/list")
-    public ResponseEntity<List<BoardVO>> list() {
-        log.info("list");
-        List<BoardVO> boardList = boardServiceImpl.getList();
-        return ResponseEntity.ok(boardList);  // JSON 형식으로 반환
+    public BoardController(BoardService boardService) {
+        this.boardService = boardService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Long> create(@RequestBody BoardVO boardVO) {
-        log.info("create: " + boardVO);
-        boardServiceImpl.create(boardVO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(boardVO.getBoardNo());  // 생성된 리소스의 ID 반환
+    @GetMapping({"", "/"})
+    public ResponseEntity<Page> getList(@RequestParam(defaultValue = "1") int page,
+                                        @RequestParam(defaultValue = "10") int amount,
+                                        @RequestParam(required = false) String category,
+                                        @RequestParam(required = false) String keyword)  {
+        System.out.println("page: " + page + " amount: " + amount + " category: " + category + " keyword: " + keyword);
+        PageRequest pageRequest = PageRequest.of(page, amount);
+        List<BoardVO> boards = (keyword != null && !keyword.isEmpty())
+                ? boardService.getBoardsByPageAndKeyword(pageRequest, category, keyword)
+                : boardService.getBoardsByPage(pageRequest);
+
+        int totalBoardsCount = (keyword != null && !keyword.isEmpty())
+                ? boardService.getTotalCntByKeyword(category, keyword)
+                : boardService.getTotalCnt();
+
+        Page<BoardVO> boardsPage = Page.of(pageRequest, totalBoardsCount, boards);
+        return ResponseEntity.ok(boardsPage);
     }
 
-    @GetMapping("/{boardNo}")
-    public ResponseEntity<BoardVO> get(@PathVariable("boardNo") Long boardNo) {
-        log.info("get: " + boardNo);
-        BoardVO boardVO = boardServiceImpl.get(boardNo);
-        return ResponseEntity.ok(boardVO);  // JSON 형식으로 반환
+    @GetMapping("/{no}")
+    public ResponseEntity<BoardVO> getById(@PathVariable Long no) {
+        return ResponseEntity.ok(boardService.get(no));
     }
 
-    @PutMapping("/{boardNo}")
-    public ResponseEntity<String> update(@PathVariable("boardNo") Long boardNo, @RequestBody BoardVO boardVO) {
-        log.info("update: " + boardVO);
-        boardVO.setBoardNo(boardNo);  // boardNo 설정
-        if(boardServiceImpl.update(boardVO)) {
-            return ResponseEntity.ok("success");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");  // 리소스가 없을 경우
+    @GetMapping("/{no}/comments")
+    public ResponseEntity<List<CommentVO>> getComment(@PathVariable Long no) {
+        List<CommentVO> comments = boardService.getComments(no);
+        return ResponseEntity.ok(comments);
     }
 
-    @DeleteMapping("/{boardNo}")
-    public ResponseEntity<String> delete(@PathVariable("boardNo") Long boardNo) {
-        log.info("delete: " + boardNo);
-        if(boardServiceImpl.delete(boardNo)) {
-            return ResponseEntity.ok("success");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");  // 리소스가 없을 경우
+    @PostMapping("/comment")
+    public ResponseEntity<String> createComment(@RequestBody CommentVO commentVO) {
+//        commentVO.setBoardNo(no);
+        System.out.println("commentVO: " + commentVO);
+        boardService.createComment(commentVO);
+        return ResponseEntity.ok("댓글이 성공적으로 작성되었습니다.");
     }
 
-    // 다운로드 기능은 REST API에 적합하지 않으므로 별도의 엔드포인트로 구현 가능
-    // @GetMapping("/download/{boardNo}")
-    // public void download(@PathVariable("boardNo") Long boardNo, HttpServletResponse response) throws Exception {
-    //     BoardAttachmentVO attach = boardServiceImpl.getAttachment(boardNo);
-    //     File file = new File(attach.getPath());
-    //     UploadFiles.download(response, file, attach.getFilename());
-    // }
+    @PostMapping({"","/"})
+    public ResponseEntity<BoardVO> create(BoardVO boardVO) {
+        return ResponseEntity.ok(boardService.create(boardVO));
+    }
+
+    @PutMapping("/{no}")
+    public ResponseEntity<BoardVO> update(@PathVariable Long no, BoardVO boardVO) {
+        System.out.println("update controller boardVO: " + boardVO);
+        return ResponseEntity.ok(boardService.update(boardVO));
+    }
+    @DeleteMapping("/{no}")
+    public ResponseEntity<BoardVO> delete(@PathVariable Long no) {
+        return ResponseEntity.ok(boardService.delete(no));
+    }
+
+    @GetMapping("/download/{no}")
+    public void download(@PathVariable Long no,  HttpServletResponse response) throws Exception {
+        BoardAttachmentVO attachment = boardService.getAttachment(no);
+        File file = new File(attachment.getPath());
+        UploadFiles.download(response, file, attachment.getFilename());
+    }
+
+    @DeleteMapping("/deleteAttachment/{no}")
+    public ResponseEntity<Boolean> deleteAttachment(@PathVariable Long no) throws Exception {
+        return ResponseEntity.ok(boardService.deleteAttachment(no));
+    }
+
 }
