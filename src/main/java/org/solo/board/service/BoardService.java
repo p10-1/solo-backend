@@ -22,4 +22,5 @@ public interface BoardService {
     boolean deleteAttachment(Long attachmentNo);
     List<CommentVO> getComments(Long no);
     void createComment(CommentVO commentVO);
+
 }

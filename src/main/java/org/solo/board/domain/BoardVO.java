@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class BoardVO {
     private Long boardNo;
     private String title;
     private String content;
-    private String userID;
-    private Date regDate;
+    private String userId;
+    private Date regDate; // LOCALDATETIME
     private Date modDate;
     private int likes;
     private int comments;

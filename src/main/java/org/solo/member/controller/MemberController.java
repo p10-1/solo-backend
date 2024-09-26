@@ -60,12 +60,12 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Failed to retrieve user info.");
         }
 
-        // Kakao ID를 Long으로 가져오기
-        Long kakaoIdLong = (Long) userInfoMap.get("id"); // Long으로 가져오기
-        String kakaoId = String.valueOf(kakaoIdLong); // String으로 변환
+        // userId를 Long으로 가져오기
+        Long userIdLong = (Long) userInfoMap.get("id"); // Long으로 가져오기
+        String userId = String.valueOf(userIdLong); // String으로 변환
 
         // 디비에 해당 카카오 아이디를 가진 사용자가 이미 있는지 검사
-        MemberVO memberVO = memberService.findByKakaoId(kakaoId);
+        MemberVO memberVO = memberService.findByKakaoId(userId);
 
         if (memberVO == null) {
             session.setAttribute("newUserInfo", userInfoMap);
@@ -117,8 +117,8 @@ public class MemberController {
             Map<String, Object> userInfoMap = objectMapper.readValue(response.getBody(), new TypeReference<Map<String, Object>>() {});
 
             // kakaoId를 Long에서 String으로 변환
-            Long kakaoIdLong = (Long) userInfoMap.get("id"); // Long 타입으로 가져오기
-            String kakaoId = String.valueOf(kakaoIdLong); // String으로 변환
+            Long userIdLong = (Long) userInfoMap.get("id"); // Long 타입으로 가져오기
+            String userId = String.valueOf(userIdLong); // String으로 변환
 
             Map<String, Object> kakaoAccount = (Map<String, Object>) userInfoMap.get("kakao_account");
             Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
@@ -126,7 +126,7 @@ public class MemberController {
             String nickName = (String) profile.get("nickname"); // "nickname" 필드로 수정
 
             // 세션에 사용자 정보를 저장
-            session.setAttribute("kakaoId", kakaoId); // String으로 저장
+            session.setAttribute("userId", userId); // String으로 저장
             session.setAttribute("nickName", nickName);
             session.setAttribute("email", email);
             return userInfoMap;
@@ -155,12 +155,12 @@ public class MemberController {
     @PostMapping("/firstUser")
     public ResponseEntity<?> firstUser(@RequestBody Map<String, String> nameAndbirth, HttpSession session) {
         String name = nameAndbirth.get("name");
-        String birthDate = nameAndbirth.get("birthDate");
-        String kakaoId = session.getAttribute("kakaoId").toString();
+        String birthdate = nameAndbirth.get("birthdate");
+        String userId = session.getAttribute("userId").toString();
         String nickName = session.getAttribute("nickName").toString();
         String email = session.getAttribute("email").toString();
 
-        MemberVO newUser = memberService.insertNewUserInfo(kakaoId, nickName, name, email, birthDate);
+        MemberVO newUser = memberService.insertNewUserInfo(userId, nickName, name, email, birthdate);
         session.setAttribute("userInfo", newUser);
         return ResponseEntity.ok(newUser); // 새 사용자 정보 반환
     }

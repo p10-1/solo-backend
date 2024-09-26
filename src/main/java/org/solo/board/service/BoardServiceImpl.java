@@ -73,6 +73,8 @@ public class BoardServiceImpl implements BoardService {
         boardMapper.createComment(commentVO);
     }
 
+
+
     @Transactional // 2개 이상의 insert 문이 실행될 수 있으므로 트랜잭션 처리 필요
     @Override
     public BoardVO create(BoardVO boardVO) {
@@ -122,7 +124,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardVO delete(Long boardNo) {
+        System.out.println("service board delete: " + boardNo);
         BoardVO board = get(boardNo);
+        System.out.println("board: " + board);
         boardMapper.delete(boardNo);
         return board;
     }

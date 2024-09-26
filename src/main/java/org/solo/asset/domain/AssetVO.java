@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class AssetVO {
 
     private int userNo;
-    private String userID;
+    private String userId;
     private int cash;// 현금자산: asset : amount
     private int stock;
     private int property;

@@ -35,13 +35,13 @@ public class MypageController {
 
     @PostMapping("/insertAsset")
     public ResponseEntity<String> saveUserData(HttpSession session, @RequestBody Map<String, Object> data) {
-        String userID = (String) session.getAttribute("kakaoId");
-        System.out.println("insert 수행중: " + userID);
+        String userId = (String) session.getAttribute("userId");
+        System.out.println("insert 수행중: " + userId);
 
         AssetVO assetData = new AssetVO();
 
-        if (userID != null) {
-            assetData.setUserID(userID);
+        if (userId != null) {
+            assetData.setUserId(userId);
         }
         // 데이터 매핑
         assetData.setConsume((String) data.get("consume"));
@@ -56,7 +56,7 @@ public class MypageController {
         assetData.setPeriod((Integer) data.get("period"));
 
         // DB 저장
-        if (mypageService.findAssetData(userID)) {
+        if (mypageService.findAssetData(userId)) {
             session.setAttribute("message", "이미 저장된 데이터가 있습니다.");
             return ResponseEntity.status(409).body("이미 저장된 데이터가 있습니다.");
         }
@@ -82,18 +82,18 @@ public class MypageController {
     //update
     @PutMapping("/updateAsset")
     public ResponseEntity<String> updateUserData(HttpSession session, @RequestBody Map<String, Object> data) {
-        String userID = (String) session.getAttribute("kakaoId");
-        System.out.println("update 수행중:" + userID);
+        String userId = (String) session.getAttribute("userId");
+        System.out.println("update 수행중:" + userId);
 
         // 넘어온 데이터 출력
         System.out.println("수정될 데이터: " + data); // 추가된 부분
         AssetVO assetData = new AssetVO();
 
-        if (userID != null) {
-            assetData.setUserID(userID);
+        if (userId != null) {
+            assetData.setUserId(userId);
 
             // 기존 데이터 조회
-            AssetVO existingData = mypageService.getAssetData(userID); // 기존 데이터를 가져오는 서비스 메서드
+            AssetVO existingData = mypageService.getAssetData(userId); // 기존 데이터를 가져오는 서비스 메서드
 
             // 데이터 매핑
             assetData.setConsume(data.get("consume") != null ? (String) data.get("consume") : existingData.getConsume());
@@ -122,11 +122,11 @@ public class MypageController {
     @PostMapping("/updateMember")
     public String updateUser(MemberVO memberVO, Model model, HttpSession session) {
 
-        String kakaoId = (String) session.getAttribute("kakaoId");
-        System.out.println("user update 수행중:" + kakaoId);
+        String userId = (String) session.getAttribute("userId");
+        System.out.println("user update 수행중:" + userId);
 
-        if (kakaoId != null) {
-            memberVO.setKakaoId(kakaoId);
+        if (userId != null) {
+            memberVO.setUserId(userId);
             mypageService.updateMember(memberVO);
             session.setAttribute("message", "정보가 성공적으로 수정되었습니다.");
         } else {
@@ -142,11 +142,11 @@ public class MypageController {
     // point 조회
     @GetMapping(value = "/points", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> getPoints(HttpSession session) {
-        String kakaoId = (String) session.getAttribute("kakaoId");
+        String userId = (String) session.getAttribute("userId");
         System.out.println("points 조회 들어옴");
 
-        if (kakaoId != null) {
-            Integer point = mypageService.getPoint(kakaoId);
+        if (userId != null) {
+            Integer point = mypageService.getPoint(userId);
             if (point != null) {
                 System.out.println(point);
                 return ResponseEntity.ok(point); // 포인트만 반환
@@ -161,17 +161,17 @@ public class MypageController {
     @PostMapping("/withdraw")
     public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data, HttpSession session) {
 
-        String kakaoId = (String) session.getAttribute("kakaoId");
-        if (kakaoId != null) {
-            Integer point = mypageService.getPoint(kakaoId);
+        String userId = (String) session.getAttribute("userId");
+        if (userId != null) {
+            Integer point = mypageService.getPoint(userId);
             // 출금 처리 로직: data.getPoint() : 서버에서 요청한 출금 값
             if (point != null && point >= data.getPoint()) {
-                boolean withdrawSuccess = mypageService.withdrawPoints(kakaoId, data.getPoint());
+                boolean withdrawSuccess = mypageService.withdrawPoints(userId, data.getPoint());
                 if (withdrawSuccess) {
                     System.out.println("withdraw success");
 
                     // cash를 업데이트하는 메서드 호출 (서비스에서 처리됨)
-                    boolean addCashSuccess = mypageService.updateCash(kakaoId, data.getPoint());
+                    boolean addCashSuccess = mypageService.updateCash(userId, data.getPoint());
 
                     if (addCashSuccess) {
                         return ResponseEntity.ok("출금 및 현금 추가가 성공적으로 완료되었습니다.");
