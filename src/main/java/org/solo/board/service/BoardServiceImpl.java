@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 @Transactional
 //@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    private final static String BASE_DIR = "/Users/junyoung/Documents/upload/board";
+    private final static String BASE_DIR = "upload/board";
     private final BoardMapper boardMapper;
 
     @Autowired

@@ -96,3 +96,5 @@ CREATE TABLE `comment`
     `regDate`     DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (boardNo) REFERENCES board (boardNo) ON DELETE CASCADE
 );
+
+SELECT * FROM userAsset WHERE userId = 3716674516;
