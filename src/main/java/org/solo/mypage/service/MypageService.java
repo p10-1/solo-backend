@@ -7,13 +7,13 @@ import java.util.Map;
 
 public interface MypageService {
     void insertAssetData(AssetVO assetVO);
-    boolean findAssetData(String userID);
+    boolean findAssetData(String userId);
     void updateAssetData(AssetVO assetData);
     void updateMember(MemberVO memberVO);
 
-    AssetVO getAssetData(String userID);
-    int getPoint(String kakaoId);
-    boolean withdrawPoints(String kakaoId, int point);
+    AssetVO getAssetData(String userId);
+    int getPoint(String userId);
+    boolean withdrawPoints(String userId, int point);
     boolean updateCash(String userId, int cashAmount);
 
 }

@@ -31,8 +31,8 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
-    public boolean findAssetData(String userID) {
-        return mypageMapper.findAssetData(userID);
+    public boolean findAssetData(String userId) {
+        return mypageMapper.findAssetData(userId);
     }
 
     @Override
@@ -46,24 +46,24 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
-    public AssetVO getAssetData(String kakaoId) {
-        return mypageMapper.getAssetData(kakaoId);
+    public AssetVO getAssetData(String userId) {
+        return mypageMapper.getAssetData(userId);
     }
     @Override
-    public int getPoint(String kakaoId){
-        return mypageMapper.getPoint(kakaoId);
+    public int getPoint(String userId){
+        return mypageMapper.getPoint(userId);
     }
 
     @Override
-    public boolean withdrawPoints(String kakaoId, int point) {
-        MemberVO member = memberMapper.findByKakaoId(kakaoId);
+    public boolean withdrawPoints(String userId, int point) {
+        MemberVO member = memberMapper.findByKakaoId(userId);
 
         System.out.println("withdrawPoints 서비스 실행");
         if (member != null && member.getPoint() >= point) {
             int newPoint = member.getPoint() - point;
 
             Map<String, Object> params = new HashMap<>();
-            params.put("kakaoId", kakaoId);
+            params.put("userId", userId);
             params.put("newPoint", newPoint);
 
             memberMapper.updatePoint(params);

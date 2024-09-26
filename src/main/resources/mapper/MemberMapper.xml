@@ -6,18 +6,20 @@
 <mapper namespace="org.solo.member.mapper.MemberMapper">
 
     <select id="findByKakaoId" parameterType="java.lang.String" resultType="org.solo.member.domain.MemberVO">
-        SELECT * FROM kakaoMember WHERE kakaoId = #{kakaoId}
+        SELECT * FROM user WHERE userId = #{userId}
     </select>
 
     <insert id="insertNewUserInfo" parameterType="org.solo.member.domain.MemberVO">
-        INSERT INTO kakaoMember (kakaoId, nickName, profileImage, name, email, birthDate, point)
-        VALUES (#{kakaoId}, #{nickName}, #{profileImage}, #{name}, #{email}, #{birthDate}, 0)
+
+        INSERT INTO user (userId, nickName, name, email, birthdate, point)
+        VALUES (#{userId}, #{nickName}, #{name}, #{email}, #{birthdate}, 0)
+
     </insert>
 
     <update id="updatePoint" parameterType="map">
-        UPDATE kakaoMember
+        UPDATE user
         SET point = #{newPoint}
-        WHERE kakaoId = #{kakaoId}
+        WHERE userId = #{userId}
     </update>
 
 </mapper>

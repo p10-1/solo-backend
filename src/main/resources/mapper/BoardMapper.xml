@@ -3,4 +3,140 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.solo.board.mapper.BoardMapper"></mapper>
+<mapper namespace="org.solo.board.mapper.BoardMapper">
+    <insert id="create">
+        INSERT INTO board(title, content, userId)
+        VALUES (#{title}, #{content}, #{userId})
+        <selectKey resultType="Long" keyProperty="boardNo" keyColumn="boardNo" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="update">
+        UPDATE board
+        SET title = #{title}, content = #{content}, userId = #{userId}, updateDate = now()
+        WHERE boardNo = #{boardNo}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM board
+        WHERE boardNo = #{boardNo}
+    </delete>
+
+    <select id="getTotalCnt" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM board
+    </select>
+
+    <select id="getTotalCntByKeyword" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM board
+        WHERE #{category} LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="getBoardsByPage" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        ORDER BY regDate DESC LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getBoardsByPageAndKeyword" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        WHERE content LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY regDate DESC
+            LIMIT #{offset}, #{limit}
+    </select>
+
+    <resultMap id="boardMap" type="org.solo.board.domain.BoardVO">
+        <id property="boardNo" column="boardNo"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="userId" column="userId"/>
+        <result property="regDate" column="regDate"/>
+        <result property="modDate" column="modDate"/>
+        <result property="likes" column="likes"/>
+        <result property="comments" column="comments"/>
+        <result property="views" column="views"/>
+
+        <collection property="attaches" ofType="org.solo.board.domain.BoardAttachmentVO">
+            <result property="attachmentNo" column="attachmentNo"/>
+            <result property="bno" column="bno"/>
+            <result property="filename" column="filename"/>
+            <result property="path" column="path"/>
+            <result property="contentType" column="contentType"/>
+            <result property="size" column="size"/>
+            <result property="regDate" column="a_regDate"/>
+        </collection>
+    </resultMap>
+
+    <select id="get" resultMap="boardMap">
+        SELECT b.*, a.attachmentNo, a.bno, a.filename, a.contentType, a.size, a.regDate as a_regDate
+        FROM board b
+            LEFT OUTER JOIN boardAttachment a
+            ON b.boardNo = a.bno
+        WHERE b.boardNo = #{boardNo}
+        ORDER BY filename
+    </select>
+
+    <select id="getAttachmentList" resultType="org.solo.board.domain.BoardAttachmentVO">
+        SELECT *
+        FROM boardAttachment
+        WHERE bno = #{bno}
+        ORDER BY filename
+    </select>
+    <select id="getAttachment" resultType="org.solo.board.domain.BoardAttachmentVO">
+        SELECT *
+        FROM boardAttachment
+        WHERE attachmentNo = #{attachmentNo}
+    </select>
+
+    <insert id="createAttachment">
+        INSERT INTO boardAttachment(filename, path, contentType, size, bno)
+        VALUES (#{filename}, #{path}, #{contentType}, #{size}, #{bno})
+    </insert>
+
+    <delete id="deleteAttachment">
+        DELETE
+        FROM boardAttachment
+        WHERE attachmentNo = #{attachmentNo}
+    </delete>
+
+    <select id="getComments" resultType="org.solo.board.domain.CommentVO">
+        SELECT *
+        FROM comment
+        WHERE boardNo = #{boardNo}
+    </select>
+
+    <insert id="createComment">
+        INSERT INTO comment(boardNo, userId, commentText, regDate)
+        VALUES (#{boardNo}, #{userId}, #{commentText}, now())
+    </insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

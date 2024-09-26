@@ -13,15 +13,15 @@ import java.util.Map;
 public interface MypageMapper {
     void insertAssetData(AssetVO assetVO);
 
-    boolean findAssetData(String kakaoId);
+    boolean findAssetData(String userId);
 
-    AssetVO getAssetData(String kakaoId);
+    AssetVO getAssetData(String userId);
 
     void updateAssetData(AssetVO assetData);
 
     void updateMember(MemberVO memberVO);
 
-    int getPoint(String kakaoId);
+    int getPoint(String userId);
 
     void updateCash(Map<String, Object> params);
 
