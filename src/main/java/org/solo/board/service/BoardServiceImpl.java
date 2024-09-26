@@ -39,15 +39,38 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardVO> getBoardsByPage(PageRequest pageRequest) {
-        System.out.println("service: " + boardMapper.getBoardsByPage(pageRequest.getOffset(), pageRequest.getAmount()));
-        return boardMapper.getBoardsByPage(pageRequest.getOffset(), pageRequest.getAmount());
+    public List<BoardVO> getBoardsByPageOrderByregDate(PageRequest pageRequest){
+        return boardMapper.getBoardsByPageOrderByregDate(pageRequest.getOffset(), pageRequest.getAmount());
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageOrderBylike(PageRequest pageRequest){
+        return boardMapper.getBoardsByPageOrderBylike(pageRequest.getOffset(), pageRequest.getAmount());
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageOrderByview(PageRequest pageRequest){
+        return boardMapper.getBoardsByPageOrderByview(pageRequest.getOffset(), pageRequest.getAmount());
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageOrderBycomment(PageRequest pageRequest){
+        return boardMapper.getBoardsByPageOrderBycomment(pageRequest.getOffset(), pageRequest.getAmount());
     }
 
     @Override
-    public List<BoardVO> getBoardsByPageAndKeyword(PageRequest pageRequest, String category, String keyword) {
-        System.out.println("category: " + category + " keyword: " + keyword);
-        return boardMapper.getBoardsByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
+    public List<BoardVO> getBoardsByPageAndKeywordOrderByregDate(PageRequest pageRequest, String category, String keyword) {
+        return boardMapper.getBoardsByPageAndKeywordOrderByregDate(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageAndKeywordOrderBylike(PageRequest pageRequest, String category, String keyword) {
+        return boardMapper.getBoardsByPageAndKeywordOrderBylike(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageAndKeywordOrderByview(PageRequest pageRequest, String category, String keyword) {
+        System.out.println(boardMapper.getBoardsByPageAndKeywordOrderByview(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword));
+        return boardMapper.getBoardsByPageAndKeywordOrderByview(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageAndKeywordOrderBycomment(PageRequest pageRequest, String category, String keyword) {
+        return boardMapper.getBoardsByPageAndKeywordOrderBycomment(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
     }
 
     @Override

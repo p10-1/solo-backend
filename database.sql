@@ -106,4 +106,17 @@ FROM board
 WHERE userId LIKE '%3%'
 ORDER BY regDate DESC
 
-select * from board;
+select * from board
+where title like '%제목%'
+order by likes desc
+limit 1, 10;
+
+insert into board (title, content, userId, likes, comments, views)
+values ('제목1','내용1','3704999150',30,43,81),
+       ('제목2','내용2','3704999150',20,41,77),
+       ('제목3','내용3','3704999150',14,9,49),
+       ('제목4','내용4','3704999150',34,11,121),
+       ('제목5','내용5','3704999150',29,3,88),
+       ('제목6','내용6','3704999150',17,2,68),
+       ('제목7','내용7','3704999150',33,43,90),
+       ('제목8','내용8','3704999150',50,32,143)

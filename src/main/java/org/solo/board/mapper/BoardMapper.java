@@ -16,11 +16,6 @@ public interface BoardMapper {
     int getTotalCnt();
     int getTotalCntByKeyword(@Param("category") String category,
                              @Param("keyword") String keyword);
-    List<BoardVO> getBoardsByPage(@Param("offset") int offset, @Param("limit") int limit);
-    List<BoardVO> getBoardsByPageAndKeyword(@Param("offset") int offset,
-                                            @Param("limit") int limit,
-                                            @Param("category") String category,
-                                            @Param("keyword") String keyword);
     BoardVO get(Long boardNo);
     void create(BoardVO boardVO);
     int update(BoardVO boardVO);
@@ -34,6 +29,26 @@ public interface BoardMapper {
     void upCommentCnt(@Param("boardNo") Long boardNo);
     void upViewCnt(@Param("boardNo") Long boardNo);
     void upLikeCnt(@Param("boardNo") Long boardNo);
+
+    List<BoardVO> getBoardsByPageAndKeywordOrderByregDate(@Param("offset") int offset, @Param("limit") int limit, @Param("category") String category,
+                                                @Param("keyword") String keyword);
+
+    List<BoardVO> getBoardsByPageAndKeywordOrderBylike(@Param("offset") int offset, @Param("limit") int limit, @Param("category") String category,
+                                             @Param("keyword") String keyword);
+
+    List<BoardVO> getBoardsByPageAndKeywordOrderByview(@Param("offset") int offset, @Param("limit") int limit, @Param("category") String category,
+                                             @Param("keyword") String keyword);
+
+    List<BoardVO> getBoardsByPageAndKeywordOrderBycomment(@Param("offset") int offset, @Param("limit") int limit, @Param("category") String category,
+                                                @Param("keyword") String keyword);
+
+    List<BoardVO> getBoardsByPageOrderByregDate(@Param("offset") int offset, @Param("limit") int limit);
+
+    List<BoardVO> getBoardsByPageOrderBylike(@Param("offset") int offset, @Param("limit") int limit);
+
+    List<BoardVO> getBoardsByPageOrderByview(@Param("offset") int offset, @Param("limit") int limit);
+
+    List<BoardVO> getBoardsByPageOrderBycomment(@Param("offset") int offset, @Param("limit") int limit);
 }
 
 

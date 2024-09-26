@@ -50,13 +50,32 @@
         WHERE #{category} LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
-    <select id="getBoardsByPage" resultType="org.solo.board.domain.BoardVO">
+    <select id="getBoardsByPageOrderByregDate" resultType="org.solo.board.domain.BoardVO">
         SELECT *
         FROM board
-        ORDER BY regDate DESC LIMIT #{offset}, #{limit}
+        ORDER BY regDate DESC
+            LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageOrderBylike" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        ORDER BY likes DESC
+            LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageOrderByview" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        ORDER BY views DESC
+            LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageOrderBycomment" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        ORDER BY comments DESC
+            LIMIT #{offset}, #{limit}
     </select>
 
-    <select id="getBoardsByPageAndKeyword" resultType="org.solo.board.domain.BoardVO">
+    <select id="getBoardsByPageAndKeywordOrderByregDate" resultType="org.solo.board.domain.BoardVO">
         SELECT *
         FROM board
         WHERE
@@ -70,8 +89,74 @@
             <when test="category == 'userId'">
                 userId LIKE CONCAT('%', #{keyword}, '%')
             </when>
+            <otherwise>
+                1 = 1
+            </otherwise>
         </choose>
         ORDER BY regDate DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageAndKeywordOrderBylike" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        WHERE
+        <choose>
+            <when test="category == 'title'">
+                title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'content'">
+                content LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'userId'">
+                userId LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                1 = 1
+            </otherwise>
+        </choose>
+        ORDER BY likes DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageAndKeywordOrderByview" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        WHERE
+        <choose>
+            <when test="category == 'title'">
+                title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'content'">
+                content LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'userId'">
+                userId LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                1 = 1
+            </otherwise>
+        </choose>
+        ORDER BY views DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageAndKeywordOrderBycomment" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        WHERE
+        <choose>
+            <when test="category == 'title'">
+                title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'content'">
+                content LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'userId'">
+                userId LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                1 = 1
+            </otherwise>
+        </choose>
+        ORDER BY comments DESC
         LIMIT #{offset}, #{limit}
     </select>
 

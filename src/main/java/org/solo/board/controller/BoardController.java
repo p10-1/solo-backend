@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,23 +26,53 @@ public class BoardController {
     }
 
     @GetMapping({"", "/"})
-    public ResponseEntity<Page> getList(@RequestParam(defaultValue = "1") int page,
-                                        @RequestParam(defaultValue = "10") int amount,
-                                        @RequestParam(required = false) String category,
-                                        @RequestParam(required = false) String keyword)  {
-        System.out.println("page: " + page + " amount: " + amount + " category: " + category + " keyword: " + keyword);
-        PageRequest pageRequest = PageRequest.of(page, amount);
-        List<BoardVO> boards = (keyword != null && !keyword.isEmpty())
-                ? boardService.getBoardsByPageAndKeyword(pageRequest, category, keyword)
-                : boardService.getBoardsByPage(pageRequest);
+    public ResponseEntity<Page<BoardVO>> getList(@RequestParam(defaultValue = "1") int page,
+                                                 @RequestParam(defaultValue = "10") int amount,
+                                                 @RequestParam(required = false) String category,
+                                                 @RequestParam(required = false) String keyword,
+                                                 @RequestParam String sort) {
+        System.out.println("page: " + page + " amount: " + amount + " category: " + category + " keyword: " + keyword + " sort: " + sort);
+        PageRequest pageRequest = PageRequest.of(page, amount); // 페이지 번호는 0부터 시작하므로 -1 필요
 
+        List<BoardVO> boards;
+
+        switch (sort) {
+            case "likes":
+                System.out.println("좋아요");
+                boards = (keyword != null && !keyword.isEmpty())
+                        ? boardService.getBoardsByPageAndKeywordOrderBylike(pageRequest, category, keyword)
+                        : boardService.getBoardsByPageOrderBylike(pageRequest);
+                break;
+            case "comments":
+                System.out.println("댓글");
+                boards = (keyword != null && !keyword.isEmpty())
+                        ? boardService.getBoardsByPageAndKeywordOrderBycomment(pageRequest, category, keyword)
+                        : boardService.getBoardsByPageOrderBycomment(pageRequest);
+                break;
+            case "views":
+                System.out.println("조회수");
+                boards = (keyword != null && !keyword.isEmpty())
+                        ? boardService.getBoardsByPageAndKeywordOrderByview(pageRequest, category, keyword)
+                        : boardService.getBoardsByPageOrderByview(pageRequest);
+                break;
+            default: // sort가 다른 값일 때의 기본 동작
+                System.out.println("최신순");
+                boards = (keyword != null && !keyword.isEmpty())
+                        ? boardService.getBoardsByPageAndKeywordOrderByregDate(pageRequest, category, keyword)
+                        : boardService.getBoardsByPageOrderByregDate(pageRequest);
+                break;
+        }
         int totalBoardsCount = (keyword != null && !keyword.isEmpty())
                 ? boardService.getTotalCntByKeyword(category, keyword)
                 : boardService.getTotalCnt();
-        System.out.println("controller: " + boards);
+
+//        System.out.println("controller: " + boards);
+
         Page<BoardVO> boardsPage = Page.of(pageRequest, totalBoardsCount, boards);
+
         return ResponseEntity.ok(boardsPage);
     }
+
 
     @GetMapping("/{no}")
     public ResponseEntity<BoardVO> getById(@PathVariable Long no) {
@@ -69,7 +100,6 @@ public class BoardController {
 
     @PutMapping("/{no}")
     public ResponseEntity<BoardVO> update(@PathVariable Long no, BoardVO boardVO) {
-        System.out.println("update controller boardVO: " + boardVO);
         return ResponseEntity.ok(boardService.update(boardVO));
     }
     @DeleteMapping("/{no}")
