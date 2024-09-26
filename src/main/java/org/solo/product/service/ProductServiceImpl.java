@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
                 .queryParam("topFinGrpNo", topFinGrpNo)
                 .queryParam("pageNo", pageNo)
                 .toUriString();
-        System.out.println("requestDepositUrl: " + requestDepositUrl);
+//        System.out.println("requestDepositUrl: " + requestDepositUrl);
         try {
             ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestDepositUrl, String.class);
 
@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
                 .queryParam("topFinGrpNo", topFinGrpNo)
                 .queryParam("pageNo", pageNo)
                 .toUriString();
-        System.out.println("requestSavingUrl: " + requestSavingUrl);
+//        System.out.println("requestSavingUrl: " + requestSavingUrl);
         try {
             ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestSavingUrl, String.class);
 
@@ -94,9 +94,9 @@ public class ProductServiceImpl implements ProductService {
                 String jsonResponse = responseEntity.getBody();
                 Map<String, Object> responseMap = objectMapper.readValue(jsonResponse, new TypeReference<Map<String, Object>>() {});
                 Map<String, Object> results = (Map<String, Object>) responseMap.get("result");
-                System.out.println("results: " + results);
+//                System.out.println("results: " + results);
                 List<Object> baseList = (List<Object>) results.get("baseList");
-                System.out.println("baseList size: " + baseList.size());
+//                System.out.println("baseList size: " + baseList.size());
 
                 List<ProductVO> products = new ArrayList<>();
                 String type = "적금";
@@ -112,7 +112,7 @@ public class ProductServiceImpl implements ProductService {
                     String etcNote = (String) saving.get("etc_note");
 
                     ProductVO productVO = new ProductVO(dclsMonth, korCoNm, finPrdtNm, joinWay, mtrtInt, spclCnd, joinMember, etcNote, type);
-                    System.out.println("적금: " + productVO);
+//                    System.out.println("적금: " + productVO);
                     products.add(productVO);
                 }
                 saveProducts(products);
