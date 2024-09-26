@@ -93,7 +93,7 @@ values
 
 SELECT * FROM board;
 
-SELECT * FROM board_attachment;
+# SELECT * FROM board_attachment;
 
 SELECT * FROM comment;
 

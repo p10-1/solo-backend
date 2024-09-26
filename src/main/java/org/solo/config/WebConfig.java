@@ -18,10 +18,10 @@ import javax.servlet.Filter;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletRegistration;
 
-@Configuration
+//@Configuration
 @Slf4j
 @EnableWebMvc
-@MapperScan(basePackages  = {"org.solo.member.mapper"})
+//@MapperScan(basePackages  = {"org.solo.member.mapper"})
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
     final String LOCATION = "";
     final long MAX_FILE_SIZE = 1024 * 1024 * 10L;
@@ -65,15 +65,15 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
     }
 
     // cross origin 접근 허용
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true); // 쿠키를 허용하도록 설정
-        config.addAllowedOriginPattern("*"); // 모든 도메인 허용
-        config.addAllowedHeader("*"); // 모든 헤더 허용
-        config.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
-        source.registerCorsConfiguration("/**", config); // 모든 경로에 대해 설정 적용
-        return new CorsFilter(source);
-    }
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials(true); // 쿠키를 허용하도록 설정
+//        config.addAllowedOriginPattern("*"); // 모든 도메인 허용
+//        config.addAllowedHeader("*"); // 모든 헤더 허용
+//        config.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
+//        source.registerCorsConfiguration("/**", config); // 모든 경로에 대해 설정 적용
+//        return new CorsFilter(source);
+//    }
 }
