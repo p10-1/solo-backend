@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.solo.board.domain.BoardVO;
-import org.solo.board.dto.BoardDTO;
 import org.solo.config.RootConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

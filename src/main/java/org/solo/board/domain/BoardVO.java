@@ -13,9 +13,10 @@ public class BoardVO {
     private String userID;
     private String title;
     private String content;
-    private List<BoardAttachmentVO> attaches;
     private Date regDate;
     private Date modDate;
     private int likes;
     private int views;
+    private int comments;
+    private List<BoardAttachmentVO> attaches;
 }

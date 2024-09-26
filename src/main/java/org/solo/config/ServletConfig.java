@@ -5,10 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 //@Configuration
@@ -27,25 +24,18 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 })  // <- 공통 팩키지
 public class ServletConfig implements WebMvcConfigurer {
-
-    @Bean   // <- object 생성
-    public InternalResourceViewResolver viewResolver() {
-        System.out.println("WebConfig viewResolver() ~~~");
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/views/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }
-
-    @Bean
-    public MultipartResolver multipartResolver() {
-        return new StandardServletMultipartResolver();
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("forward:/resources/index.html");
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**")
                 .addResourceLocations("/resources/");
+
+        registry.addResourceHandler("/assets/**")
+                .addResourceLocations("/resources/assets/");
 
         registry.addResourceHandler("/img/**")
                 .addResourceLocations("/img/");
@@ -57,6 +47,13 @@ public class ServletConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:5173") // 프론트엔드 주소
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowCredentials(true);
+    }
+
+    //	Servlet 3.0 파일 업로드 사용시
+    @Bean
+    public MultipartResolver multipartResolver() {
+        StandardServletMultipartResolver resolver = new StandardServletMultipartResolver();
+        return resolver;
     }
 }
 
