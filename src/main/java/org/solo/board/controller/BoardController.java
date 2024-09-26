@@ -1,80 +1,92 @@
 package org.solo.board.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import org.solo.board.domain.BoardAttachmentVO;
-
 import org.solo.board.domain.BoardVO;
-import org.solo.board.service.BoardServiceImpl;
+import org.solo.board.domain.CommentVO;
+import org.solo.board.service.BoardService;
+import org.solo.common.pagination.Page;
+import org.solo.common.pagination.PageRequest;
 import org.solo.common.util.UploadFiles;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.List;
 
-@Controller
-@Log4j
-@RequestMapping("/board")
-@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/board")
 public class BoardController {
-    final private BoardServiceImpl boardServiceImpl;
+    private final BoardService boardService;
 
-    @GetMapping("/list")
-    public void list(Model model) {
-        log.info("list");
-        model.addAttribute("list", boardServiceImpl.getList());
+    public BoardController(BoardService boardService) {
+        this.boardService = boardService;
     }
 
-    @GetMapping("/create")
-    public String create() {
-        log.info("create");
-        return "board/create";
+    @GetMapping({"", "/"})
+    public ResponseEntity<Page> getList(@RequestParam(defaultValue = "1") int page,
+                                        @RequestParam(defaultValue = "10") int amount,
+                                        @RequestParam(required = false) String category,
+                                        @RequestParam(required = false) String keyword)  {
+        System.out.println("page: " + page + " amount: " + amount + " category: " + category + " keyword: " + keyword);
+        PageRequest pageRequest = PageRequest.of(page, amount);
+        List<BoardVO> boards = (keyword != null && !keyword.isEmpty())
+                ? boardService.getBoardsByPageAndKeyword(pageRequest, category, keyword)
+                : boardService.getBoardsByPage(pageRequest);
+
+        int totalBoardsCount = (keyword != null && !keyword.isEmpty())
+                ? boardService.getTotalCntByKeyword(category, keyword)
+                : boardService.getTotalCnt();
+
+        Page<BoardVO> boardsPage = Page.of(pageRequest, totalBoardsCount, boards);
+        return ResponseEntity.ok(boardsPage);
     }
 
-    @PostMapping("/create")
-    public String create(BoardVO boardVO, RedirectAttributes ra) {
-        log.info("create: " + boardVO);
-
-        boardServiceImpl.create(boardVO);
-        ra.addFlashAttribute("result", boardVO.getBoardNo());
-        // localhost:8080/board/list + GET
-        return "redirect:/board/list";
+    @GetMapping("/{no}")
+    public ResponseEntity<BoardVO> getById(@PathVariable Long no) {
+        return ResponseEntity.ok(boardService.get(no));
     }
 
-    @GetMapping({"/get", "/update"})
-    public void get(@RequestParam("boardNo") Long boardNo, Model model) {
-        log.info("/get or update");
-        model.addAttribute("boardVO", boardServiceImpl.get(boardNo));
+    @GetMapping("/{no}/comments")
+    public ResponseEntity<List<CommentVO>> getComment(@PathVariable Long no) {
+        List<CommentVO> comments = boardService.getComments(no);
+        return ResponseEntity.ok(comments);
     }
 
-    @PostMapping("/update")
-    public String update(BoardVO boardVO, RedirectAttributes ra) {
-        log.info("update: " + boardVO);
-        if(boardServiceImpl.update(boardVO)) {
-            ra.addFlashAttribute("result", "success");
-        }
-        return "redirect:/board/list";
+    @PostMapping("/comment")
+    public ResponseEntity<String> createComment(@RequestBody CommentVO commentVO) {
+//        commentVO.setBoardNo(no);
+        System.out.println("commentVO: " + commentVO);
+        boardService.createComment(commentVO);
+        return ResponseEntity.ok("댓글이 성공적으로 작성되었습니다.");
     }
 
-    @PostMapping("/delete")
-    public String delete(@RequestParam("boardNo") Long boardNo, RedirectAttributes ra) {
-        log.info("delete......" + boardNo);
-        if(boardServiceImpl.delete(boardNo)) {
-            ra.addFlashAttribute("result", "success");
-        }
-        return "redirect:/board/list";
+    @PostMapping({"","/"})
+    public ResponseEntity<BoardVO> create(BoardVO boardVO) {
+        return ResponseEntity.ok(boardService.create(boardVO));
     }
 
-    @GetMapping("/download/{boardNo}")
-    @ResponseBody   // view를 사용하지 않고, 직접 내보냄
-    public void download(@PathVariable("boardNo") Long boardNo, HttpServletResponse response) throws Exception {
-        BoardAttachmentVO attach = boardServiceImpl.getAttachment(boardNo);
-
-        File file = new File(attach.getPath());
-
-        UploadFiles.download(response, file, attach.getFilename());
+    @PutMapping("/{no}")
+    public ResponseEntity<BoardVO> update(@PathVariable Long no, BoardVO boardVO) {
+        System.out.println("update controller boardVO: " + boardVO);
+        return ResponseEntity.ok(boardService.update(boardVO));
     }
+    @DeleteMapping("/{no}")
+    public ResponseEntity<BoardVO> delete(@PathVariable Long no) {
+        return ResponseEntity.ok(boardService.delete(no));
+    }
+
+    @GetMapping("/download/{no}")
+    public void download(@PathVariable Long no,  HttpServletResponse response) throws Exception {
+        BoardAttachmentVO attachment = boardService.getAttachment(no);
+        File file = new File(attachment.getPath());
+        UploadFiles.download(response, file, attachment.getFilename());
+    }
+
+    @DeleteMapping("/deleteAttachment/{no}")
+    public ResponseEntity<Boolean> deleteAttachment(@PathVariable Long no) throws Exception {
+        return ResponseEntity.ok(boardService.deleteAttachment(no));
+    }
+
 }

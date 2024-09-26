@@ -4,100 +4,139 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.solo.board.mapper.BoardMapper">
-    <!-- 조회 -->
-    <select id="getList" resultType="BoardVO" >
-        <![CDATA[
-        select * from board
-        order by boardNo desc
-        ]]>
-    </select>
-
-    <!--    <select id="get" resultType="BoardVO">-->
-    <!--        select * from board where boardNo = #{boardNo}-->
-    <!--    </select>-->
-    <select id="get" resultMap="boardMap">
-        SELECT b.*, ba.no as baNo, ba.boardNo, ba.filename, ba.path, ba.content_type, ba.size, ba.reg_date as ba_reg_date
-        FROM board b left outer join board_attachment ba
-                                     on b.boardNo = ba.boardNo
-        where b.boardNo = 23
-        order by filename
-    </select>
-
-    <!-- 생성 -->
     <insert id="create">
-        insert into board (title, content, userID, likes, views)
-        values (#{title}, #{content}, #{userID}, #{likes}, #{views})
-
+        INSERT INTO board(title, content, userId)
+        VALUES (#{title}, #{content}, #{userId})
         <selectKey resultType="Long" keyProperty="boardNo" keyColumn="boardNo" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
     </insert>
 
-    <!-- 수정 -->
     <update id="update">
-        update board set
-             title = #{title},
-             content = #{content},
-             userID = #{userID},
-             modDate = now(),
-             likes = #{likes},
-             views = #{views}
-        where boardNo = #{boardNo}
+        UPDATE board
+        SET title = #{title}, content = #{content}, userId = #{userId}, updateDate = now()
+        WHERE boardNo = #{boardNo}
     </update>
 
-    <!-- 삭제 -->
-    <delete id="delete">
-        delete from board where boardNo = #{boardNo}
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM board
+        WHERE boardNo = #{boardNo}
     </delete>
+
+    <select id="getTotalCnt" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM board
+    </select>
+
+    <select id="getTotalCntByKeyword" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM board
+        WHERE #{category} LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="getBoardsByPage" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        ORDER BY regDate DESC LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getBoardsByPageAndKeyword" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        WHERE content LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY regDate DESC
+            LIMIT #{offset}, #{limit}
+    </select>
+
+    <resultMap id="boardMap" type="org.solo.board.domain.BoardVO">
+        <id property="boardNo" column="boardNo"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="userId" column="userId"/>
+        <result property="regDate" column="regDate"/>
+        <result property="modDate" column="modDate"/>
+        <result property="likes" column="likes"/>
+        <result property="comments" column="comments"/>
+        <result property="views" column="views"/>
+
+        <collection property="attaches" ofType="org.solo.board.domain.BoardAttachmentVO">
+            <result property="attachmentNo" column="attachmentNo"/>
+            <result property="bno" column="bno"/>
+            <result property="filename" column="filename"/>
+            <result property="path" column="path"/>
+            <result property="contentType" column="contentType"/>
+            <result property="size" column="size"/>
+            <result property="regDate" column="a_regDate"/>
+        </collection>
+    </resultMap>
+
+    <select id="get" resultMap="boardMap">
+        SELECT b.*, a.attachmentNo, a.bno, a.filename, a.contentType, a.size, a.regDate as a_regDate
+        FROM board b
+            LEFT OUTER JOIN boardAttachment a
+            ON b.boardNo = a.bno
+        WHERE b.boardNo = #{boardNo}
+        ORDER BY filename
+    </select>
+
+    <select id="getAttachmentList" resultType="org.solo.board.domain.BoardAttachmentVO">
+        SELECT *
+        FROM boardAttachment
+        WHERE bno = #{bno}
+        ORDER BY filename
+    </select>
+    <select id="getAttachment" resultType="org.solo.board.domain.BoardAttachmentVO">
+        SELECT *
+        FROM boardAttachment
+        WHERE attachmentNo = #{attachmentNo}
+    </select>
 
     <insert id="createAttachment">
-        insert into board_attachment(filename, path, content_type, size, boardNo)
-        values(#{filename}, #{path}, #{contentType}, #{size}, #{boardNo})
+        INSERT INTO boardAttachment(filename, path, contentType, size, bno)
+        VALUES (#{filename}, #{path}, #{contentType}, #{size}, #{bno})
     </insert>
 
-    <select id="getAttachmentList" resultType="BoardAttachmentVO">
-        select * from board_attachment
-        where boardNo = #{boardNo}
-        order by filename
-    </select>
-
-    <select id="getAttachment" resultType="BoardAttachmentVO">
-        select * from board_attachment
-        where no = #{no}
-    </select>
-
     <delete id="deleteAttachment">
-        delete from board_attachment
-        where no = #{no}
+        DELETE
+        FROM boardAttachment
+        WHERE attachmentNo = #{attachmentNo}
     </delete>
 
-    <delete id="deleteAttachment_bno">
-        delete from board_attachment
-        where boardNo = #{boardNo}
-    </delete>
+    <select id="getComments" resultType="org.solo.board.domain.CommentVO">
+        SELECT *
+        FROM comment
+        WHERE boardNo = #{boardNo}
+    </select>
 
-    <!-- join 처리-->
-    <resultMap id="attachmentMap" type="BoardAttachmentVO">
-        <id column="ano"                property="no" />
-        <result column="board_no"       property="boardNo"/>
-        <result column="filename"       property="filename"/>
-        <result column="path"           property="path" />
-        <result column="content_type"   property="contentType"/>
-        <result column="size"           property="size"/>
-        <result column="a_reg_date"     property="regDate"/>
-    </resultMap>
-
-    <resultMap id="boardMap" type="BoardVO">
-        <id column="board_no"           property="boardNo"/>
-        <result column="title"          property="title"/>
-        <result column="content"        property="content"/>
-        <result column="user_id"        property="userID"/>
-        <result column="reg_date"       property="regDate"/>
-        <result column="mod_date"       property="modDate"/>
-        <result column="likes"          property="likes"/>
-        <result column="views"          property="views"/>
-
-        <collection property="attaches" resultMap="attachmentMap"/>
-    </resultMap>
-
+    <insert id="createComment">
+        INSERT INTO comment(boardNo, userId, commentText, regDate)
+        VALUES (#{boardNo}, #{userId}, #{commentText}, now())
+    </insert>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

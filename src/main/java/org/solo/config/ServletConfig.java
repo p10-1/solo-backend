@@ -3,6 +3,9 @@ package org.solo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -11,7 +14,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-//@Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {
         "org.solo.controller",
@@ -23,7 +25,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
         "org.solo.asset.controller",
         "org.solo.policy.controller",
         "org.solo.policy.scheduler",
-        "org.solo.product.controller"
+        "org.solo.product.controller",
+        "org.solo.product.scheduler"
 
 })  // <- 공통 팩키지
 public class ServletConfig implements WebMvcConfigurer {
@@ -50,6 +53,18 @@ public class ServletConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/img/**")
                 .addResourceLocations("/img/");
     }
+
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials(true);
+//        config.addAllowedOriginPattern("*");
+//        config.addAllowedHeader("*");
+//        config.addAllowedMethod("*");
+//        source.registerCorsConfiguration("/**", config);
+//        return new CorsFilter(source);
+//    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

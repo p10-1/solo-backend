@@ -1,33 +1,57 @@
 package org.solo.board.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.solo.board.domain.BoardAttachmentVO;
 import org.solo.board.domain.BoardVO;
+import org.solo.board.domain.CommentVO;
+import org.solo.common.pagination.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Mapper
 @Repository
+@Mapper
 public interface BoardMapper {
-    public List<BoardVO> getList();
-
-    public BoardVO get(Long boardNo);
-
-    public void create(BoardVO board);
-
-    public int update(BoardVO board);
-
-    public int delete(Long boardNo);
-
-    // BoardAttachment 관련
-    public void createAttachment(BoardAttachmentVO attach);
-
-    public List<BoardAttachmentVO> getAttachmentList(Long boardNo);
-
-    public BoardAttachmentVO getAttachment(Long no);
-
-    public int deleteAttachment(Long no);
-
-//    public int deleteAttachment_boardNo(Long boardNo);
+    int getTotalCnt();
+    int getTotalCntByKeyword(@Param("category") String category,
+                             @Param("keyword") String keyword);
+    List<BoardVO> getBoardsByPage(@Param("offset") int offset, @Param("limit") int limit);
+    List<BoardVO> getBoardsByPageAndKeyword(@Param("offset") int offset,
+                                            @Param("limit") int limit,
+                                            @Param("category") String category,
+                                            @Param("keyword") String keyword);
+    BoardVO get(Long boardNo);
+    void create(BoardVO boardVO);
+    int update(BoardVO boardVO);
+    int delete(Long boardNo);
+    void createAttachment(BoardAttachmentVO attach);
+    List<BoardAttachmentVO> getAttachmentList(Long bno);
+    BoardAttachmentVO getAttachment(Long boardNo);
+    int deleteAttachment(Long attachmentNo);
+    List<CommentVO> getComments(Long boardNo);
+    void createComment(CommentVO commentVO);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
