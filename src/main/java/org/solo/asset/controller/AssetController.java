@@ -27,6 +27,7 @@ public class AssetController {
     @GetMapping("")
     public ResponseEntity<AssetVO> getAsset(HttpSession session) {
         String userId = (String) session.getAttribute("userId");
+        System.out.println("get 수행중:" + userId);
         if (userId != null) {
             AssetVO asset = assetService.getAssetData(userId);
             return ResponseEntity.ok(asset);
