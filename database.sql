@@ -1,7 +1,19 @@
-USE solo_db;
+use solo_db;
 SHOW TABLES;
 
+select * from user;
+select * from board;
+select * from userAsset;
+select * from news;
 
+update user
+set point = 1000
+where userId = 3711364352;
+
+delete from news;
+select * from policy;
+select count(*) from news;
+# ########
 DROP TABLE IF EXISTS user;
 CREATE TABLE `user`
 (
@@ -29,6 +41,7 @@ CREATE TABLE `userAsset`
     `updateDate`  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (userId) REFERENCES user (userId)
 );
+
 
 DROP TABLE IF EXISTS policy;
 CREATE TABLE `policy`
@@ -69,7 +82,7 @@ CREATE TABLE board
     regDate    DATETIME DEFAULT CURRENT_TIMESTAMP,
     updateDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     likes      INTEGER  DEFAULT 0,
-    contents   INTEGER  DEFAULT 0,
+    comments   INTEGER  DEFAULT 0,
     views      INTEGER  DEFAULT 0
 );
 
@@ -96,3 +109,15 @@ CREATE TABLE `comment`
     `regDate`     DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (boardNo) REFERENCES board (boardNo) ON DELETE CASCADE
 );
+
+DROP TABLE IF EXISTS news;
+CREATE TABLE news (
+no int NOT NULL primary Key,
+title varchar(255) NOT NULL,
+link varchar(255) NOT NULL,
+category varchar(50) NOT NULL,
+author varchar(255) NOT NULL,
+pubDate datetime NOT NULL,
+description varchar(4000) DEFAULT NULL
+);
+

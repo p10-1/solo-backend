@@ -28,11 +28,13 @@ public class MypageController {
         this.mypageService = mypageService;
     }
 
-    @GetMapping({"", "/"})
-    public String mypage() {
-        return "mypage";
-    }
 
+//    @GetMapping({"", "/"})
+//    public String mypage() {
+//        return "mypage";
+//    }
+
+    // 마이페이지 자산 입력
     @PostMapping("/insertAsset")
     public ResponseEntity<String> saveUserData(HttpSession session, @RequestBody Map<String, Object> data) {
         String userId = (String) session.getAttribute("userId");
@@ -79,7 +81,7 @@ public class MypageController {
         return ResponseEntity.ok("저장 완료");
     }
 
-    //update
+    // 자산 업데이트
     @PutMapping("/updateAsset")
     public ResponseEntity<String> updateUserData(HttpSession session, @RequestBody Map<String, Object> data) {
         String userId = (String) session.getAttribute("userId");
@@ -115,8 +117,6 @@ public class MypageController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보를 찾을 수 없습니다.");
         }
     }
-
-
 
     // member 수정
     @PostMapping("/updateMember")

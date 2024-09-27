@@ -17,19 +17,19 @@ public class AssetController {
     @Autowired
     private AssetService assetService;
     private MypageService mypageService;
-    @GetMapping({"","/"})
-    public String asset(HttpSession session, Model model) {
-
-//        String userID = (String) session.getAttribute("kakaoId");
+//    @GetMapping({"","/"})
+//    public String asset(HttpSession session, Model model) {
 //
-//        if(userID != null) {
-//            List<Asset> assets = mypageService.getAssets(userID);
-//            model.addAttribute("assets",assets);
-//        } else {
-//            model.addAllAttributes("assets",null);
-//        }
-        return "asset";
-    }
+////        String userID = (String) session.getAttribute("kakaoId");
+////
+////        if(userID != null) {
+////            List<Asset> assets = mypageService.getAssets(userID);
+////            model.addAttribute("assets",assets);
+////        } else {
+////            model.addAllAttributes("assets",null);
+////        }
+//        return "asset";
+//    }
 
 
 }
