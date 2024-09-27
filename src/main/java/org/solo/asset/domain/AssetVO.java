@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class AssetVO {
 
-    private int userNo;
+//    private int assetNo;
     private String userId;
     private int cash;// 현금자산: asset : amount
     private int stock;
