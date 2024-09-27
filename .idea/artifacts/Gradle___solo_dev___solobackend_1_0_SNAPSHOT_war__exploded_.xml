@@ -34,6 +34,7 @@
           <element id="library" level="project" name="Gradle: javax.servlet:jstl:1.2" />
           <element id="library" level="project" name="Gradle: com.zaxxer:HikariCP:2.7.4" />
           <element id="library" level="project" name="Gradle: com.rometools:rome:1.19.0" />
+          <element id="library" level="project" name="Gradle: org.quartz-scheduler:quartz:2.3.2" />
           <element id="library" level="project" name="Gradle: org.slf4j:slf4j-api:2.0.9" />
           <element id="library" level="project" name="Gradle: log4j:log4j:1.2.17" />
           <element id="library" level="project" name="Gradle: xerces:xercesImpl:2.12.2" />
@@ -61,6 +62,9 @@
           <element id="library" level="project" name="Gradle: org.springframework.security:spring-security-crypto:5.8.13" />
           <element id="library" level="project" name="Gradle: com.rometools:rome-utils:1.19.0" />
           <element id="library" level="project" name="Gradle: org.jdom:jdom2:2.0.6.1" />
+          <element id="library" level="project" name="Gradle: com.zaxxer:HikariCP-java7:2.4.13" />
+          <element id="library" level="project" name="Gradle: com.mchange:c3p0:0.9.5.4" />
+          <element id="library" level="project" name="Gradle: com.mchange:mchange-commons-java:0.2.15" />
           <element id="library" level="project" name="Gradle: xml-apis:xml-apis:1.4.01" />
           <element id="library" level="project" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.14.0" />
           <element id="library" level="project" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.14.0" />
@@ -79,10 +83,6 @@
           <element id="library" level="project" name="Gradle: io.jsonwebtoken:jjwt-impl:0.11.5" />
           <element id="library" level="project" name="Gradle: org.slf4j:slf4j-reload4j:2.0.9" />
           <element id="library" level="project" name="Gradle: ch.qos.reload4j:reload4j:1.2.22" />
-          <element id="library" level="project" name="Gradle: org.quartz-scheduler:quartz:2.3.2" />
-          <element id="library" level="project" name="Gradle: com.zaxxer:HikariCP-java7:2.4.13" />
-          <element id="library" level="project" name="Gradle: com.mchange:c3p0:0.9.5.4" />
-          <element id="library" level="project" name="Gradle: com.mchange:mchange-commons-java:0.2.15" />
         </element>
       </element>
     </root>
