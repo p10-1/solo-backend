@@ -219,9 +219,18 @@
         FROM comment
         WHERE boardNo = #{boardNo}
     </select>
+    <select id="likeCheck" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM `like`
+        WHERE userId = #{userId} AND boardNo = #{boardNo}
+    </select>
 
     <insert id="createComment">
         INSERT INTO comment(boardNo, userId, commentText, regDate)
         VALUES (#{boardNo}, #{userId}, #{commentText}, now())
+    </insert>
+    <insert id="likeUpdate">
+        INSERT INTO `like`(boardNo, userId)
+        VALUES (#{boardNo}, #{userId})
     </insert>
 </mapper>

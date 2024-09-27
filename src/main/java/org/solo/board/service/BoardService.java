@@ -37,5 +37,6 @@ public interface BoardService {
     List<CommentVO> getComments(Long no);
     void createComment(CommentVO commentVO);
     void upLikeCnt(Long boardNo);
-
+    boolean likeCheck(Long boardNo, String userId);
+    void likeUpdate(Long boardNo, String userId);
 }

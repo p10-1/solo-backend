@@ -65,7 +65,6 @@ public class BoardServiceImpl implements BoardService {
     }
     @Override
     public List<BoardVO> getBoardsByPageAndKeywordOrderByview(PageRequest pageRequest, String category, String keyword) {
-        System.out.println(boardMapper.getBoardsByPageAndKeywordOrderByview(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword));
         return boardMapper.getBoardsByPageAndKeywordOrderByview(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
     }
     @Override
@@ -168,5 +167,15 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void upLikeCnt(Long boardNo) {
         boardMapper.upLikeCnt(boardNo);
+    }
+
+    @Override
+    public boolean likeCheck(Long boardNo, String userId) {
+        return boardMapper.likeCheck(boardNo, userId) == 0;
+    }
+
+    @Override
+    public void likeUpdate(Long boardNo, String userId) {
+        boardMapper.likeUpdate(boardNo, userId);
     }
 }

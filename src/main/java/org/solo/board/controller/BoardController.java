@@ -31,11 +31,8 @@ public class BoardController {
                                                  @RequestParam(required = false) String category,
                                                  @RequestParam(required = false) String keyword,
                                                  @RequestParam String sort) {
-        System.out.println("page: " + page + " amount: " + amount + " category: " + category + " keyword: " + keyword + " sort: " + sort);
         PageRequest pageRequest = PageRequest.of(page, amount); // 페이지 번호는 0부터 시작하므로 -1 필요
-
         List<BoardVO> boards;
-
         switch (sort) {
             case "likes":
                 System.out.println("좋아요");
@@ -66,8 +63,6 @@ public class BoardController {
                 ? boardService.getTotalCntByKeyword(category, keyword)
                 : boardService.getTotalCnt();
 
-//        System.out.println("controller: " + boards);
-
         Page<BoardVO> boardsPage = Page.of(pageRequest, totalBoardsCount, boards);
 
         return ResponseEntity.ok(boardsPage);
@@ -87,8 +82,6 @@ public class BoardController {
 
     @PostMapping("/comment")
     public ResponseEntity<String> createComment(@RequestBody CommentVO commentVO) {
-//        commentVO.setBoardNo(no);
-//        System.out.println("commentVO: " + commentVO);
         boardService.createComment(commentVO);
         return ResponseEntity.ok("댓글이 성공적으로 작성되었습니다.");
     }
@@ -119,10 +112,16 @@ public class BoardController {
         return ResponseEntity.ok(boardService.deleteAttachment(no));
     }
 
-    @PostMapping("/like/{no}")
-    public ResponseEntity<String> like(@PathVariable Long no) {
-        boardService.upLikeCnt(no);
-        return ResponseEntity.ok("좋아요가 증가되었습니다.");
-    }
+    @GetMapping("/like")
+    public ResponseEntity<String> like(@RequestParam Long boardNo, @RequestParam String userId) {
+        System.out.println("boardNo: " + boardNo + " userId: " + userId);
+        if (boardService.likeCheck(boardNo,userId)) {
+            boardService.upLikeCnt(boardNo);
+            boardService.likeUpdate(boardNo, userId);
+            return ResponseEntity.ok("success");
+        } else {
+            return ResponseEntity.ok("fail");
+        }
 
+    }
 }

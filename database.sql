@@ -16,7 +16,8 @@ CREATE TABLE `user`
 DROP TABLE IF EXISTS userAsset;
 CREATE TABLE `userAsset`
 (
-    `userId`      VARCHAR(30) NOT NULL PRIMARY KEY,
+    `assetNo`     INT         AUTO_INCREMENT PRIMARY KEY,
+    `userId`      VARCHAR(50) NOT NULL,
     `cash`        INT         NULL,
     `stock`       INT         NULL,
     `property`    INT         NULL,
@@ -70,7 +71,8 @@ CREATE TABLE `board`
     `updateDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `likes`      INTEGER  DEFAULT 0,
     `comments`   INTEGER  DEFAULT 0,
-    `views`      INTEGER  DEFAULT 0
+    `views`      INTEGER  DEFAULT 0,
+    FOREIGN KEY (userId) REFERENCES user (userId)
 );
 
 DROP TABLE IF EXISTS boardAttachment;
@@ -94,29 +96,31 @@ CREATE TABLE `comment`
     `userId`      VARCHAR(50) NOT NULL,
     `commentText` TEXT        NOT NULL,
     `regDate`     DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES user (userId),
     FOREIGN KEY (boardNo) REFERENCES board (boardNo) ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS like;
+CREATE TABLE `like`
+(
+    `likeNo`    INT         NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+    `boardNo`   INT         NOT NULL,
+    `userId`    VARCHAR(50) NOT NULL,
+    FOREIGN KEY (boardNo) REFERENCES board (boardNo) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES user (userId)
+);
 
 
-# ------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
-SELECT *
-FROM board
-WHERE userId LIKE '%3%'
-ORDER BY regDate DESC
+insert into user (userId, nickName, name, email, birthdate, point)
+values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
+        ('9702399454','홍길동', '홍길동', 'hong@454','2013-03-21',0),
+       ('3101219225','박지성', '박지성', 'park@225','2007-05-19',0),
+       ('6304009156','손흥민', '손흥민', 'son@156','2020-12-25',0),
+       ('2004991237','김하성', '김하성', 'kim@237','2009-03-30',0),
+       ('1004539485','유재석', '유재석', 'you@485','2004-01-19',0),
+       ('8704441237','차범근', '차범근', 'cha@237','2009-03-30',0);
 
-select * from board
-where title like '%제목%'
-order by likes desc
-limit 1, 10;
-
-insert into board (title, content, userId, likes, comments, views)
-values ('제목1','내용1','3704999150',30,43,81),
-       ('제목2','내용2','3704999150',20,41,77),
-       ('제목3','내용3','3704999150',14,9,49),
-       ('제목4','내용4','3704999150',34,11,121),
-       ('제목5','내용5','3704999150',29,3,88),
-       ('제목6','내용6','3704999150',17,2,68),
-       ('제목7','내용7','3704999150',33,43,90),
-       ('제목8','내용8','3704999150',50,32,143)
+select *
+from user;
