@@ -49,6 +49,33 @@ CREATE TABLE `userAsset`
     FOREIGN KEY (userId) REFERENCES user (userId)
 );
 
+CREATE TABLE `userAsset` (
+                             `assetNo` INT AUTO_INCREMENT PRIMARY KEY,
+                             `userId` VARCHAR(50) NOT NULL,
+                             `cashBank` JSON NULL,
+                             `cashAccount` JSON NULL,
+                             `cash` JSON NULL,
+                             `stockBank` JSON NULL,
+                             `stockAccount` JSON NULL,
+                             `stock` JSON NULL,
+                             `propertyBank` JSON NULL,
+                             `propertyAccount` JSON NULL,
+                             `property` JSON NULL,
+                             `depositBank` JSON NULL,
+                             `depositAccount` JSON NULL,
+                             `deposit` JSON NULL,
+                             `consume` VARCHAR(30) NULL,
+                             `loanAmount` INT NULL,
+                             `loanPurpose` VARCHAR(30) NULL,
+                             `period` INT NULL,
+                             `interest` DECIMAL(5, 2) NULL, -- 소수점 단위를 입력할 수 있도록 DECIMAL로 변경
+                             `createDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
+                             `updateDate` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                             FOREIGN KEY (userId) REFERENCES user (userId)
+);
+
+
+
 DROP TABLE IF EXISTS policy;
 CREATE TABLE `policy`
 (
@@ -222,11 +249,66 @@ select * from board;
 select * from userAsset;
 select * from policy;
 
+
+
 update user
 set point = 1000
 where userId = 3711364352;
 
+INSERT INTO `userAsset` (
+    `userId`,
+    `cashBank`,
+    `cashAccount`,
+    `cash`,
+    `stockBank`,
+    `stockAccount`,
+    `stock`,
+    `propertyBank`,
+    `propertyAccount`,
+    `property`,
+    `depositBank`,
+    `depositAccount`,
+    `deposit`,
+    `consume`,
+    `loanAmount`,
+    `loanPurpose`,
+    `period`,
+    `interest`
+) VALUES (
+             '3711364352',
+             '["우리은행", "신한은행"]',  -- 현금 은행 배열
+             '["123-456-7890", "987-654-3210"]',  -- 현금 계좌 배열
+             '["50000", "20000"]',  -- 현금 자산 배열
+             '["미래에셋", "삼성증권"]',  -- 주식 은행 배열
+             '["111-222-3333", "444-555-6666"]',  -- 주식 계좌 배열
+             '["10000", "15000"]',  -- 주식 자산 배열
+             '["국민은행", "부동산은행"]',  -- 부동산 은행 배열
+             '["777-888-9999", "000-111-2222"]',  -- 부동산 계좌 배열
+             '["300000", "400000"]',  -- 부동산 자산 배열
+             '["농협은행", "하나은행"]',  -- 예적금 은행 배열
+             '["333-444-5555", "666-777-8888"]',  -- 예적금 계좌 배열
+             '["20000", "25000"]' ,  -- 예적금 자산 배열
+             '소비유형1',
+             2000000,
+             '주택구입',
+             24,
+             3
+         );
 
-delete from news;
-select * from policy;
-select count(*) from news;
+
+ALTER TABLE `userAsset`
+    MODIFY `cashBank` JSON NULL,
+    MODIFY `cashAccount` JSON NULL,
+    MODIFY `cash` JSON NULL,
+
+    MODIFY `stockBank` JSON NULL,
+    MODIFY `stockAccount` JSON NULL,
+    MODIFY `stock` JSON NULL,
+
+    MODIFY `propertyBank` JSON NULL,
+    MODIFY `propertyAccount` JSON NULL,
+    MODIFY `property` JSON NULL,
+
+    MODIFY `depositBank` JSON NULL,
+    MODIFY `depositAccount` JSON NULL,
+    MODIFY `deposit` JSON NULL;
