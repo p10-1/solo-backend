@@ -74,13 +74,14 @@ CREATE TABLE `product`
     `type`       VARCHAR(45)  NOT NULL
 );
 
+# board 테이블을 삭제하고 새로 만드려면 boardAttachment, like, comment 역시 새로 만들어줘야함, 외래키를 없앴기 때문..
 DROP TABLE IF EXISTS `board`;
 CREATE TABLE `board`
 (
     `boardNo`    INTEGER AUTO_INCREMENT PRIMARY KEY,
     `title`      VARCHAR(200) NOT NULL,
     `content`    TEXT,
-    `userId`     VARCHAR(50)  NOT NULL,
+    `userName`   VARCHAR(50)  NOT NULL,
     `regDate`    DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updateDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `likes`      INTEGER  DEFAULT 0,
@@ -105,7 +106,7 @@ CREATE TABLE `comment`
 (
     `commentNo`   INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `boardNo`     INT         NOT NULL,
-    `userId`      VARCHAR(50) NOT NULL,
+    `userName`      VARCHAR(50) NOT NULL,
     `commentText` TEXT        NOT NULL,
     `regDate`     DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -115,7 +116,7 @@ CREATE TABLE `like`
 (
     `likeNo`    INT         NOT NULL AUTO_INCREMENT PRIMARY KEY ,
     `boardNo`   INT         NOT NULL,
-    `userId`    VARCHAR(50) NOT NULL
+    `userName`    VARCHAR(50) NOT NULL
 );
 
 DROP TABLE IF EXISTS news;
@@ -142,18 +143,3 @@ values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
        ('1004539485','유재석', '유재석', 'you@485','2004-01-19',0),
        ('8704441237','차범근', '차범근', 'cha@237','2009-03-30',0);
 
-select *
-from user;
-
-select * from userAsset;
-
-show tables;
-
-delete
-from user where nickName = '김철수';
-
-insert into user(userId, userName, nickName, email, birthdate, point)
-values ('123456','김철수','김철수','kim@gmail.com','2024-09-11',0);
-
-
-select * from boardAttachment;

@@ -5,8 +5,8 @@
 
 <mapper namespace="org.solo.board.mapper.BoardMapper">
     <insert id="create">
-        INSERT INTO board(title, content, userId)
-        VALUES (#{title}, #{content}, #{userId})
+        INSERT INTO board(title, content, userName)
+        VALUES (#{title}, #{content}, #{userName})
         <selectKey resultType="Long" keyProperty="boardNo" keyColumn="boardNo" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -14,7 +14,7 @@
 
     <update id="update">
         UPDATE board
-        SET title = #{title}, content = #{content}, userId = #{userId}, updateDate = now()
+        SET title = #{title}, content = #{content}, userName = #{userName}, updateDate = now()
         WHERE boardNo = #{boardNo}
     </update>
     <update id="upCommentCnt">
@@ -86,8 +86,8 @@
             <when test="category == 'content'">
                 content LIKE CONCAT('%', #{keyword}, '%')
             </when>
-            <when test="category == 'userId'">
-                userId LIKE CONCAT('%', #{keyword}, '%')
+            <when test="category == 'userName'">
+                userName LIKE CONCAT('%', #{keyword}, '%')
             </when>
             <otherwise>
                 1 = 1
@@ -107,8 +107,8 @@
             <when test="category == 'content'">
                 content LIKE CONCAT('%', #{keyword}, '%')
             </when>
-            <when test="category == 'userId'">
-                userId LIKE CONCAT('%', #{keyword}, '%')
+            <when test="category == 'userName'">
+                userName LIKE CONCAT('%', #{keyword}, '%')
             </when>
             <otherwise>
                 1 = 1
@@ -128,8 +128,8 @@
             <when test="category == 'content'">
                 content LIKE CONCAT('%', #{keyword}, '%')
             </when>
-            <when test="category == 'userId'">
-                userId LIKE CONCAT('%', #{keyword}, '%')
+            <when test="category == 'userName'">
+                userName LIKE CONCAT('%', #{keyword}, '%')
             </when>
             <otherwise>
                 1 = 1
@@ -149,8 +149,8 @@
             <when test="category == 'content'">
                 content LIKE CONCAT('%', #{keyword}, '%')
             </when>
-            <when test="category == 'userId'">
-                userId LIKE CONCAT('%', #{keyword}, '%')
+            <when test="category == 'userName'">
+                userName LIKE CONCAT('%', #{keyword}, '%')
             </when>
             <otherwise>
                 1 = 1
@@ -164,7 +164,7 @@
         <id property="boardNo" column="boardNo"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
-        <result property="userId" column="userId"/>
+        <result property="userName" column="userName"/>
         <result property="regDate" column="regDate"/>
         <result property="updateDate" column="updateDate"/>
         <result property="likes" column="likes"/>
@@ -222,15 +222,15 @@
     <select id="likeCheck" resultType="java.lang.Integer">
         SELECT count(*)
         FROM `like`
-        WHERE userId = #{userId} AND boardNo = #{boardNo}
+        WHERE userName = #{userName} AND boardNo = #{boardNo}
     </select>
 
     <insert id="createComment">
-        INSERT INTO comment(boardNo, userId, commentText, regDate)
-        VALUES (#{boardNo}, #{userId}, #{commentText}, now())
+        INSERT INTO comment(boardNo, userName, commentText, regDate)
+        VALUES (#{boardNo}, #{userName}, #{commentText}, now())
     </insert>
     <insert id="likeUpdate">
-        INSERT INTO `like`(boardNo, userId)
-        VALUES (#{boardNo}, #{userId})
+        INSERT INTO `like`(boardNo, userName)
+        VALUES (#{boardNo}, #{userName})
     </insert>
 </mapper>

@@ -50,9 +50,9 @@ public interface BoardMapper {
 
     List<BoardVO> getBoardsByPageOrderBycomment(@Param("offset") int offset, @Param("limit") int limit);
 
-    int likeCheck(@Param("boardNo") Long boardNo, @Param("userId") String userId);
+    int likeCheck(@Param("boardNo") Long boardNo, @Param("userName") String userName);
 
-    void likeUpdate(@Param("boardNo") Long boardNo, @Param("userId") String userId);
+    void likeUpdate(@Param("boardNo") Long boardNo, @Param("userName") String userName);
 }
 
 
