@@ -4,10 +4,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.solo.news.mapper.NewsMapper">
-    <insert id="insertNews" parameterType="NewsVO">
+<!--    <insert id="insertNews" parameterType="NewsVO">-->
+<!--        INSERT INTO news (no, title, link, category, author, pubDate, description)-->
+<!--        VALUES (#{no}, #{title}, #{link}, #{category}, #{author}, now(), #{description})-->
+<!--    </insert>-->
+
+    <insert id="insertNews" parameterType="java.util.List">
         INSERT INTO news (no, title, link, category, author, pubDate, description)
-        VALUES (#{no}, #{title}, #{link}, #{category}, #{author}, now(), #{description})
+        VALUES
+        <foreach collection="list" item="news" separator=",">
+            (#{news.no}, #{news.title}, #{news.link}, #{news.category}, #{news.author}, #{news.pubDate}, #{news.description})
+        </foreach>
     </insert>
+
 
     <select id="getNewsALL" resultType="NewsVO">
         SELECT * FROM news
