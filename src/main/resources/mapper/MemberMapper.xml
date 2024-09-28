@@ -9,10 +9,16 @@
         SELECT * FROM user WHERE userId = #{userId}
     </select>
 
+    <select id="checkUser" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM user
+        WHERE userName = #{nickName}
+    </select>
+
     <insert id="insertNewUserInfo" parameterType="org.solo.member.domain.MemberVO">
 
-        INSERT INTO user (userId, nickName, name, email, birthdate, point)
-        VALUES (#{userId}, #{nickName}, #{name}, #{email}, #{birthdate}, 0)
+        INSERT INTO user (userId, nickName, userName, email, birthdate, point)
+        VALUES (#{userId}, #{nickName}, #{userName}, #{email}, #{birthdate}, 0)
 
     </insert>
 

@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 @Transactional
 //@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    private final static String BASE_DIR = "upload/board";
+    private final static String BASE_DIR = "/Users/junyoung/Documents/upload/board";
     private final BoardMapper boardMapper;
 
     @Autowired
@@ -119,15 +119,11 @@ public class BoardServiceImpl implements BoardService {
         for (MultipartFile part : files) {
             if (part.isEmpty()) continue;
             try {
-                System.out.println("Uploaded file: " + part.getOriginalFilename());
                 String uploadPath = UploadFiles.upload(BASE_DIR, part);
-                System.out.println("uploadPath: " + uploadPath);
                 BoardAttachmentVO attach = BoardAttachmentVO.from(part, boardNo, uploadPath);
-                System.out.println("attach: " + attach);
                 boardMapper.createAttachment(attach);
             } catch (IOException e) {
                 throw new RuntimeException(e);
-                // log.error(e.getMessage());
             }
         }
     }
@@ -136,7 +132,6 @@ public class BoardServiceImpl implements BoardService {
     public BoardVO update(BoardVO boardVO) {
         System.out.println("update service boardVO: " + boardVO);
         int result = boardMapper.update(boardVO);
-        System.out.println("result: " + result);
         // 파일 업로드 처리
         List<MultipartFile> files = boardVO.getFiles(); // BoardVO에 getFiles() 메서드가 있어야 함
         if (files != null && !files.isEmpty()) {

@@ -183,7 +183,7 @@
     </resultMap>
 
     <select id="get" resultMap="boardMap">
-        SELECT b.*, a.attachmentNo, a.bno, a.filename, a.contentType, a.size, a.regDate as a_regDate
+        SELECT b.*, a.attachmentNo, a.bno, a.filename, a.contentType, a.path, a.size, a.regDate as a_regDate
         FROM board b
             LEFT OUTER JOIN boardAttachment a
             ON b.boardNo = a.bno
