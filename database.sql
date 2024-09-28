@@ -2,7 +2,7 @@ USE solo_db;
 SHOW TABLES;
 
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS user;
 CREATE TABLE `user`
 (
     `userId`    VARCHAR(50) NOT NULL PRIMARY KEY,
@@ -13,7 +13,24 @@ CREATE TABLE `user`
     `point`     INT         NOT NULL
 );
 
-DROP TABLE IF EXISTS `userAsset`;
+DROP TABLE IF EXISTS userAsset;
+CREATE TABLE `userAsset`
+(
+    `userId`      VARCHAR(50) NOT NULL PRIMARY KEY,
+    `cash`        INT         NULL,
+    `stock`       INT         NULL,
+    `property`    INT         NULL,
+    `deposit`     INT         NULL,
+    `consume`     VARCHAR(30) NULL,
+    `loanAmount`  INT         NULL,
+    `loanPurpose` VARCHAR(30) NULL,
+    `period`      INT         NULL,
+    `createDate`  DATETIME DEFAULT CURRENT_TIMESTAMP, -- 생성 시간을 저장하는 컬럼
+    `updateDate`  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES user (userId)
+);
+
+-- 변경예정
 CREATE TABLE `userAsset`
 (
     `assetNo`     INT         AUTO_INCREMENT PRIMARY KEY,
@@ -136,22 +153,3 @@ values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
 
 select *
 from user;
-
-delete
-from user where userId = '3704999157';
-
-
-select *
-from policy;
-
-SELECT * from board;
-
-insert into board(title, content, userId, likes, comments, views)
-values ('돈 잘 모으는 꿀팁 알려드림','돈을 많이 벌어야 합니다.','9702399454',30,0,51),
-       ('연말정산 관련 정보 알려드림','연말 정산 관련 정보들입니다~','2004991237',42,0,109),
-       ('KB Star 정기예금 좋음','그렇다고 합니다','1004539485',11,0,39),
-       ('KB 맑은하늘 적금이 더 좋음','그렇다고 하네요','5704999188',9,0,32),
-       ('일주일에 5만원 쓰기 중','알뜰살뜰하네요','6304009156',15,0,50),
-       ('방금 정책에 괜찮은 정책 떴음','정책 페이지로 가보세요','1004539485',95,0,290),
-       ('오늘 금융 뉴스 5개 읽었다','다들 뉴스보고 오세요','8704441237',83,0,103),
-       ('다들 왜이렇게 돈을 많이 모았냐?','나 평균보다 밑이네 열심히 모아야겠다','9702399454',139,0,482);

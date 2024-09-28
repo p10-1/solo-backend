@@ -28,10 +28,10 @@ public class MypageController {
         this.mypageService = mypageService;
     }
 
-    @GetMapping({"", "/"})
-    public String mypage() {
-        return "mypage";
-    }
+//    @GetMapping({"", "/"})
+//    public String mypage() {
+//        return "mypage";
+//    }
 
     @PostMapping("/insertAsset")
     public ResponseEntity<String> saveUserData(HttpSession session, @RequestBody Map<String, Object> data) {

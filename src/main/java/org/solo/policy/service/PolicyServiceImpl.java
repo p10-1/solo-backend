@@ -72,6 +72,7 @@ public class PolicyServiceImpl implements PolicyService {
 
                 PolicyVO policyVO = new PolicyVO(bizId, polyBizTy, polyBizSjnm, polyItcnCn, sporCn, rqutUrla);
                 policies.add(policyVO);
+
             }
             // 데이터베이스에 저장
             savePolicies(policies);
