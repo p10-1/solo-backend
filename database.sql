@@ -1,7 +1,6 @@
 USE solo_db;
 SHOW TABLES;
 
-
 DROP TABLE IF EXISTS user;
 CREATE TABLE `user`
 (
@@ -69,7 +68,7 @@ CREATE TABLE board
     regDate    DATETIME DEFAULT CURRENT_TIMESTAMP,
     updateDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     likes      INTEGER  DEFAULT 0,
-    contents   INTEGER  DEFAULT 0,
+    comments   INTEGER  DEFAULT 0,
     views      INTEGER  DEFAULT 0
 );
 
@@ -96,3 +95,20 @@ CREATE TABLE `comment`
     `regDate`     DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (boardNo) REFERENCES board (boardNo) ON DELETE CASCADE
 );
+
+DROP TABLE IF EXISTS news;
+DROP TABLE IF EXISTS quizs;
+
+insert into board(title, content, userId, likes, comments, views)
+values ('오늘 로또 당첨 되는 꿈을 꿈', '돼지가 나와서 나를 똥에 밀어넣음', '8704441237', '100', 3, 350),
+       ('사회 초년생의 부자 되는 방법1', '소비 지출 내역을 기록해서 절약 패턴 찾기', '1004539485', '30', 0, 100),
+       ('사회 초년생의 부자 되는 방법2', '지출 내역에 카테고리를 분류해서 필요한 지출 고르기', '1004539485', '35', 0, 120),
+       ('사회 초년생의 부자 되는 방법3', '고정 지출과 유동 지출을 분류해서 1년 계획 세우기', '1004539485', '35', 0, 120),
+       ('사회 초년생의 부자 되는 방법4', '수정중', '1004539485', '40', 0, 150),
+       ('사회 초년생의 부자 되는 방법5', '수정중', '1004539485', '42', 0, 158);
+INSERT INTO user (userId, nickName, name, email, birthdate, point)
+VALUES ('2004991238','sung_guen', '김성근', 'kimSungen@157','1955-09-05',0),
+       ('6304009176','gwang_gill', '이광길', 'lee@021','1968-08-24',0),
+       ('1004539355','오세훈짱', '정우성', 'jung@023','2002-07-11',0),
+       ('4803392224','야구천재', '송승준', 'song@156','2000-11-29',0),
+       ('9204451541','느림의미학', '유희관', 'lyu@128','1997-06-15',0);
