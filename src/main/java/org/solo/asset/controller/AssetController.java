@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("api/asset")
+@RequestMapping("/api/asset")
 public class AssetController {
     private final AssetService assetService;
 
@@ -24,6 +24,7 @@ public class AssetController {
 
     @GetMapping("")
     public ResponseEntity<AssetVO> getAsset(HttpSession session, HttpServletRequest request) {
+        System.out.println("controller실행");
         if (session == null || !request.isRequestedSessionIdValid()) {
             System.out.println("세션이 무효화 상태입니다.");
         }

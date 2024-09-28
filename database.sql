@@ -185,3 +185,9 @@ values ('돈 잘 모으는 꿀팁 알려드림','돈을 많이 벌어야 합니�
 
 select *
 from user;
+
+select * from userasset;
+select* from userasset;
+delete from userasset;
+delete from user where name='서나연';
+
