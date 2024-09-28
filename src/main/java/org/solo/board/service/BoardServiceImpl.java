@@ -86,6 +86,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public List<BoardVO> getBest() {
+        return boardMapper.getBest();
+    }
+
+    @Override
     public List<CommentVO> getComments(Long boardNo) {
         return boardMapper.getComments(boardNo);
     }

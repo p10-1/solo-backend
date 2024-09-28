@@ -53,6 +53,8 @@ public interface BoardMapper {
     int likeCheck(@Param("boardNo") Long boardNo, @Param("userName") String userName);
 
     void likeUpdate(@Param("boardNo") Long boardNo, @Param("userName") String userName);
+
+    List<BoardVO> getBest();
 }
 
 

@@ -68,6 +68,10 @@ public class BoardController {
         return ResponseEntity.ok(boardsPage);
     }
 
+    @GetMapping("/best")
+    public ResponseEntity<List<BoardVO>> getBest(){
+        return ResponseEntity.ok(boardService.getBest());
+    }
 
     @GetMapping("/{no}")
     public ResponseEntity<BoardVO> getById(@PathVariable Long no) {

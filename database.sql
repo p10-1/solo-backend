@@ -143,3 +143,15 @@ values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
        ('1004539485','유재석', '유재석', 'you@485','2004-01-19',0),
        ('8704441237','차범근', '차범근', 'cha@237','2009-03-30',0);
 
+
+select * from user;
+
+select * from board;
+
+insert into board(title, content, userName, likes, comments, views)
+values ('인기글 테스트를 위한 가짜 테스트','아 언제까지 이걸하지', '김하성', 32, 0, 130);
+
+SELECT *
+FROM board
+ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
+LIMIT 5;
