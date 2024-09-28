@@ -2,6 +2,7 @@ package org.solo.mypage.service;
 
 import org.solo.asset.domain.AssetVO;
 import org.solo.member.domain.MemberVO;
+import org.solo.mypage.domain.MypageVO;
 
 import java.util.Map;
 
@@ -15,5 +16,6 @@ public interface MypageService {
     int getPoint(String userId);
     boolean withdrawPoints(String userId, int point);
     boolean updateCash(String userId, int cashAmount);
+
 
 }

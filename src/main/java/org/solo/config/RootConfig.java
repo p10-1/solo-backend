@@ -1,5 +1,6 @@
 package org.solo.config;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.zaxxer.hikari.HikariDataSource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.sql.DataSource;
+import java.util.TimeZone;
 
 @Configuration
 @PropertySource({"classpath:/application.properties"})
@@ -47,6 +49,9 @@ import javax.sql.DataSource;
 public class RootConfig {
     @Bean
     public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
         return new ObjectMapper();
     }
 
