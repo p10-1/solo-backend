@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("api/asset")
+@RequestMapping("/api/asset")
 public class AssetController {
     private final AssetService assetService;
 
