@@ -2,6 +2,7 @@ package org.solo.asset.controller;
 
 import org.solo.asset.domain.AssetVO;
 import org.solo.asset.service.AssetService;
+import org.solo.mypage.service.MypageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ public class AssetController {
 
     @GetMapping("")
     public ResponseEntity<AssetVO> getAsset(HttpSession session, HttpServletRequest request) {
+        System.out.println("controller실행");
         if (session == null || !request.isRequestedSessionIdValid()) {
             System.out.println("세션이 무효화 상태입니다.");
         }
@@ -36,7 +38,3 @@ public class AssetController {
 
     }
 }
-
-
-
-
