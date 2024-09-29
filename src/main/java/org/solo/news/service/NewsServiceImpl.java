@@ -15,10 +15,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
 @Transactional
@@ -76,11 +73,10 @@ public class NewsServiceImpl implements NewsService {
                     Element itemElement = (Element) itemNode;
 
                     NewsVO news = new NewsVO();
-                    news.setNo(Integer.parseInt(itemElement.getElementsByTagName("no").item(0).getTextContent()));
+                    news.setNewsNo(Integer.parseInt(itemElement.getElementsByTagName("no").item(0).getTextContent()));
                     news.setTitle(itemElement.getElementsByTagName("title").item(0).getTextContent());
                     news.setLink(itemElement.getElementsByTagName("link").item(0).getTextContent());
                     news.setCategory(itemElement.getElementsByTagName("category").item(0).getTextContent());
-                    news.setAuthor(itemElement.getElementsByTagName("author").item(0).getTextContent());
 
                     // pubDate 변환
                     String pubDateString = itemElement.getElementsByTagName("pubDate").item(0).getTextContent();
@@ -90,10 +86,7 @@ public class NewsServiceImpl implements NewsService {
                     String formattedPubDate = outputFormat.format(pubDate);
                     news.setPubDate(formattedPubDate); // 변환된 날짜를 설정
 
-
-                    news.setDescription(itemElement.getElementsByTagName("description").item(0).getTextContent());
-
-                    System.out.println("데이터매핑 후:"+ news);
+//                    System.out.println("데이터매핑 후:"+ news);
                     newsList.add(news); // 뉴스 리스트에 추가
                 }
             }
@@ -108,8 +101,15 @@ public class NewsServiceImpl implements NewsService {
     // 뉴스 리스트를 데이터베이스에 삽입
     public void insertNews(List<NewsVO> newsList) {
         System.out.println("insertNews 들어옴 (service): " + newsList);
-        newsMapper.insertNews(newsList);
+        for (NewsVO news : newsList) {
+            // 중복 체크
+            if (newsMapper.getNewsByNo((int) news.getNewsNo()) == null) {
+                // 중복되지 않는 경우에만 삽입
+                newsMapper.insertNews(Collections.singletonList(news));
+            } else {
+                System.out.println("중복 데이터 발견: " + news.getNewsNo());
+            }
+        }
         System.out.println("insertNews 실행(mapper)");
-        // 가져온 뉴스 리스트를 한 번에 삽입
     }
 }

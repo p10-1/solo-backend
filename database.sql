@@ -157,12 +157,11 @@ CREATE TABLE news (
 );
 -- 변경예정
 CREATE TABLE news (
-                      `no` int NOT NULL primary Key,
-                      `title` varchar(255) NOT NULL,
-                      `link` varchar(255) NOT NULL,
-                      `category` varchar(50) NOT NULL,
-                      `author` varchar(255) NOT NULL,
-                      `pubDate` datetime NOT NULL,
+`newsNo` int NOT NULL primary Key,
+`title` varchar(255) NOT NULL,
+`link` varchar(255) NOT NULL,
+`category` varchar(50) NOT NULL,
+`pubDate` datetime NOT NULL
 );
 
 
@@ -238,7 +237,7 @@ from user;
 select * from news;
 select * from userasset;
 
-delete from userasset;
+delete from news;
 
 select * from userasset;
 delete from userasset;
