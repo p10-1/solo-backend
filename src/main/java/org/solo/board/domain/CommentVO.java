@@ -16,7 +16,7 @@ import java.util.Date;
 public class CommentVO {
     private Long commentNo;
     private Long boardNo;
-    private String userId;
+    private String userName;
     private String commentText;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;

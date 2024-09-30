@@ -13,4 +13,5 @@ public interface MemberMapper {
     MemberVO findByKakaoId(@Param("userId") String userId);
     void insertNewUserInfo(MemberVO member);
     void updatePoint(Map<String, Object> params);
+    int checkUser(@Param("nickName") String nickName);
 }

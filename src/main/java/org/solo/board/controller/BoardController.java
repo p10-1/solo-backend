@@ -68,6 +68,10 @@ public class BoardController {
         return ResponseEntity.ok(boardsPage);
     }
 
+    @GetMapping("/best")
+    public ResponseEntity<List<BoardVO>> getBest(){
+        return ResponseEntity.ok(boardService.getBest());
+    }
 
     @GetMapping("/{no}")
     public ResponseEntity<BoardVO> getById(@PathVariable Long no) {
@@ -113,11 +117,11 @@ public class BoardController {
     }
 
     @GetMapping("/like")
-    public ResponseEntity<String> like(@RequestParam Long boardNo, @RequestParam String userId) {
-        System.out.println("boardNo: " + boardNo + " userId: " + userId);
-        if (boardService.likeCheck(boardNo,userId)) {
+    public ResponseEntity<String> like(@RequestParam Long boardNo, @RequestParam String userName) {
+        System.out.println("boardNo: " + boardNo + " userName: " + userName);
+        if (boardService.likeCheck(boardNo,userName)) {
             boardService.upLikeCnt(boardNo);
-            boardService.likeUpdate(boardNo, userId);
+            boardService.likeUpdate(boardNo, userName);
             return ResponseEntity.ok("success");
         } else {
             return ResponseEntity.ok("fail");
