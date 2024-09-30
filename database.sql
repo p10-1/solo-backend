@@ -50,28 +50,29 @@ CREATE TABLE `userAsset`
 );
 
 CREATE TABLE `userAsset` (
-                             `assetNo` INT AUTO_INCREMENT PRIMARY KEY,
-                             `userId` VARCHAR(50) NOT NULL,
-                             `cashBank` JSON NULL,
-                             `cashAccount` JSON NULL,
-                             `cash` JSON NULL,
-                             `stockBank` JSON NULL,
-                             `stockAccount` JSON NULL,
-                             `stock` JSON NULL,
-                             `propertyBank` JSON NULL,
-                             `propertyAccount` JSON NULL,
-                             `property` JSON NULL,
-                             `depositBank` JSON NULL,
-                             `depositAccount` JSON NULL,
-                             `deposit` JSON NULL,
-                             `consume` VARCHAR(30) NULL,
-                             `loanAmount` INT NULL,
-                             `loanPurpose` VARCHAR(30) NULL,
-                             `period` INT NULL,
-                             `interest` DECIMAL(5, 2) NULL, -- 소수점 단위를 입력할 수 있도록 DECIMAL로 변경
-                             `createDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
-                             `updateDate` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                             FOREIGN KEY (userId) REFERENCES user (userId)
+    `assetNo` INT AUTO_INCREMENT PRIMARY KEY,
+    `userId` VARCHAR(50) NOT NULL,
+    `consumeType` VARCHAR(50) NULL,
+    `cashBank` JSON NULL,
+    `cashAccount` JSON NULL,
+    `cash` JSON NULL,
+    `stockBank` JSON NULL,
+    `stockAccount` JSON NULL,
+    `stock` JSON NULL,
+    `propertyBank` JSON NULL,
+    `propertyAccount` JSON NULL,
+    `property` JSON NULL,
+    `depositBank` JSON NULL,
+    `depositAccount` JSON NULL,
+    `deposit` JSON NULL,
+    `consume` VARCHAR(30) NULL,
+    `loanAmount` INT NULL,
+    `loanPurpose` VARCHAR(30) NULL,
+    `period` INT NULL,
+    `interest` DECIMAL(5, 2) NULL, -- 소수점 단위를 입력할 수 있도록 DECIMAL로 변경
+    `createDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updateDate` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+FOREIGN KEY (userId) REFERENCES user (userId)
 );
 
 
