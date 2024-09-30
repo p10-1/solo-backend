@@ -1,8 +1,7 @@
 USE solo_db;
 SHOW TABLES;
 
-
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
 (
     `userId`    VARCHAR(50) NOT NULL PRIMARY KEY,
@@ -13,39 +12,32 @@ CREATE TABLE `user`
     `point`     INT         NOT NULL
 );
 
-DROP TABLE IF EXISTS userAsset;
+DROP TABLE IF EXISTS `userAsset`;
 CREATE TABLE `userAsset`
 (
-    `userId`      VARCHAR(50) NOT NULL PRIMARY KEY,
-    `cash`        INT         NULL,
-    `stock`       INT         NULL,
-    `property`    INT         NULL,
-    `deposit`     INT         NULL,
-    `consume`     VARCHAR(30) NULL,
-    `loanAmount`  INT         NULL,
-    `loanPurpose` VARCHAR(30) NULL,
-    `period`      INT         NULL,
-    `createDate`  DATETIME DEFAULT CURRENT_TIMESTAMP, -- 생성 시간을 저장하는 컬럼
-    `updateDate`  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    `assetNo`         INT AUTO_INCREMENT PRIMARY KEY,
+    `userId`          VARCHAR(50)   NOT NULL,
+    `consumeType`     VARCHAR(50)   NULL,
+    `cashBank`        JSON          NULL,
+    `cashAccount`     JSON          NULL,
+    `cash`            JSON          NULL,
+    `stockBank`       JSON          NULL,
+    `stockAccount`    JSON          NULL,
+    `stock`           JSON          NULL,
+    `propertyBank`    JSON          NULL,
+    `propertyAccount` JSON          NULL,
+    `property`        JSON          NULL,
+    `depositBank`     JSON          NULL,
+    `depositAccount`  JSON          NULL,
+    `deposit`         JSON          NULL,
+    `consume`         VARCHAR(30)   NULL,
+    `loanAmount`      INT           NULL,
+    `loanPurpose`     VARCHAR(30)   NULL,
+    `period`          INT           NULL,
+    `interest`        DECIMAL(5, 2) NULL, -- 소수점 단위를 입력할 수 있도록 DECIMAL로 변경
+    `createDate`      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updateDate`      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
--- 변경예정
-# CREATE TABLE `userAsset`
-# (
-#     `assetNo`     INT         AUTO_INCREMENT PRIMARY KEY,
-#     `userId`      VARCHAR(50) NOT NULL,
-#     `cash`        INT         NULL,
-#     `stock`       INT         NULL,
-#     `property`    INT         NULL,
-#     `deposit`     INT         NULL,
-#     `consume`     VARCHAR(30) NULL,
-#     `loanAmount`  INT         NULL,
-#     `loanPurpose` VARCHAR(30) NULL,
-#     `period`      INT         NULL,
-#     `createDate`  DATETIME DEFAULT CURRENT_TIMESTAMP, -- 생성 시간을 저장하는 컬럼
-#     `updateDate`  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-#     FOREIGN KEY (userId) REFERENCES user (userId)
-# );
 
 DROP TABLE IF EXISTS `policy`;
 CREATE TABLE `policy`
@@ -119,20 +111,17 @@ CREATE TABLE `like`
     `userName`    VARCHAR(50) NOT NULL
 );
 
-DROP TABLE IF EXISTS news;
+DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news`
 (
-    `no`          INT          NOT NULL PRIMARY KEY ,
-    `title`       VARCHAR(255) NOT NULL,
-    `link`        VARCHAR(255) NOT NULL,
-    `category`    VARCHAR(50)  NOT NULL,
-    `author`      VARCHAR(255) NOT NULL,
-    `pubDate`     DATETIME    NOT NULL,
-    `description` VARCHAR(4000) DEFAULT NULL
+    `newsNo`   int          NOT NULL primary Key,
+    `title`    varchar(255) NOT NULL,
+    `link`     varchar(255) NOT NULL,
+    `category` varchar(50)  NOT NULL,
+    `pubDate`  datetime     NOT NULL
 );
 
-
-# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------
 
 insert into user (userId, nickName, userName, email, birthdate, point)
 values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
@@ -155,3 +144,7 @@ SELECT *
 FROM board
 ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
 LIMIT 5;
+
+delete from user where nickName = '김준영';
+
+select * from news;

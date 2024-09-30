@@ -35,7 +35,6 @@ public class MemberServiceImpl implements MemberService {
     public boolean checkUser(String nickName) {
         return memberMapper.checkUser(nickName) > 0;
     }
-
 }
 
 
