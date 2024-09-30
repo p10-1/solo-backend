@@ -29,16 +29,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/product")
 public class ProductController {
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private final ProductService productService;
-    private final RestTemplate restTemplate;
 
     @Autowired
-    public ProductController(ProductService productService, RestTemplate restTemplate) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/kb")
