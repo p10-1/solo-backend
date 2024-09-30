@@ -88,16 +88,30 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    // page로 조회
+    // 뉴스 조회
+    @Override
+    public List<NewsVO> getNewsBycategory(PageRequest pageRequest, String category) {
+        return newsMapper.getNewsBycategory(pageRequest.getOffset(), pageRequest.getAmount(), category); // 페이지와 항목 수에 따라 데이터 가져오기
+    }
+
+    // 카테고리별 뉴스 개수 조회
+    @Override
+    public int getNewsCountBycategory(String category) {
+        return newsMapper.getNewsCountBycategory(category); // 전체 뉴스 수 가져오기
+    }
+
+    // 카테고리별 조회
     @Override
     public List<NewsVO> getNewsByPage(PageRequest pageRequest) {
         return newsMapper.getNewsByPage(pageRequest.getOffset(), pageRequest.getAmount()); // 페이지와 항목 수에 따라 데이터 가져오기
     }
 
-    // 뉴스 갯수 조회
+    // 카테고리별 뉴스 개수 조회
     @Override
     public int getNewsCount() {
         return newsMapper.getNewsCount(); // 전체 뉴스 수 가져오기
     }
+
+
 
 }

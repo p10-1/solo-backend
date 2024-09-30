@@ -14,6 +14,10 @@ public interface NewsMapper {
     void insertNews(List<NewsVO> newsList);
     List<NewsVO> getNewsALL();
     NewsVO getNewsByNo(int no);
+    List<NewsVO> getNewsBycategory(@Param("offset") int offset, @Param("limit") int limit, @Param("category") String category);
+    int getNewsCountBycategory(@Param("category") String category);
+
     List<NewsVO> getNewsByPage(@Param("offset") int offset, @Param("limit") int limit);
     int getNewsCount();
+
 }

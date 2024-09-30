@@ -36,16 +36,36 @@ public class NewsController {
         this.newsService = newsService; // 생성자에서 초기화
     }
 
-    @GetMapping("/fetch")
-    public ResponseEntity<Page<NewsVO>> fetchNews(
+
+    @GetMapping("/getNews")
+    public ResponseEntity<Page<NewsVO>> fetchAllNews(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int amount) {
+
+        System.out.println("전체 뉴스 fetch 요청 들어옴 (controller)");
+
+        PageRequest pageRequest = PageRequest.of(page, amount);
+        List<NewsVO> newsList = newsService.getNewsByPage(pageRequest);
+        int totalNewsCount = newsService.getNewsCount();
+
+        Page<NewsVO> newsPage = Page.of(pageRequest, totalNewsCount, newsList);
+
+
+        return ResponseEntity.ok(newsPage);
+    }
+    @GetMapping("/getNewsBycategory")
+    public ResponseEntity<Page<NewsVO>> fetchNews(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int amount,
+            @RequestParam(required = false) String category) {
+
+        System.out.println("news fetch 요청 들어옴 (controller)");
 
         // PageRequest 객체 생성
         PageRequest pageRequest = PageRequest.of(page, amount);
         // 뉴스 데이터를 가져오고 Page 객체 생성, 뉴스 개수 조회
-        List<NewsVO> newsList = newsService.getNewsByPage(pageRequest);
-        int totalNewsCount = newsService.getNewsCount();
+        List<NewsVO> newsList = newsService.getNewsBycategory(pageRequest, category);
+        int totalNewsCount = newsService.getNewsCountBycategory(category);
 
         Page<NewsVO> newsPage = Page.of(pageRequest, totalNewsCount, newsList);
 

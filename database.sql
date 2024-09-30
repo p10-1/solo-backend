@@ -260,3 +260,10 @@ ALTER TABLE `userAsset`
     MODIFY `deposit` JSON NULL;
 
 select * from news order by pubDate DESC;
+
+select * from news where category='증권';
+
+SELECT *
+FROM NEWS
+WHERE (category = '경제' OR '경제' IS NULL)
+LIMIT 0, 20;
