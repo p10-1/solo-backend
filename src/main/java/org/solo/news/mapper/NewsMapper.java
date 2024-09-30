@@ -11,4 +11,5 @@ import java.util.List;
 public interface NewsMapper {
     void insertNews(List<NewsVO> newsList);
     List<NewsVO> getNewsALL();
+    NewsVO getNewsByNo(int no);
 }

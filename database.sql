@@ -1,8 +1,9 @@
+
+
 USE solo_db;
 SHOW TABLES;
 
-
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
 (
     `userId`    VARCHAR(50) NOT NULL PRIMARY KEY,
@@ -13,39 +14,32 @@ CREATE TABLE `user`
     `point`     INT         NOT NULL
 );
 
-DROP TABLE IF EXISTS userAsset;
+DROP TABLE IF EXISTS `userAsset`;
 CREATE TABLE `userAsset`
 (
-    `userId`      VARCHAR(50) NOT NULL PRIMARY KEY,
-    `cash`        INT         NULL,
-    `stock`       INT         NULL,
-    `property`    INT         NULL,
-    `deposit`     INT         NULL,
-    `consume`     VARCHAR(30) NULL,
-    `loanAmount`  INT         NULL,
-    `loanPurpose` VARCHAR(30) NULL,
-    `period`      INT         NULL,
-    `createDate`  DATETIME DEFAULT CURRENT_TIMESTAMP, -- 생성 시간을 저장하는 컬럼
-    `updateDate`  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    `assetNo`         INT AUTO_INCREMENT PRIMARY KEY,
+    `userId`          VARCHAR(50)   NOT NULL,
+    `consumeType`     VARCHAR(50)   NULL,
+    `cashBank`        JSON          NULL,
+    `cashAccount`     JSON          NULL,
+    `cash`            JSON          NULL,
+    `stockBank`       JSON          NULL,
+    `stockAccount`    JSON          NULL,
+    `stock`           JSON          NULL,
+    `propertyBank`    JSON          NULL,
+    `propertyAccount` JSON          NULL,
+    `property`        JSON          NULL,
+    `depositBank`     JSON          NULL,
+    `depositAccount`  JSON          NULL,
+    `deposit`         JSON          NULL,
+    `consume`         VARCHAR(30)   NULL,
+    `loanAmount`      INT           NULL,
+    `loanPurpose`     VARCHAR(30)   NULL,
+    `period`          INT           NULL,
+    `interest`        DECIMAL(5, 2) NULL, -- 소수점 단위를 입력할 수 있도록 DECIMAL로 변경
+    `createDate`      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updateDate`      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
--- 변경예정
-# CREATE TABLE `userAsset`
-# (
-#     `assetNo`     INT         AUTO_INCREMENT PRIMARY KEY,
-#     `userId`      VARCHAR(50) NOT NULL,
-#     `cash`        INT         NULL,
-#     `stock`       INT         NULL,
-#     `property`    INT         NULL,
-#     `deposit`     INT         NULL,
-#     `consume`     VARCHAR(30) NULL,
-#     `loanAmount`  INT         NULL,
-#     `loanPurpose` VARCHAR(30) NULL,
-#     `period`      INT         NULL,
-#     `createDate`  DATETIME DEFAULT CURRENT_TIMESTAMP, -- 생성 시간을 저장하는 컬럼
-#     `updateDate`  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-#     FOREIGN KEY (userId) REFERENCES user (userId)
-# );
 
 DROP TABLE IF EXISTS `policy`;
 CREATE TABLE `policy`
@@ -119,16 +113,14 @@ CREATE TABLE `like`
     `userName`    VARCHAR(50) NOT NULL
 );
 
-DROP TABLE IF EXISTS news;
+DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news`
 (
-    `no`          INT          NOT NULL PRIMARY KEY ,
-    `title`       VARCHAR(255) NOT NULL,
-    `link`        VARCHAR(255) NOT NULL,
-    `category`    VARCHAR(50)  NOT NULL,
-    `author`      VARCHAR(255) NOT NULL,
-    `pubDate`     DATETIME    NOT NULL,
-    `description` VARCHAR(4000) DEFAULT NULL
+    `newsNo`   int          NOT NULL primary Key,
+    `title`    varchar(255) NOT NULL,
+    `link`     varchar(255) NOT NULL,
+    `category` varchar(50)  NOT NULL,
+    `pubDate`  datetime     NOT NULL
 );
 
 
@@ -136,22 +128,135 @@ CREATE TABLE `news`
 
 insert into user (userId, nickName, userName, email, birthdate, point)
 values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
-        ('9702399454','홍길동', '홍길동', 'hong@454','2013-03-21',0),
+       ('9702399454','홍길동', '홍길동', 'hong@454','2013-03-21',0),
        ('3101219225','박지성', '박지성', 'park@225','2007-05-19',0),
        ('6304009156','손흥민', '손흥민', 'son@156','2020-12-25',0),
        ('2004991237','김하성', '김하성', 'kim@237','2009-03-30',0),
        ('1004539485','유재석', '유재석', 'you@485','2004-01-19',0),
        ('8704441237','차범근', '차범근', 'cha@237','2009-03-30',0);
 
+insert into board(title, content, userId, likes, comments, views)
+values ('오늘 로또 당첨 되는 꿈을 꿈', '돼지가 나와서 나를 똥에 밀어넣음', '8704441237', '100', 3, 350),
+       ('사회 초년생의 부자 되는 방법1', '소비 지출 내역을 기록해서 절약 패턴 찾기', '1004539485', '30', 0, 100),
+       ('사회 초년생의 부자 되는 방법2', '지출 내역에 카테고리를 분류해서 필요한 지출 고르기', '1004539485', '35', 0, 120),
+       ('사회 초년생의 부자 되는 방법3', '고정 지출과 유동 지출을 분류해서 1년 계획 세우기', '1004539485', '35', 0, 120);
 
-select * from user;
 
-select * from board;
-
+INSERT INTO user (userId, nickName, name, email, birthdate, point)
+VALUES ('2004991238','sung_guen', '김성근', 'kimSungen@157','1955-09-05',0),
+       ('6304009176','gwang_gill', '이광길', 'lee@021','1968-08-24',0),
+       ('1004539355','오세훈짱', '정우성', 'jung@023','2002-07-11',0),
+       ('4803392224','야구천재', '송승준', 'song@156','2000-11-29',0),
+       ('9204451541','느림의미학', '유희관', 'lyu@128','1997-06-15',0);
+delete from board;
 insert into board(title, content, userName, likes, comments, views)
-values ('인기글 테스트를 위한 가짜 테스트','아 언제까지 이걸하지', '김하성', 32, 0, 130);
+values ('돈 잘 모으는 꿀팁 알려드림','돈을 많이 벌어야 합니다.','홍길동',30,0,51),
+       ('연말정산 관련 정보 알려드림','연말 정산 관련 정보들입니다~','김하성',42,0,109),
+       ('KB Star 정기예금 좋음','그렇다고 합니다','유재석',11,0,39),
+       ('KB 맑은하늘 적금이 더 좋음','그렇다고 하네요','오타니',9,0,32),
+       ('일주일에 5만원 쓰기 중','알뜰살뜰하네요','손흥민',15,0,50),
+       ('방금 정책에 괜찮은 정책 떴음','정책 페이지로 가보세요','유재석',95,0,290),
+       ('오늘 금융 뉴스 5개 읽었다','다들 뉴스보고 오세요','차범근',83,0,103),
+       ('다들 왜이렇게 돈을 많이 모았냐?','나 평균보다 밑이네 열심히 모아야겠다','홍길동',139,0,482);
 
-SELECT *
-FROM board
-ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
-LIMIT 5;
+insert into board(title, content, userId, likes, comments, views)
+values ('이 서비스 좀 좋은 듯','그렇지 않나요?','9702399454',0,0,0),
+       ('자산 입력할 때 돈 없어서 슬펐음','열심히 모아야겠다 ','2004991237',0,0,0),
+       ('적금 써본 거 중에 좋은 거 추천함','KB맑은 하늘 적금 추천함','1004539485',0,0,0),
+       ('돈 모으는 법 알려주실 분','도와주세요','6304009156',0,0,0),
+       ('일주일에 5만원 쓰기 중','알뜰살뜰하네요','6304009156',15,0,50),
+       ('방금 정책에 괜찮은 정책 떴음','정책 페이지로 가보세요','1004539485',95,0,290),
+       ('오늘 금융 뉴스 5개 읽었다','다들 뉴스보고 오세요','8704441237',83,0,103),
+       ('다들 왜이렇게 돈을 많이 모았냐?','나 평균보다 밑이네 열심히 모아야겠다','9702399454',139,0,482);
+
+INSERT INTO board(title, content, userId, likes, comments, views)
+VALUES ('주식 투자 시작하는 방법','처음 주식을 시작하는 분들을 위한 가이드입니다.','1004539485', 0, 0, 0),
+       ('가계부를 잘 쓰는 방법','가계부 작성 꿀팁을 공유합니다.','8704441237', 0, 0, 0),
+       ('금리 인상에 따른 대출 전략','금리 인상에 대처하는 대출 관리 팁입니다.','6304009156', 76, 0,0 ),
+       ('비상금 만들기, 어떻게 시작할까?','비상금을 준비하는 방법과 그 필요성에 대해 설명합니다.','2004991237', 30, 0, 80),
+       ('월급 관리 이렇게 하세요','월급을 효과적으로 관리하는 5가지 팁을 공유합니다.','1004539485', 94, 0, 231);
+
+INSERT INTO board(title, content, userId, likes, comments, views)
+VALUES ('일주일에 5만원 쓰기 중','알뜰살뜰하네요','6304009156',15,0,50);
+select *
+from user;
+
+select * from news;
+select * from userasset;
+
+delete from news;
+
+select * from userasset;
+delete from userasset;
+
+delete from board where title='일주일에 5만원 쓰기 중';
+select * from user;
+select * from board;
+select * from userAsset;
+select * from policy;
+
+
+
+update user
+set point = 1000
+where userId = 3711364352;
+
+INSERT INTO `userAsset` (
+    `userId`,
+    `cashBank`,
+    `cashAccount`,
+    `cash`,
+    `stockBank`,
+    `stockAccount`,
+    `stock`,
+    `propertyBank`,
+    `propertyAccount`,
+    `property`,
+    `depositBank`,
+    `depositAccount`,
+    `deposit`,
+    `consume`,
+    `loanAmount`,
+    `loanPurpose`,
+    `period`,
+    `interest`
+) VALUES (
+             '3711364352',
+             '["우리은행", "신한은행"]',  -- 현금 은행 배열
+             '["123-456-7890", "987-654-3210"]',  -- 현금 계좌 배열
+             '["50000", "20000"]',  -- 현금 자산 배열
+             '["미래에셋", "삼성증권"]',  -- 주식 은행 배열
+             '["111-222-3333", "444-555-6666"]',  -- 주식 계좌 배열
+             '["10000", "15000"]',  -- 주식 자산 배열
+             '["국민은행", "부동산은행"]',  -- 부동산 은행 배열
+             '["777-888-9999", "000-111-2222"]',  -- 부동산 계좌 배열
+             '["300000", "400000"]',  -- 부동산 자산 배열
+             '["농협은행", "하나은행"]',  -- 예적금 은행 배열
+             '["333-444-5555", "666-777-8888"]',  -- 예적금 계좌 배열
+             '["20000", "25000"]' ,  -- 예적금 자산 배열
+             '소비유형1',
+             2000000,
+             '주택구입',
+             24,
+             3
+         );
+
+
+ALTER TABLE `userAsset`
+    MODIFY `cashBank` JSON NULL,
+    MODIFY `cashAccount` JSON NULL,
+    MODIFY `cash` JSON NULL,
+
+    MODIFY `stockBank` JSON NULL,
+    MODIFY `stockAccount` JSON NULL,
+    MODIFY `stock` JSON NULL,
+
+    MODIFY `propertyBank` JSON NULL,
+    MODIFY `propertyAccount` JSON NULL,
+    MODIFY `property` JSON NULL,
+
+    MODIFY `depositBank` JSON NULL,
+    MODIFY `depositAccount` JSON NULL,
+    MODIFY `deposit` JSON NULL;
+
+select * from news order by pubDate DESC;

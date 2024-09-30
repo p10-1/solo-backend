@@ -8,12 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewsVO {
-    private long no;
+    private long newsNo;
     private String title;
     private String link;
     private String category;
-    private String author;
     private String pubDate;
-    private String description;
 
 }
