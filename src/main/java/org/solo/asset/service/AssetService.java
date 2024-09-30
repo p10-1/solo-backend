@@ -5,4 +5,5 @@ import org.solo.asset.domain.AssetVO;
 public interface AssetService {
 
 
+    AssetVO getAssetData(String userId);
 }

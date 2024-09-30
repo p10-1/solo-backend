@@ -51,31 +51,35 @@ public class MemberController {
 
     @RequestMapping(value= "/login/callback", produces = "application/json", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<?> loginCallback(@RequestParam("code") String code, HttpSession session) throws IOException {
-        String accessToken = getKakaoAccessToken(code);
-        session.setAttribute("accessToken", accessToken);
+        try {
+            String accessToken = getKakaoAccessToken(code);
+            session.setAttribute("accessToken", accessToken);
 
-        Map<String, Object> userInfoMap = getKakaoUserInfo(accessToken, session);
-        if (userInfoMap == null) {
-//            return "redirect:/error"; // 에러 페이지로 리다이렉트
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Failed to retrieve user info.");
-        }
+            Map<String, Object> userInfoMap = getKakaoUserInfo(accessToken, session);
+            if (userInfoMap == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Failed to retrieve user info.");
+            }
 
-        // userId를 Long으로 가져오기
-        Long userIdLong = (Long) userInfoMap.get("id"); // Long으로 가져오기
-        String userId = String.valueOf(userIdLong); // String으로 변환
+    //        Long userIdLong = (Long) userInfoMap.get("id");
+    //        String userId = String.valueOf(userIdLong);
+            String userId = String.valueOf(userInfoMap.get("id"));
 
-        // 디비에 해당 카카오 아이디를 가진 사용자가 이미 있는지 검사
-        MemberVO memberVO = memberService.findByKakaoId(userId);
+            // 디비에 해당 카카오 아이디를 가진 사용자가 이미 있는지 검사
+            MemberVO memberVO = memberService.findByKakaoId(userId);
 
-        if (memberVO == null) {
-            session.setAttribute("newUserInfo", userInfoMap);
-            return ResponseEntity.status(HttpStatus.CREATED).body("{\"status\": \"newUser\"}"); // JSON 형태로 변경
-        } else {
-            session.setAttribute("userInfo", memberVO);
-            return ResponseEntity.ok(memberVO); // 기존 사용자 정보 반환
+            if (memberVO == null) {
+                session.setAttribute("newUserInfo", userInfoMap);
+                return ResponseEntity.status(HttpStatus.CREATED).body("{\"status\": \"newUser\"}"); // JSON 형태로 변경
+            } else {
+                session.setAttribute("userInfo", memberVO);
+                return ResponseEntity.ok(memberVO); // 기존 사용자 정보 반환
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred.");
         }
 
     }
+
     private String getKakaoAccessToken(String code) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -154,15 +158,21 @@ public class MemberController {
 
     @PostMapping("/firstUser")
     public ResponseEntity<?> firstUser(@RequestBody Map<String, String> nameAndbirth, HttpSession session) {
-        String name = nameAndbirth.get("name");
+        String userName = nameAndbirth.get("userName");
         String birthdate = nameAndbirth.get("birthdate");
         String userId = session.getAttribute("userId").toString();
         String nickName = session.getAttribute("nickName").toString();
         String email = session.getAttribute("email").toString();
 
-        MemberVO newUser = memberService.insertNewUserInfo(userId, nickName, name, email, birthdate);
+        MemberVO newUser = memberService.insertNewUserInfo(userId, nickName, userName, email, birthdate);
         session.setAttribute("userInfo", newUser);
         return ResponseEntity.ok(newUser); // 새 사용자 정보 반환
+    }
+
+    @GetMapping("/checkUser")
+    public ResponseEntity<Boolean> checkUser(@RequestParam("nickName") String nickName) {
+        boolean isDuplicate = memberService.checkUser(nickName);
+        return ResponseEntity.ok(!isDuplicate);
     }
 
 }

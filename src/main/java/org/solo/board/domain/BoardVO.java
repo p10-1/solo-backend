@@ -1,5 +1,7 @@
 package org.solo.board.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,9 +21,11 @@ public class BoardVO {
     private Long boardNo;
     private String title;
     private String content;
-    private String userId;
-    private Date regDate; // LOCALDATETIME
-    private Date modDate;
+    private String userName;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    LocalDateTime regDate; // LOCALDATETIME
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    LocalDateTime updateDate;
     private int likes;
     private int comments;
     private int views;
@@ -36,17 +40,3 @@ public class BoardVO {
         this.files = files;
     }
 }
-
-
-//CREATE TABLE board
-//        (
-//                boardNo			INTEGER AUTO_INCREMENT PRIMARY KEY,
-//                title		VARCHAR(200) NOT NULL,
-//content		TEXT,
-//userID		VARCHAR(50) NOT NULL,
-//regDate		DATETIME DEFAULT CURRENT_TIMESTAMP,
-//updateDate	DATETIME DEFAULT CURRENT_TIMESTAMP,
-//likes       INTEGER DEFAULT 0,
-//contents    INTEGER DEFAULT 0,
-//views       INTEGER DEFAULT 0
-//        );

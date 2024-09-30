@@ -1,5 +1,6 @@
 package org.solo.board.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,17 +16,8 @@ import java.util.Date;
 public class CommentVO {
     private Long commentNo;
     private Long boardNo;
-    private String userId;
+    private String userName;
     private String commentText;
-    private Date regDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime regDate;
 }
-//
-//CREATE TABLE comment
-//        (
-//    `commentNo`   INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-//    `boardNo`     INT         NOT NULL,
-//    `userId`      VARCHAR(50) NOT NULL,
-//    `commentText` TEXT        NOT NULL,
-//        `regDate`     DATE        NOT NULL,
-//FOREIGN KEY (boardNo) REFERENCES board (boardNo)
-//        );

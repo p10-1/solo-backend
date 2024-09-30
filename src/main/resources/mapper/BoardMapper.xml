@@ -5,8 +5,8 @@
 
 <mapper namespace="org.solo.board.mapper.BoardMapper">
     <insert id="create">
-        INSERT INTO board(title, content, userId)
-        VALUES (#{title}, #{content}, #{userId})
+        INSERT INTO board(title, content, userName)
+        VALUES (#{title}, #{content}, #{userName})
         <selectKey resultType="Long" keyProperty="boardNo" keyColumn="boardNo" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -14,7 +14,22 @@
 
     <update id="update">
         UPDATE board
-        SET title = #{title}, content = #{content}, userId = #{userId}, updateDate = now()
+        SET title = #{title}, content = #{content}, userName = #{userName}, updateDate = now()
+        WHERE boardNo = #{boardNo}
+    </update>
+    <update id="upCommentCnt">
+        UPDATE board
+        SET comments = comments + 1
+        WHERE boardNo = #{boardNo}
+    </update>
+    <update id="upViewCnt">
+        UPDATE board
+        SET views = views + 1
+        WHERE boardNo = #{boardNo}
+    </update>
+    <update id="upLikeCnt">
+        UPDATE board
+        SET likes = likes + 1
         WHERE boardNo = #{boardNo}
     </update>
 
@@ -35,27 +50,130 @@
         WHERE #{category} LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
-    <select id="getBoardsByPage" resultType="org.solo.board.domain.BoardVO">
+    <select id="getBest" resultType="org.solo.board.domain.BoardVO">
         SELECT *
         FROM board
-        ORDER BY regDate DESC LIMIT #{offset}, #{limit}
+        ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
+            LIMIT 5;
     </select>
 
-    <select id="getBoardsByPageAndKeyword" resultType="org.solo.board.domain.BoardVO">
+    <select id="getBoardsByPageOrderByregDate" resultType="org.solo.board.domain.BoardVO">
         SELECT *
         FROM board
-        WHERE content LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY regDate DESC
             LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageOrderBylike" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        ORDER BY likes DESC
+            LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageOrderByview" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        ORDER BY views DESC
+            LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageOrderBycomment" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        ORDER BY comments DESC
+            LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getBoardsByPageAndKeywordOrderByregDate" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        WHERE
+        <choose>
+            <when test="category == 'title'">
+                title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'content'">
+                content LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'userName'">
+                userName LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                1 = 1
+            </otherwise>
+        </choose>
+        ORDER BY regDate DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageAndKeywordOrderBylike" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        WHERE
+        <choose>
+            <when test="category == 'title'">
+                title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'content'">
+                content LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'userName'">
+                userName LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                1 = 1
+            </otherwise>
+        </choose>
+        ORDER BY likes DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageAndKeywordOrderByview" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        WHERE
+        <choose>
+            <when test="category == 'title'">
+                title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'content'">
+                content LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'userName'">
+                userName LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                1 = 1
+            </otherwise>
+        </choose>
+        ORDER BY views DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+    <select id="getBoardsByPageAndKeywordOrderBycomment" resultType="org.solo.board.domain.BoardVO">
+        SELECT *
+        FROM board
+        WHERE
+        <choose>
+            <when test="category == 'title'">
+                title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'content'">
+                content LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="category == 'userName'">
+                userName LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                1 = 1
+            </otherwise>
+        </choose>
+        ORDER BY comments DESC
+        LIMIT #{offset}, #{limit}
     </select>
 
     <resultMap id="boardMap" type="org.solo.board.domain.BoardVO">
         <id property="boardNo" column="boardNo"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
-        <result property="userId" column="userId"/>
+        <result property="userName" column="userName"/>
         <result property="regDate" column="regDate"/>
-        <result property="modDate" column="modDate"/>
+        <result property="updateDate" column="updateDate"/>
         <result property="likes" column="likes"/>
         <result property="comments" column="comments"/>
         <result property="views" column="views"/>
@@ -72,7 +190,7 @@
     </resultMap>
 
     <select id="get" resultMap="boardMap">
-        SELECT b.*, a.attachmentNo, a.bno, a.filename, a.contentType, a.size, a.regDate as a_regDate
+        SELECT b.*, a.attachmentNo, a.bno, a.filename, a.contentType, a.path, a.size, a.regDate as a_regDate
         FROM board b
             LEFT OUTER JOIN boardAttachment a
             ON b.boardNo = a.bno
@@ -108,35 +226,18 @@
         FROM comment
         WHERE boardNo = #{boardNo}
     </select>
+    <select id="likeCheck" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM `like`
+        WHERE userName = #{userName} AND boardNo = #{boardNo}
+    </select>
 
     <insert id="createComment">
-        INSERT INTO comment(boardNo, userId, commentText, regDate)
-        VALUES (#{boardNo}, #{userId}, #{commentText}, now())
+        INSERT INTO comment(boardNo, userName, commentText, regDate)
+        VALUES (#{boardNo}, #{userName}, #{commentText}, now())
+    </insert>
+    <insert id="likeUpdate">
+        INSERT INTO `like`(boardNo, userName)
+        VALUES (#{boardNo}, #{userName})
     </insert>
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -5,6 +5,9 @@ import org.solo.news.domain.NewsVO;
 import java.util.List;
 
 public interface NewsService {
-    void insertNews(NewsVO newsVO);
+//    void insertNews(NewsVO newsVO);
     List<NewsVO> getNewsALL();
+    List<NewsVO> fetchNews(String rssUrl);
+    void insertNews(List<NewsVO> newsList);
+
 }

@@ -39,21 +39,43 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardVO> getBoardsByPage(PageRequest pageRequest) {
-        return boardMapper.getBoardsByPage(pageRequest.getOffset(), pageRequest.getAmount());
+    public List<BoardVO> getBoardsByPageOrderByregDate(PageRequest pageRequest){
+        return boardMapper.getBoardsByPageOrderByregDate(pageRequest.getOffset(), pageRequest.getAmount());
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageOrderBylike(PageRequest pageRequest){
+        return boardMapper.getBoardsByPageOrderBylike(pageRequest.getOffset(), pageRequest.getAmount());
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageOrderByview(PageRequest pageRequest){
+        return boardMapper.getBoardsByPageOrderByview(pageRequest.getOffset(), pageRequest.getAmount());
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageOrderBycomment(PageRequest pageRequest){
+        return boardMapper.getBoardsByPageOrderBycomment(pageRequest.getOffset(), pageRequest.getAmount());
     }
 
     @Override
-    public List<BoardVO> getBoardsByPageAndKeyword(PageRequest pageRequest, String category, String keyword) {
-        System.out.println("category: " + category + " keyword: " + keyword);
-        return boardMapper.getBoardsByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
+    public List<BoardVO> getBoardsByPageAndKeywordOrderByregDate(PageRequest pageRequest, String category, String keyword) {
+        return boardMapper.getBoardsByPageAndKeywordOrderByregDate(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageAndKeywordOrderBylike(PageRequest pageRequest, String category, String keyword) {
+        return boardMapper.getBoardsByPageAndKeywordOrderBylike(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageAndKeywordOrderByview(PageRequest pageRequest, String category, String keyword) {
+        return boardMapper.getBoardsByPageAndKeywordOrderByview(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
+    }
+    @Override
+    public List<BoardVO> getBoardsByPageAndKeywordOrderBycomment(PageRequest pageRequest, String category, String keyword) {
+        return boardMapper.getBoardsByPageAndKeywordOrderBycomment(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
     }
 
     @Override
     public BoardVO get(Long boardNo) {
-        System.out.println("Board get no: " + boardNo);
         BoardVO boardVO = boardMapper.get(boardNo);
-        System.out.println("boardVO: " + boardVO);
+        boardMapper.upViewCnt(boardNo);
         if (boardVO == null) {
             System.out.println("No board found for boardNo: " + boardNo);
         } else {
@@ -64,15 +86,21 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public List<BoardVO> getBest() {
+        return boardMapper.getBest();
+    }
+
+    @Override
     public List<CommentVO> getComments(Long boardNo) {
         return boardMapper.getComments(boardNo);
     }
 
     @Override
     public void createComment(CommentVO commentVO) {
+        Long boardNo = commentVO.getBoardNo();
+        boardMapper.upCommentCnt(boardNo);
         boardMapper.createComment(commentVO);
     }
-
 
 
     @Transactional // 2개 이상의 insert 문이 실행될 수 있으므로 트랜잭션 처리 필요
@@ -96,24 +124,18 @@ public class BoardServiceImpl implements BoardService {
         for (MultipartFile part : files) {
             if (part.isEmpty()) continue;
             try {
-                System.out.println("Uploaded file: " + part.getOriginalFilename());
                 String uploadPath = UploadFiles.upload(BASE_DIR, part);
-                System.out.println("uploadPath: " + uploadPath);
                 BoardAttachmentVO attach = BoardAttachmentVO.from(part, boardNo, uploadPath);
-                System.out.println("attach: " + attach);
                 boardMapper.createAttachment(attach);
             } catch (IOException e) {
                 throw new RuntimeException(e);
-                // log.error(e.getMessage());
             }
         }
     }
 
     @Override
     public BoardVO update(BoardVO boardVO) {
-        System.out.println("update service boardVO: " + boardVO);
         int result = boardMapper.update(boardVO);
-        System.out.println("result: " + result);
         // 파일 업로드 처리
         List<MultipartFile> files = boardVO.getFiles(); // BoardVO에 getFiles() 메서드가 있어야 함
         if (files != null && !files.isEmpty()) {
@@ -124,9 +146,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardVO delete(Long boardNo) {
-        System.out.println("service board delete: " + boardNo);
         BoardVO board = get(boardNo);
-        System.out.println("board: " + board);
         boardMapper.delete(boardNo);
         return board;
     }
@@ -139,5 +159,20 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public boolean deleteAttachment(Long attachmentNo) {
         return boardMapper.deleteAttachment(attachmentNo) == 1;
+    }
+
+    @Override
+    public void upLikeCnt(Long boardNo) {
+        boardMapper.upLikeCnt(boardNo);
+    }
+
+    @Override
+    public boolean likeCheck(Long boardNo, String userName) {
+        return boardMapper.likeCheck(boardNo, userName) == 0;
+    }
+
+    @Override
+    public void likeUpdate(Long boardNo, String userName) {
+        boardMapper.likeUpdate(boardNo, userName);
     }
 }
