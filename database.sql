@@ -1,5 +1,6 @@
 USE solo_db;
 SHOW TABLES;
+DROP TABLE IF EXISTS `kakaomember`;
 
 # ########
 DROP TABLE IF EXISTS user;
