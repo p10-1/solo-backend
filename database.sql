@@ -144,3 +144,5 @@ SELECT *
 FROM board
 ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
 LIMIT 5;
+
+select * from news;
