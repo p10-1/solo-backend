@@ -100,7 +100,7 @@ public class NewsServiceImpl implements NewsService {
 
     // 뉴스 리스트를 데이터베이스에 삽입
     public void insertNews(List<NewsVO> newsList) {
-        System.out.println("insertNews 들어옴 (service): " + newsList);
+//        System.out.println("insertNews 들어옴 (service): " + newsList);
         for (NewsVO news : newsList) {
             // 중복 체크
             if (newsMapper.getNewsByNo((int) news.getNewsNo()) == null) {
