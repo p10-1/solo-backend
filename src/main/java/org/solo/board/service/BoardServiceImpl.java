@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 @Transactional
 //@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    private final static String BASE_DIR = "upload/board";
+    private final static String BASE_DIR = "/Users/junyoung/Documents/upload/board";
     private final BoardMapper boardMapper;
 
     @Autowired
@@ -86,6 +86,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public List<BoardVO> getBest() {
+        return boardMapper.getBest();
+    }
+
+    @Override
     public List<CommentVO> getComments(Long boardNo) {
         return boardMapper.getComments(boardNo);
     }
@@ -119,24 +124,18 @@ public class BoardServiceImpl implements BoardService {
         for (MultipartFile part : files) {
             if (part.isEmpty()) continue;
             try {
-                System.out.println("Uploaded file: " + part.getOriginalFilename());
                 String uploadPath = UploadFiles.upload(BASE_DIR, part);
-                System.out.println("uploadPath: " + uploadPath);
                 BoardAttachmentVO attach = BoardAttachmentVO.from(part, boardNo, uploadPath);
-                System.out.println("attach: " + attach);
                 boardMapper.createAttachment(attach);
             } catch (IOException e) {
                 throw new RuntimeException(e);
-                // log.error(e.getMessage());
             }
         }
     }
 
     @Override
     public BoardVO update(BoardVO boardVO) {
-        System.out.println("update service boardVO: " + boardVO);
         int result = boardMapper.update(boardVO);
-        System.out.println("result: " + result);
         // 파일 업로드 처리
         List<MultipartFile> files = boardVO.getFiles(); // BoardVO에 getFiles() 메서드가 있어야 함
         if (files != null && !files.isEmpty()) {
@@ -147,9 +146,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardVO delete(Long boardNo) {
-        System.out.println("service board delete: " + boardNo);
         BoardVO board = get(boardNo);
-        System.out.println("board: " + board);
         boardMapper.delete(boardNo);
         return board;
     }
@@ -170,12 +167,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public boolean likeCheck(Long boardNo, String userId) {
-        return boardMapper.likeCheck(boardNo, userId) == 0;
+    public boolean likeCheck(Long boardNo, String userName) {
+        return boardMapper.likeCheck(boardNo, userName) == 0;
     }
 
     @Override
-    public void likeUpdate(Long boardNo, String userId) {
-        boardMapper.likeUpdate(boardNo, userId);
+    public void likeUpdate(Long boardNo, String userName) {
+        boardMapper.likeUpdate(boardNo, userName);
     }
 }
