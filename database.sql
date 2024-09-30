@@ -125,7 +125,7 @@ CREATE TABLE `news`
 
 insert into user (userId, nickName, userName, email, birthdate, point)
 values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
-        ('9702399454','홍길동', '홍길동', 'hong@454','2013-03-21',0),
+       ('9702399454','홍길동', '홍길동', 'hong@454','2013-03-21',0),
        ('3101219225','박지성', '박지성', 'park@225','2007-05-19',0),
        ('6304009156','손흥민', '손흥민', 'son@156','2020-12-25',0),
        ('2004991237','김하성', '김하성', 'kim@237','2009-03-30',0),
@@ -144,7 +144,3 @@ SELECT *
 FROM board
 ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
 LIMIT 5;
-
-delete from user where nickName = '김준영';
-
-select * from news;

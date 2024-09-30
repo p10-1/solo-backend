@@ -4,6 +4,52 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.solo.mypage.mapper.MypageMapper">
 
+    <!-- 자산 데이터 조회 -->
+    <select id="getAssetData" parameterType="String" resultType="org.solo.asset.domain.AssetVO">
+        SELECT
+            userId,cashBank,cashAccount,cash,stockBank,stockAccount,stock,propertyBank,
+            propertyAccount,
+            property,
+            depositBank,
+            depositAccount,
+            deposit,
+            consume,
+            loanAmount,
+            loanPurpose,
+            period,
+            interest,
+            createDate,
+            updateDate
+        FROM userAsset
+        WHERE userId = #{userId}
+            AND MONTH(createDate) = MONTH(CURRENT_DATE)
+          AND YEAR(createDate) = YEAR(CURRENT_DATE)
+            LIMIT 1
+    </select>
+
+<!--    자산데이터저장-->
+    <update id="updateAsset" parameterType="org.solo.asset.domain.AssetVO">
+        UPDATE userAsset
+        SET
+            cashBank = #{cashBank},
+            cashAccount = #{cashAccount},
+            cash = #{cash},
+            stockBank = #{stockBank},
+            stockAccount = #{stockAccount},
+            stock = #{stock},
+            propertyBank = #{propertyBank},
+            propertyAccount = #{propertyAccount},
+            property = #{property},
+            depositBank = #{depositBank},
+            depositAccount = #{depositAccount},
+            deposit = #{deposit},
+            loanAmount = #{loanAmount},
+            loanPurpose = #{loanPurpose},
+            period = #{period},
+            interest = #{interest}
+        WHERE userId = #{userId};
+    </update>
+
     <insert id="insertAssetData" parameterType="org.solo.asset.domain.AssetVO">
         INSERT INTO userAsset (userId, cash, stock, property, deposit, consume, loanAmount, loanPurpose, period)
         VALUES (#{userId}, #{cash}, #{stock}, #{property}, #{deposit}, #{consume}, #{loanAmount}, #{loanPurpose},#{period})
@@ -15,7 +61,7 @@
         WHERE userId = #{userId}
     </select>
 
-    <select id="getAssetData" parameterType="java.lang.String" resultType="org.solo.asset.domain.AssetVO">
+    <select id="checkAssetData" parameterType="java.lang.String" resultType="org.solo.asset.domain.AssetVO">
         SELECT * FROM userAsset WHERE userId = #{userId}
     </select>
 
