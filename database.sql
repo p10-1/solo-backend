@@ -135,7 +135,7 @@ CREATE TABLE news (
                       `link` varchar(255) NOT NULL,
                       `category` varchar(50) NOT NULL,
                       `author` varchar(255) NOT NULL,
-                      `pubDate` datetime NOT NULL,
+                      `pubDate` datetime NOT NULL
 );
 
 
@@ -230,3 +230,5 @@ where userId = 3711364352;
 delete from news;
 select * from policy;
 select count(*) from news;
+
+
