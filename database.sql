@@ -312,3 +312,5 @@ ALTER TABLE `userAsset`
     MODIFY `depositBank` JSON NULL,
     MODIFY `depositAccount` JSON NULL,
     MODIFY `deposit` JSON NULL;
+
+select * from news order by pubDate DESC;

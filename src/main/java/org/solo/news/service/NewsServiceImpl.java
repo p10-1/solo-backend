@@ -52,9 +52,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     // RSS 피드에서 뉴스 가져오기
-    public List<NewsVO> fetchNews() {
-        System.out.println("fetchNews() 실행(service)");
-        String rssUrl = "https://www.mk.co.kr/rss/50300009/";
+    public List<NewsVO> fetchNews(String rssUrl) {
+        System.out.println("fetchNews() 실행(service)" + rssUrl);
+//        String rssUrl = "https://www.mk.co.kr/rss/50300009/";
         List<NewsVO> newsList = new ArrayList<>();
 
         try {

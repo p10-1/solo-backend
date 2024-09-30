@@ -20,6 +20,7 @@
 
     <select id="getNewsALL" resultType="NewsVO">
         SELECT * FROM news
+        ORDER BY pubDate DESC;
     </select>
 
     <select id="getNewsByNo" parameterType="int" resultType="NewsVO">
