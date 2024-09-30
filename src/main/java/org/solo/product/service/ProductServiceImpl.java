@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
                 String jsonResponse = responseEntity.getBody();
                 Map<String, Object> responseMap = objectMapper.readValue(jsonResponse, new TypeReference<Map<String, Object>>() {});
                 Map<String, Object> results = (Map<String, Object>) responseMap.get("result");
-
+//                System.out.println("results: " + results);
                 List<Object> baseList = (List<Object>) results.get("baseList");
 
                 List<ProductVO> products = new ArrayList<>();
