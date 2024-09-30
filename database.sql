@@ -199,8 +199,15 @@ select * from policy;
 
 update user
 set point = 1000
-where userId = 3711364352;
+where userId = 3721153289;
 
+
+SELECT * FROM userAsset WHERE userId = 3721153289
+ORDER BY createDate DESC;
+
+delete from
+           userasset where
+                         userId=3721153289;
 INSERT INTO `userAsset` (
     `userId`,
     `cashBank`,
@@ -221,7 +228,7 @@ INSERT INTO `userAsset` (
     `period`,
     `interest`
 ) VALUES (
-             '3711364352',
+             '3721153289',
              '["우리은행", "신한은행"]',  -- 현금 은행 배열
              '["123-456-7890", "987-654-3210"]',  -- 현금 계좌 배열
              '["50000", "20000"]',  -- 현금 자산 배열
@@ -240,6 +247,98 @@ INSERT INTO `userAsset` (
              24,
              3
          );
+
+INSERT INTO `userAsset` (
+    `userId`,
+    `cashBank`,
+    `cashAccount`,
+    `cash`,
+    `stockBank`,
+    `stockAccount`,
+    `stock`,
+    `propertyBank`,
+    `propertyAccount`,
+    `property`,
+    `depositBank`,
+    `depositAccount`,
+    `deposit`,
+    `consume`,
+    `loanAmount`,
+    `loanPurpose`,
+    `period`,
+    `interest`,
+    `createDate`,`updateDate`
+
+) VALUES (
+             '3721153289',
+             '["우리은행", "신한은행"]',
+             '["123-456-7890", "987-654-3210"]',
+             '["45000", "18000"]',
+             '["미래에셋", "삼성증권"]',
+             '["111-222-3333", "444-555-6666"]',
+             '["9000", "14000"]',
+             '["국민은행", "부동산은행"]',
+             '["777-888-9999", "000-111-2222"]',
+             '["290000", "390000"]',
+             '["농협은행", "하나은행"]',
+             '["333-444-5555", "666-777-8888"]',
+             '["18000", "23000"]',
+             '소비유형1',
+             2100000,
+             '주택구입',
+             25,
+             3,
+             DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH),
+             DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
+         );
+INSERT INTO `userAsset` (
+    `userId`,
+    `cashBank`,
+    `cashAccount`,
+    `cash`,
+    `stockBank`,
+    `stockAccount`,
+    `stock`,
+    `propertyBank`,
+    `propertyAccount`,
+    `property`,
+    `depositBank`,
+    `depositAccount`,
+    `deposit`,
+    `consume`,
+    `loanAmount`,
+    `loanPurpose`,
+    `period`,
+    `interest`,
+    `createDate`,`updateDate`
+
+) VALUES (
+             '3721153289',
+             '["우리은행", "신한은행"]',
+             '["123-456-7890", "987-654-3210"]',
+             '["10000", "1000"]',
+             '["미래에셋", "삼성증권"]',
+             '["111-222-3333", "444-555-6666"]',
+             '["5000", "10000"]',
+             '["국민은행", "부동산은행"]',
+             '["777-888-9999", "000-111-2222"]',
+             '["20000", "30000"]',
+             '["농협은행", "하나은행"]',
+             '["333-444-5555", "666-777-8888"]',
+             '["10000", "20000"]',
+             '소비유형1',
+             2100000,
+             '주택구입',
+             25,
+             3,
+             DATE_SUB(CURRENT_DATE, INTERVAL 5 MONTH),
+             DATE_SUB(CURRENT_DATE, INTERVAL 5 MONTH)
+         );
+
+SELECT * FROM userAsset
+WHERE userId = '3721153289'
+  AND createDate BETWEEN '2024-04-30 00:00:00' AND '2024-09-30 15:57:09'
+ORDER BY createDate DESC;
 
 
 ALTER TABLE `userAsset`

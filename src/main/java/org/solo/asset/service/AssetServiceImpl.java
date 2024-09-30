@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.solo.asset.mapper.AssetMapper;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 @Transactional
 public class AssetServiceImpl implements AssetService {
@@ -17,9 +20,11 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public AssetVO getAssetData(String userId) {
-        AssetVO asset = assetMapper.getAssetData(userId);
-        System.out.println("asset"+asset);
+    public List<AssetVO> getAssetData(String userId, int months) {
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.minusMonths(months - 1);
+        List<AssetVO> asset = assetMapper.getAssetData(userId, startDate, endDate);
+        System.out.println("asset" + asset);
         return asset;
     }
 }

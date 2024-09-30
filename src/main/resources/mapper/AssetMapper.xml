@@ -5,7 +5,10 @@
 
 <mapper namespace="org.solo.asset.mapper.AssetMapper">
 
-    <select id="getAssetData" parameterType="java.lang.String" resultType="org.solo.asset.domain.AssetVO">
-        SELECT * FROM userAsset WHERE userId = #{userId}
+    <select id="getAssetData" resultType="org.solo.asset.domain.AssetVO">
+        SELECT * FROM userAsset
+        WHERE userId = #{userId}
+          AND createDate BETWEEN #{startDate} AND #{endDate}
+        ORDER BY createDate DESC
     </select>
 </mapper>
