@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
                 .queryParam("topFinGrpNo", topFinGrpNo)
                 .queryParam("pageNo", pageNo)
                 .toUriString();
-//        System.out.println("requestDepositUrl: " + requestDepositUrl);
+        System.out.println("requestDepositUrl: " + requestDepositUrl);
         try {
             ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestDepositUrl, String.class);
 
