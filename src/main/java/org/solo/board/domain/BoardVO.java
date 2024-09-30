@@ -21,7 +21,7 @@ public class BoardVO {
     private Long boardNo;
     private String title;
     private String content;
-    private String userId;
+    private String userName;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime regDate; // LOCALDATETIME
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

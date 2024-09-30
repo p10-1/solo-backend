@@ -9,6 +9,6 @@ import java.util.List;
 @Mapper
 @Repository
 public interface NewsMapper {
-    void insertNews(NewsVO newsVO);
+    void insertNews(List<NewsVO> newsList);
     List<NewsVO> getNewsALL();
 }

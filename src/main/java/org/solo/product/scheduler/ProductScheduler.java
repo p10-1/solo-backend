@@ -18,7 +18,7 @@ public class ProductScheduler {
 
     @PostConstruct
     public void scheduleFetchProducts(){
-        System.out.println("scheduling fetch policies");
+        System.out.println("scheduling fetch product");
         taskScheduler.scheduleAtFixedRate(() -> {
             productService.fetchDeposit();
             productService.fetchSaving();

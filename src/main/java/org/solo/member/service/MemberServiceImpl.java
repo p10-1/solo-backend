@@ -20,16 +20,20 @@ public class MemberServiceImpl implements MemberService {
         return memberMapper.findByKakaoId(userId);
     }
 
-    public MemberVO insertNewUserInfo(String userId, String nickName, String name, String email, String birthdate) {
+    public MemberVO insertNewUserInfo(String userId, String nickName, String userName, String email, String birthdate) {
         System.out.println("inserting new user info");
         MemberVO newUser = new MemberVO();
         newUser.setUserId(userId);
         newUser.setNickName(nickName);
-        newUser.setName(name);
+        newUser.setUserName(userName);
         newUser.setEmail(email);
         newUser.setBirthdate(birthdate);
         memberMapper.insertNewUserInfo(newUser);
         return newUser;
+    }
+
+    public boolean checkUser(String nickName) {
+        return memberMapper.checkUser(nickName) > 0;
     }
 
 }
