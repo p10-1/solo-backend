@@ -182,3 +182,6 @@ INSERT INTO `userAsset` (
              24,
              3
          );
+
+
+select * from user;
