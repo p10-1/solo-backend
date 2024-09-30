@@ -7,7 +7,7 @@ import java.util.List;
 public interface NewsService {
 //    void insertNews(NewsVO newsVO);
     List<NewsVO> getNewsALL();
-    List<NewsVO> fetchNews();
+    List<NewsVO> fetchNews(String rssUrl);
     void insertNews(List<NewsVO> newsList);
 
 }
