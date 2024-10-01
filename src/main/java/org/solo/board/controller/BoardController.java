@@ -69,7 +69,7 @@ public class BoardController {
     }
 
     @GetMapping("/best")
-    public ResponseEntity<List<BoardVO>> getBest(){
+    public ResponseEntity<List<Long>> getBest(){
         return ResponseEntity.ok(boardService.getBest());
     }
 

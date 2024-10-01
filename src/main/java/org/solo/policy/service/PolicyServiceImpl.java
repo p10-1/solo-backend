@@ -113,4 +113,8 @@ public class PolicyServiceImpl implements PolicyService {
     public List<PolicyVO> getPoliciesByPageAndKeyword(PageRequest pageRequest, String keyword) {
         return policyMapper.getPoliciesByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword);
     }
+
+    public List<PolicyVO> recommendPolicies() {
+        return policyMapper.recommendPolicies();
+    }
 }

@@ -159,7 +159,7 @@ values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
 
 
 select * from user;
-select * from board;
+select * from policy;
 
 update user set todayQuiz = 0;
 
