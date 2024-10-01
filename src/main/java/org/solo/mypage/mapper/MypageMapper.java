@@ -21,10 +21,12 @@ public interface MypageMapper {
 
     void updateAssetData(AssetVO assetData);
 
-    void updateMember(MemberVO memberVO);
+//    void updateMember(MemberVO memberVO);
 
     int getPoint(String userId);
 
-    void updateCash(Map<String, Object> params);
+//    void updateCash(Map<String, Object> params);
+
+    void updateUserType(Map<String, String> params);
 
 }

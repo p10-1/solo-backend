@@ -17,12 +17,13 @@
         SELECT * FROM news WHERE newsNo = #{no}
     </select>
 
-    <select id="getNewsBycategory" resultType="org.solo.news.domain.NewsVO">
-        SELECT *
-        FROM NEWS
-        WHERE category = #{category} OR #{category} IS NULL
-        LIMIT #{offset}, #{limit}
-    </select>
+        <select id="getNewsBycategory" resultType="org.solo.news.domain.NewsVO">
+            SELECT *
+            FROM NEWS
+            WHERE category = #{category} OR #{category} IS NULL
+            ORDER BY pubDate DESC
+            LIMIT #{offset}, #{limit}
+        </select>
 
     <select id="getNewsCountBycategory" resultType="java.lang.Integer">
         SELECT count(*)
@@ -34,6 +35,7 @@
     <select id="getNewsByPage" resultType="org.solo.news.domain.NewsVO">
         SELECT *
         FROM NEWS
+        ORDER BY pubDate DESC
         LIMIT #{offset}, #{limit}
     </select>
     <select id="getNewsCount" resultType="java.lang.Integer">

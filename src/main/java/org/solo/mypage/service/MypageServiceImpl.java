@@ -40,6 +40,24 @@ public class MypageServiceImpl implements MypageService {
     }
 
 
+    @Override
+    public AssetVO checkAssetData(String userId) {
+        return mypageMapper.checkAssetData(userId);
+    }
+    @Override
+    public int getPoint(String userId){
+        return mypageMapper.getPoint(userId);
+    }
+
+
+    @Override
+    public void updateUserType(String userId, String type) {
+        System.out.println("update 서비스 들어옴");
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("type", type);
+        mypageMapper.updateUserType(params);
+    }
 
 
 //    @Override
@@ -62,33 +80,7 @@ public class MypageServiceImpl implements MypageService {
 //        mypageMapper.updateMember(memberVO);
 //    }
 
-    @Override
-    public AssetVO checkAssetData(String userId) {
-        return mypageMapper.checkAssetData(userId);
-    }
-    @Override
-    public int getPoint(String userId){
-        return mypageMapper.getPoint(userId);
-    }
 
-    @Override
-    public boolean withdrawPoints(String userId, int point) {
-        MemberVO member = memberMapper.findByKakaoId(userId);
-
-        System.out.println("withdrawPoints 서비스 실행");
-        if (member != null && member.getPoint() >= point) {
-            int newPoint = member.getPoint() - point;
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("userId", userId);
-            params.put("newPoint", newPoint);
-
-            memberMapper.updatePoint(params);
-            return true;
-        }
-
-        return false; // 출금 실패 (회원 정보가 없거나 포인트가 부족한 경우)
-    }
 
     // 자산의 cash update
 //    @Override
@@ -113,5 +105,28 @@ public class MypageServiceImpl implements MypageService {
 //
 //        return false;
 //    }
+
+
+     /*
+    @Override
+    public boolean withdrawPoints(String userId, int point) {
+        MemberVO member = memberMapper.findByKakaoId(userId);
+
+        System.out.println("withdrawPoints 서비스 실행");
+        if (member != null && member.getPoint() >= point) {
+            int newPoint = member.getPoint() - point;
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("userId", userId);
+            params.put("newPoint", newPoint);
+
+            memberMapper.updatePoint(params);
+            return true;
+        }
+
+        return false; // 출금 실패 (회원 정보가 없거나 포인트가 부족한 경우)
+    }
+     */
+
 
 }

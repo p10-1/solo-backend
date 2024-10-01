@@ -13,32 +13,30 @@ CREATE TABLE `user`
     `birthdate` DATE        NOT NULL,
     `point`     INT         NOT NULL
 );
-
-DROP TABLE IF EXISTS `userAsset`;
+-- 부동산제거 / 보험 추가
+DROP TABLE IF EXISTS userAsset;
 CREATE TABLE `userAsset`
 (
-    `assetNo`         INT AUTO_INCREMENT PRIMARY KEY,
-    `userId`          VARCHAR(50)   NOT NULL,
-    `consumeType`     VARCHAR(50)   NULL,
-    `cashBank`        JSON          NULL,
-    `cashAccount`     JSON          NULL,
-    `cash`            JSON          NULL,
-    `stockBank`       JSON          NULL,
-    `stockAccount`    JSON          NULL,
-    `stock`           JSON          NULL,
-    `propertyBank`    JSON          NULL,
-    `propertyAccount` JSON          NULL,
-    `property`        JSON          NULL,
-    `depositBank`     JSON          NULL,
-    `depositAccount`  JSON          NULL,
-    `deposit`         JSON          NULL,
-    `consume`         VARCHAR(30)   NULL,
-    `loanAmount`      INT           NULL,
-    `loanPurpose`     VARCHAR(30)   NULL,
-    `period`          INT           NULL,
-    `interest`        DECIMAL(5, 2) NULL, -- 소수점 단위를 입력할 수 있도록 DECIMAL로 변경
-    `createDate`      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `updateDate`      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    `assetNo`           INT AUTO_INCREMENT PRIMARY KEY,
+    `userId`            VARCHAR(50)   NOT NULL,
+    `cashBank`          JSON          NULL,
+    `cashAccount`       JSON          NULL,
+    `cash`              JSON          NULL,
+    `stockBank`         JSON          NULL,
+    `stockAccount`      JSON          NULL,
+    `stock`             JSON          NULL,
+    `depositBank`       JSON          NULL,
+    `depositAccount`    JSON          NULL,
+    `deposit`           JSON          NULL,
+    `insuranceCompany`  JSON          NULL,
+    `insuranceName`     JSON          NULL,
+    `insurance`         JSON          NULL,
+    `type`              VARCHAR(30)   NULL,
+    `loanAmount`        INT           NULL,
+    `loanPurpose`       VARCHAR(30)   NULL,
+    `period`            INT           NULL,
+    `interest`          DECIMAL(5, 2) NULL, -- 소수점 단위를 입력할 수 있도록 DECIMAL로 변경
+    `createDate`        DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS `policy`;
@@ -176,20 +174,13 @@ VALUES ('주식 투자 시작하는 방법','처음 주식을 시작하는 분�
        ('비상금 만들기, 어떻게 시작할까?','비상금을 준비하는 방법과 그 필요성에 대해 설명합니다.','2004991237', 30, 0, 80),
        ('월급 관리 이렇게 하세요','월급을 효과적으로 관리하는 5가지 팁을 공유합니다.','1004539485', 94, 0, 231);
 
-INSERT INTO board(title, content, userId, likes, comments, views)
-VALUES ('일주일에 5만원 쓰기 중','알뜰살뜰하네요','6304009156',15,0,50);
-select *
-from user;
 
-select * from news;
-select * from userasset;
 
-delete from news;
 
 select * from userasset;
 delete from userasset;
 
-delete from board where title='일주일에 5만원 쓰기 중';
+
 select * from user;
 select * from board;
 select * from userAsset;
@@ -209,13 +200,12 @@ INSERT INTO `userAsset` (
     `stockBank`,
     `stockAccount`,
     `stock`,
-    `propertyBank`,
-    `propertyAccount`,
-    `property`,
     `depositBank`,
     `depositAccount`,
     `deposit`,
-    `consume`,
+    `insuranceCompany`,
+    `insuranceName`,
+    `insurance`,
     `loanAmount`,
     `loanPurpose`,
     `period`,
@@ -228,37 +218,54 @@ INSERT INTO `userAsset` (
              '["미래에셋", "삼성증권"]',  -- 주식 은행 배열
              '["111-222-3333", "444-555-6666"]',  -- 주식 계좌 배열
              '["10000", "15000"]',  -- 주식 자산 배열
-             '["국민은행", "부동산은행"]',  -- 부동산 은행 배열
-             '["777-888-9999", "000-111-2222"]',  -- 부동산 계좌 배열
-             '["300000", "400000"]',  -- 부동산 자산 배열
              '["농협은행", "하나은행"]',  -- 예적금 은행 배열
              '["333-444-5555", "666-777-8888"]',  -- 예적금 계좌 배열
              '["20000", "25000"]' ,  -- 예적금 자산 배열
-             '소비유형1',
+             '["KB손해보험"]',
+             '["KB 빅플러스저축보험"]',
+             '["400000"]',
              2000000,
              '주택구입',
              24,
-             3
+             3.2
          );
 
+INSERT INTO `userAsset` (
+    `userId`,
+    `cashBank`,
+    `cashAccount`,
+    `cash`,
+    `stockBank`,
+    `stockAccount`,
+    `stock`,
+    `insuranceCompany`,
+    `insuranceName`,
+    `insurance`,
+    `loanAmount`,
+    `loanPurpose`,
+    `period`,
+    `interest`
+) VALUES (
+             '3711364352',
+             '["우리은행", "신한은행"]',  -- 현금 은행 배열
+             '["123-456-7890", "987-654-3210"]',  -- 현금 계좌 배열
+             '["20000", "20000"]',  -- 현금 자산 배열
+             '["삼성증권"]',  -- 주식 은행 배열
+             '["444-555-6666"]',  -- 주식 계좌 배열
+             '["15000"]',  -- 주식 자산 배열
+             '["KB손해보험"]',
+             '["KB 빅플러스저축보험"]',
+             '["400000"]',
+             2000000,
+             '주택구입',
+             24,
+             3.2
+         );
 
-ALTER TABLE `userAsset`
-    MODIFY `cashBank` JSON NULL,
-    MODIFY `cashAccount` JSON NULL,
-    MODIFY `cash` JSON NULL,
+select interest from userasset;
 
-    MODIFY `stockBank` JSON NULL,
-    MODIFY `stockAccount` JSON NULL,
-    MODIFY `stock` JSON NULL,
 
-    MODIFY `propertyBank` JSON NULL,
-    MODIFY `propertyAccount` JSON NULL,
-    MODIFY `property` JSON NULL,
-
-    MODIFY `depositBank` JSON NULL,
-    MODIFY `depositAccount` JSON NULL,
-    MODIFY `deposit` JSON NULL;
-
+select * from userasset;
 select * from news order by pubDate DESC;
 
 select * from news where category='증권';
