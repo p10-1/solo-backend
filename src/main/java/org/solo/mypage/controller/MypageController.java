@@ -100,6 +100,24 @@ public class MypageController {
         }
     }
 
+    @GetMapping("/getBank")
+    public ResponseEntity<?> getBank(HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+
+        // 사용자 인증 확인
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 인증이 필요합니다.");
+        }
+        try {
+            // 사용자 자산 타입 가져오기
+            System.out.println("getBank");
+            List<String> bankList = mypageService.getBank(userId);
+            return ResponseEntity.ok(bankList); // 성공적으로 타입을 가져온 경우
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());
+        }
+    }
+
 
     // == point ==
 

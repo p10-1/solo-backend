@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -62,6 +63,11 @@ public class MypageServiceImpl implements MypageService {
     @Override
     public String getType(String userId) {
         return mypageMapper.getType(userId);
+    }
+
+    @Override
+    public List<String> getBank(String userId) {
+        return mypageMapper.getBank(userId);
     }
 
 

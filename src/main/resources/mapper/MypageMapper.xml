@@ -90,6 +90,12 @@
         WHERE userId = #{userId}
     </select>
 
+    <select id="getBank" parameterType="String" resultType="java.lang.String">
+        SELECT cashBank
+        FROM userAsset
+        WHERE userId = #{userId}
+    </select>
+
 
     <!--
     <update id="updateCash" parameterType="map">
