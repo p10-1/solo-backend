@@ -145,8 +145,20 @@ select * from user;
 
 select * from board;
 
+select * from board
+where DATE_FORMAT(regDate, '%Y-%m') = '2024-10';
+
+SELECT YEAR(NOW()) AS currentYear, MONTH(NOW()) AS currentMonth;
+
+SELECT *
+FROM board
+WHERE (YEAR(regDate) = YEAR(CURDATE()) AND MONTH(regDate) = MONTH(CURDATE()) - 1)
+   OR (MONTH(CURDATE()) = 1 AND YEAR(regDate) = YEAR(CURDATE()) - 1 AND MONTH(regDate) = 12)
+ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
+LIMIT 5;
+
 insert into board(title, content, userName, likes, comments, views)
-values ('인기글 테스트를 위한 가짜 테스트','아 언제까지 이걸하지', '김하성', 32, 0, 130);
+values ('10월의 첫 게시글','이건 10월에 작성된거야', '김준영', 12, 0, 50);
 
 SELECT *
 FROM board

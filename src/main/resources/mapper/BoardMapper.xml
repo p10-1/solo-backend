@@ -53,6 +53,8 @@
     <select id="getBest" resultType="org.solo.board.domain.BoardVO">
         SELECT *
         FROM board
+        WHERE (YEAR(regDate) = YEAR(CURDATE()) AND MONTH(regDate) = MONTH(CURDATE()) - 1)
+           OR (MONTH(CURDATE()) = 1 AND YEAR(regDate) = YEAR(CURDATE()) - 1 AND MONTH(regDate) = 12)
         ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
             LIMIT 5;
     </select>
