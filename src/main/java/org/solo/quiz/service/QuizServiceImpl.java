@@ -40,5 +40,22 @@ public class QuizServiceImpl implements QuizService {
         int quizNo = (int)(Math.random() * totalCnt) + 1;
         return quizMapper.createQuiz(quizNo);
     }
+    public boolean checkPoint(String userId) {
+        System.out.println("service: " + quizMapper.checkPoint(userId));
+        System.out.println("service: " + userId);
+        return quizMapper.checkPoint(userId) == 1;
+    }
+
+    public void checkToday(String userId) {
+        quizMapper.checkToday(userId);
+    }
+
+    public void addPoint(String userId) {
+        quizMapper.addPoint(userId);
+    }
+
+    public void resetToday() {
+        quizMapper.reset();
+    }
 
 }

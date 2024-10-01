@@ -22,7 +22,6 @@ public class ProductScheduler {
         taskScheduler.scheduleAtFixedRate(() -> {
             productService.fetchDeposit();
             productService.fetchSaving();
-            System.out.println("Fetched products at: " + System.currentTimeMillis());
         },  60 * 60 * 1000); // 1시간에 한번 패치
     }
 }

@@ -9,7 +9,8 @@ CREATE TABLE `user`
     `nickName`  VARCHAR(50) NOT NULL,
     `email`     VARCHAR(50) NOT NULL,
     `birthdate` DATE        NOT NULL,
-    `point`     INT         NOT NULL
+    `point`     INT         NOT NULL,
+    `todayQuiz` INT DEFAULT 0
 );
 
 DROP TABLE IF EXISTS `userAsset`;
@@ -129,11 +130,11 @@ CREATE TABLE `like`
 DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news`
 (
-    `newsNo`   int          NOT NULL PRIMARY KEY ,
-    `title`    varchar(255) NOT NULL,
-    `link`     varchar(255) NOT NULL,
-    `category` varchar(50)  NOT NULL,
-    `pubDate`  datetime     NOT NULL
+    `newsNo`   INT          NOT NULL PRIMARY KEY ,
+    `title`    VARCHAR(255) NOT NULL,
+    `link`     VARCHAR(255) NOT NULL,
+    `category` VARCHAR(50)  NOT NULL,
+    `pubDate`  DATETIME     NOT NULL
 );
 
 DROP TABLE IF EXISTS `quiz`;
@@ -156,23 +157,13 @@ values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
        ('1004539485','유재석', '유재석', 'you@485','2004-01-19',0),
        ('8704441237','차범근', '차범근', 'cha@237','2009-03-30',0);
 
-select * from user;
 
+select * from user;
 select * from board;
 
-SELECT *
-FROM board
-ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
-LIMIT 5;
+update user set todayQuiz = 0;
 
-select * from policy
-where rqutUrla LIKE '%https%';
 
-select *
-from policy;
-
-select *
-from quiz;
 
 INSERT INTO quiz (term, description)
 VALUES ('예금', '일정 기간 동안 자금을 은행에 맡기고 이자를 받는 금융 상품'),
@@ -319,25 +310,4 @@ VALUES ('예금', '일정 기간 동안 자금을 은행에 맡기고 이자를 
        ('패시브 펀드', '시장 지수를 추종하도록 설계된 펀드로, 장기적으로 안정적인 수익을 목표로 함');
 
 
-select *
-from product;
 
-SELECT p.*
-FROM product p
-         JOIN (
-    SELECT finPrdtCd
-    FROM `option`
-    WHERE saveTrm < 9
-    ORDER BY intrRate DESC
-    LIMIT 2
-) o ON p.finPrdtCd = o.finPrdtCd;
-
-SELECT p.*
-FROM product p
-         JOIN (
-    SELECT finPrdtCd, saveTrm, intrRate, intrRate2
-    FROM `option`
-    WHERE saveTrm < 12
-    ORDER BY intrRate DESC
-    LIMIT 2
-) o ON p.finPrdtCd = o.finPrdtCd;

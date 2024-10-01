@@ -13,4 +13,23 @@
         FROM quiz
         WHERE quizNo = #{quizNo}
     </select>
+    <select id="checkPoint" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM `user`
+        WHERE userId = #{userId} AND todayQuiz = 1
+    </select>
+    <update id="addPoint">
+        UPDATE `user`
+        SET point = point + 10
+        WHERE userId = #{userId}
+    </update>
+    <update id="checkToday">
+        UPDATE `user`
+        SET todayQuiz = 1
+        WHERE userId = #{userId}
+    </update>
+    <update id="reset">
+        UPDATE `user`
+        SET todayQuiz = 0
+    </update>
 </mapper>

@@ -10,4 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface QuizMapper {
     int totalCnt();
     QuizVO createQuiz(@Param("quizNo") int randomNumber);
+    int checkPoint(@Param("userId") String userId);
+    void addPoint(@Param("userId") String userId);
+    void checkToday(@Param("userId") String userId);
+    void reset();
 }
