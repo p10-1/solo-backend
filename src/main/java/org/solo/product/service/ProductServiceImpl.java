@@ -2,8 +2,11 @@ package org.solo.product.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.solo.common.pagination.PageRequest;
 import org.solo.policy.domain.PolicyVO;
+import org.solo.product.domain.OptionVO;
 import org.solo.product.domain.ProductVO;
 import org.solo.product.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
+    private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -46,7 +47,6 @@ public class ProductServiceImpl implements ProductService {
                 .queryParam("topFinGrpNo", topFinGrpNo)
                 .queryParam("pageNo", pageNo)
                 .toUriString();
-//        System.out.println("requestDepositUrl: " + requestDepositUrl);
         try {
             ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestDepositUrl, String.class);
 
@@ -54,15 +54,17 @@ public class ProductServiceImpl implements ProductService {
                 String jsonResponse = responseEntity.getBody();
                 Map<String, Object> responseMap = objectMapper.readValue(jsonResponse, new TypeReference<Map<String, Object>>() {});
                 Map<String, Object> results = (Map<String, Object>) responseMap.get("result");
-//                System.out.println("results: " + results);
                 List<Object> baseList = (List<Object>) results.get("baseList");
-
+                List<Object> optionList = (List<Object>) results.get("optionList");
                 List<ProductVO> products = new ArrayList<>();
+                List<OptionVO> options = new ArrayList<>();
                 String type = "예금";
                 for (Object item : baseList) {
                     Map<String, Object> deposit = (Map<String, Object>) item;
                     String dclsMonth = (String) deposit.get("dcls_month");
+                    String finCoNo = (String) deposit.get("fin_co_no");
                     String korCoNm = (String) deposit.get("kor_co_nm");
+                    String finPrdtCd = (String) deposit.get("fin_prdt_cd");
                     String finPrdtNm = (String) deposit.get("fin_prdt_nm");
                     String joinWay = (String) deposit.get("join_way");
                     String mtrtInt = (String) deposit.get("mtrt_int");
@@ -70,10 +72,27 @@ public class ProductServiceImpl implements ProductService {
                     String joinMember = (String) deposit.get("join_member");
                     String etcNote = (String) deposit.get("etc_note");
 
-                    ProductVO productVO = new ProductVO(dclsMonth, korCoNm, finPrdtNm, joinWay, mtrtInt, spclCnd, joinMember, etcNote, type);
+                    ProductVO productVO = new ProductVO(dclsMonth, finCoNo, korCoNm, finPrdtCd, finPrdtNm, joinWay, mtrtInt, spclCnd, joinMember, etcNote, type);
                     products.add(productVO);
                 }
                 saveProducts(products);
+                for (Object item : optionList) {
+                    Map<String, Object> option = (Map<String, Object>) item;
+                    String dclsMonth = (String) option.get("dcls_month");
+                    String forCoNm = (String) option.get("fin_co_no");
+                    String finPrdtCd = (String) option.get("fin_prdt_cd");
+                    String saveTrm = (String) option.get("save_trm");
+                    Object intrRateObj = option.get("intr_rate");
+                    Double intrRate = (intrRateObj instanceof Number) ? ((Number) intrRateObj).doubleValue() : null; // 안전하게 변환
+                    Object intrRate2Obj = option.get("intr_rate2");
+                    Double intrRate2 = (intrRate2Obj instanceof Number) ? ((Number) intrRate2Obj).doubleValue() : null; // 안전하게 변환
+
+
+                    OptionVO optionVO = new OptionVO(dclsMonth, forCoNm, finPrdtCd, saveTrm, intrRate, intrRate2,type);
+                    System.out.println("optionVO: " + optionVO);
+                    options.add(optionVO);
+                }
+                saveOptions(options);
             }
         } catch (Exception e) {
             e.printStackTrace(); // 예외를 출력하여 문제를 확인
@@ -86,7 +105,6 @@ public class ProductServiceImpl implements ProductService {
                 .queryParam("topFinGrpNo", topFinGrpNo)
                 .queryParam("pageNo", pageNo)
                 .toUriString();
-//        System.out.println("requestSavingUrl: " + requestSavingUrl);
         try {
             ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestSavingUrl, String.class);
 
@@ -94,16 +112,17 @@ public class ProductServiceImpl implements ProductService {
                 String jsonResponse = responseEntity.getBody();
                 Map<String, Object> responseMap = objectMapper.readValue(jsonResponse, new TypeReference<Map<String, Object>>() {});
                 Map<String, Object> results = (Map<String, Object>) responseMap.get("result");
-//                System.out.println("results: " + results);
                 List<Object> baseList = (List<Object>) results.get("baseList");
-//                System.out.println("baseList size: " + baseList.size());
-
+                List<Object> optionList = (List<Object>) results.get("optionList");
                 List<ProductVO> products = new ArrayList<>();
+                List<OptionVO> options = new ArrayList<>();
                 String type = "적금";
                 for (Object item : baseList) {
                     Map<String, Object> saving = (Map<String, Object>) item;
                     String dclsMonth = (String) saving.get("dcls_month");
+                    String finCoNo = (String) saving.get("fin_co_no");
                     String korCoNm = (String) saving.get("kor_co_nm");
+                    String finPrdtCd = (String) saving.get("fin_prdt_cd");
                     String finPrdtNm = (String) saving.get("fin_prdt_nm");
                     String joinWay = (String) saving.get("join_way");
                     String mtrtInt = (String) saving.get("mtrt_int");
@@ -111,11 +130,25 @@ public class ProductServiceImpl implements ProductService {
                     String joinMember = (String) saving.get("join_member");
                     String etcNote = (String) saving.get("etc_note");
 
-                    ProductVO productVO = new ProductVO(dclsMonth, korCoNm, finPrdtNm, joinWay, mtrtInt, spclCnd, joinMember, etcNote, type);
-//                    System.out.println("적금: " + productVO);
+                    ProductVO productVO = new ProductVO(dclsMonth, finCoNo, korCoNm, finPrdtCd, finPrdtNm, joinWay, mtrtInt, spclCnd, joinMember, etcNote, type);
                     products.add(productVO);
                 }
                 saveProducts(products);
+                for (Object item : optionList) {
+                    Map<String, Object> option = (Map<String, Object>) item;
+                    String dclsMonth = (String) option.get("dcls_month");
+                    String forCoNm = (String) option.get("fin_co_no");
+                    String finPrdtCd = (String) option.get("fin_prdt_cd");
+                    String saveTrm = (String) option.get("save_trm");
+                    Object intrRateObj = option.get("intr_rate");
+                    Double intrRate = (intrRateObj instanceof Number) ? ((Number) intrRateObj).doubleValue() : null; // 안전하게 변환
+                    Object intrRate2Obj = option.get("intr_rate2");
+                    Double intrRate2 = (intrRate2Obj instanceof Number) ? ((Number) intrRate2Obj).doubleValue() : null; // 안전하게 변환
+
+                    OptionVO optionVO = new OptionVO(dclsMonth, forCoNm, finPrdtCd, saveTrm, intrRate, intrRate2,type);
+                    options.add(optionVO);
+                }
+                saveOptions(options);
             }
         } catch (Exception e) {
             e.printStackTrace(); // 예외를 출력하여 문제를 확인
@@ -133,6 +166,23 @@ public class ProductServiceImpl implements ProductService {
                 productMapper.fetchProducts(productVO);
             }
         }
+    }
+
+    public void saveOptions(List<OptionVO> options) {
+        for (OptionVO optionVO : options) {
+            Map<String, Object> optionToken = new HashMap<>();
+            optionToken.put("dclsMonth", optionVO.getDclsMonth());
+            optionToken.put("finCoNo", optionVO.getFinCoNo());
+            optionToken.put("finPrdtCd", optionVO.getFinPrdtCd());
+            optionToken.put("saveTrm", optionVO.getSaveTrm());
+            if (productMapper.findByOptionToken(optionToken) == 0) {
+                productMapper.fetchOptions(optionVO);
+            }
+        }
+    }
+
+    public List<OptionVO> getOption(String finPrdtCd) {
+        return productMapper.getOption(finPrdtCd);
     }
 
     public List<ProductVO> getKbProducts() {

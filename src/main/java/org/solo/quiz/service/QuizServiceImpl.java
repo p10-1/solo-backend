@@ -29,24 +29,10 @@ import java.util.List;
 @Service
 @Transactional
 public class QuizServiceImpl implements QuizService {
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private final QuizMapper quizMapper;
-//    private final RestTemplate restTemplate;
 
-//    @Value("${quizAPI.url}")
-//    String quizAPIUrl;
-//    @Value("${quizAPI.serviceKey}")
-//    String serviceKey;
-//    @Value("${quizAPI.pageNo}")
-//    String pageNo;
-//    @Value("${quizAPI.numOfRows}")
-//    String numOfRows;
-
-    public QuizServiceImpl(QuizMapper quizMapper, RestTemplate restTemplate) {
+    public QuizServiceImpl(QuizMapper quizMapper) {
         this.quizMapper = quizMapper;
-//        this.restTemplate = restTemplate;
     }
 
     public QuizVO createQuiz() {
@@ -55,50 +41,4 @@ public class QuizServiceImpl implements QuizService {
         return quizMapper.createQuiz(quizNo);
     }
 
-//    public void fetchQuizzes(String word) {
-//        System.out.println(word);
-//        String encodeServiceKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
-//        String term = URLEncoder.encode(word, StandardCharsets.UTF_8);
-//        URI uri = UriComponentsBuilder.fromUriString(quizAPIUrl)
-//                .queryParam("serviceKey", encodeServiceKey)
-//                .queryParam("term", term)
-//                .queryParam("pageNo", pageNo)
-//                .queryParam("numOfRows", numOfRows)
-//                .build(true) // URI 객체로 변환
-//                .toUri();
-//
-//        restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-//        String xmlResponse = restTemplate.getForObject(uri, String.class);
-//        List<QuizVO> quizzes = new ArrayList<>();
-//
-//        try {
-//            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//            DocumentBuilder builder = factory.newDocumentBuilder();
-//            Document document = builder.parse(new ByteArrayInputStream(xmlResponse.getBytes(StandardCharsets.UTF_8)));
-//
-//            NodeList quizList = document.getElementsByTagName("item");
-//            for (int i = 0; i < quizList.getLength(); i++) {
-//                Element quizElement = (Element) quizList.item(i);
-//                String fnceDictNm = quizElement.getElementsByTagName("fnceDictNm").item(0).getTextContent().trim();
-//
-//                String descContent = quizElement.getElementsByTagName("ksdFnceDictDescContent").item(0).getTextContent().trim();
-//                descContent = StringEscapeUtils.unescapeHtml4(descContent); // HTML 엔티티 디코드
-//                descContent = descContent.replaceAll("<[^>]+>", ""); // HTML 태그 제거
-//
-//                QuizVO quizVO = new QuizVO(fnceDictNm, descContent);
-//                quizzes.add(quizVO);
-//            }
-//            saveQuizzes(quizzes);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void saveQuizzes(List<QuizVO> quizzes) {
-//        for (QuizVO quizVO : quizzes) {
-//            if (quizMapper.findByTerm(quizVO.getFnceDictNm()) == 0) {
-//                quizMapper.fetchQuizzes(quizVO);
-//            }
-//        }
-//    }
 }

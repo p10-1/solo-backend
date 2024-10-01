@@ -35,6 +35,5 @@ public class AssetController {
             return ResponseEntity.ok(asset);
         }
         return ResponseEntity.notFound().build();
-
     }
 }

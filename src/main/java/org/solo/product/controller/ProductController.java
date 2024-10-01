@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.solo.common.pagination.Page;
 import org.solo.common.pagination.PageRequest;
 import org.solo.policy.domain.PolicyVO;
+import org.solo.product.domain.OptionVO;
 import org.solo.product.domain.ProductVO;
 import org.solo.product.service.ProductService;
 import org.solo.product.service.ProductServiceImpl;
@@ -16,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -64,10 +62,16 @@ public class ProductController {
         return ResponseEntity.ok(productsPage);
     }
 
-    @GetMapping("fetch")
+    @GetMapping("/fetch")
     public ResponseEntity<Void> fetchProducts(){
         productService.fetchDeposit();
         productService.fetchSaving();
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/option/{finPrdtCd}")
+    public ResponseEntity<List<OptionVO>> getOption(@PathVariable String finPrdtCd) {
+        List<OptionVO> options = productService.getOption(finPrdtCd);
+        return ResponseEntity.ok(options);
     }
 }

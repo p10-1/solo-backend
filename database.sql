@@ -56,7 +56,9 @@ CREATE TABLE `product`
 (
     `productNo`  INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `dclsMonth`  VARCHAR(45)  NULL,
+    `finCoNo`    VARCHAR(45)  NULL,
     `korCoNm`    VARCHAR(45)  NULL,
+    `finPrdtCd`  VARCHAR(45)  NULL,
     `finPrdtNm`  VARCHAR(45)  NULL,
     `joinWay`    VARCHAR(100) NULL,
     `mtrtInt`    VARCHAR(300) NULL,
@@ -64,6 +66,19 @@ CREATE TABLE `product`
     `joinMember` VARCHAR(100) NULL,
     `etcNote`    VARCHAR(300) NULL,
     `type`       VARCHAR(45)  NOT NULL
+);
+
+DROP TABLE IF EXISTS `option`;
+CREATE TABLE `option`
+(
+    `optionNo`  INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `dclsMonth` VARCHAR(45) NULL,
+    `finCoNo`   VARCHAR(45) NULL,
+    `finPrdtCd` VARCHAR(45) NULL,
+    `saveTrm`   VARCHAR(45) NULL,
+    `intrRate`  DECIMAL(10, 2) NULL,
+    `intrRate2` DECIMAL(10, 2) NULL,
+    `type`      VARCHAR(45) NOT NULL
 );
 
 # board 테이블을 삭제하고 새로 만드려면 boardAttachment, like, comment 역시 새로 만들어줘야함, 외래키를 없앴기 때문..
@@ -129,6 +144,7 @@ CREATE TABLE `quiz`
     `description` TEXT         NOT NULL
 );
 
+
 # -----------------------------------------------------------------------------------------------
 
 insert into user (userId, nickName, userName, email, birthdate, point)
@@ -140,25 +156,9 @@ values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
        ('1004539485','유재석', '유재석', 'you@485','2004-01-19',0),
        ('8704441237','차범근', '차범근', 'cha@237','2009-03-30',0);
 
-
 select * from user;
 
 select * from board;
-
-select * from board
-where DATE_FORMAT(regDate, '%Y-%m') = '2024-10';
-
-SELECT YEAR(NOW()) AS currentYear, MONTH(NOW()) AS currentMonth;
-
-SELECT *
-FROM board
-WHERE (YEAR(regDate) = YEAR(CURDATE()) AND MONTH(regDate) = MONTH(CURDATE()) - 1)
-   OR (MONTH(CURDATE()) = 1 AND YEAR(regDate) = YEAR(CURDATE()) - 1 AND MONTH(regDate) = 12)
-ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
-LIMIT 5;
-
-insert into board(title, content, userName, likes, comments, views)
-values ('10월의 첫 게시글','이건 10월에 작성된거야', '김준영', 12, 0, 50);
 
 SELECT *
 FROM board
@@ -319,4 +319,7 @@ VALUES ('예금', '일정 기간 동안 자금을 은행에 맡기고 이자를 
        ('패시브 펀드', '시장 지수를 추종하도록 설계된 펀드로, 장기적으로 안정적인 수익을 목표로 함');
 
 
-select * from quiz;
+select *
+from product;
+
+select * from `option` where saveTrm < 12 order by intrRate desc;

@@ -3,6 +3,7 @@ package org.solo.product.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.solo.policy.domain.PolicyVO;
+import org.solo.product.domain.OptionVO;
 import org.solo.product.domain.ProductVO;
 import org.springframework.stereotype.Repository;
 
@@ -21,4 +22,8 @@ public interface ProductMapper {
     List<ProductVO> getProductsByPageAndKeyword(@Param("offset") int offset,
                                                @Param("limit") int limit,
                                                @Param("keyword") String keyword);
+
+    int findByOptionToken(Map<String, Object> optionToken);
+    void fetchOptions(OptionVO optionVO);
+    List<OptionVO> getOption(@Param("finPrdtCd") String finPrdtCd);
 }

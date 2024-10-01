@@ -13,14 +13,4 @@
         FROM quiz
         WHERE quizNo = #{quizNo}
     </select>
-    <!--    <select id="findByTerm" resultType="java.lang.Integer">-->
-<!--        SELECT count(*)-->
-<!--        FROM quiz-->
-<!--        WHERE fnceDictNm = #{fnceDictNm}-->
-<!--    </select>-->
-
-<!--    <insert id="fetchQuizzes">-->
-<!--        INSERT INTO quiz(fnceDictNm, descContent)-->
-<!--        VALUES (#{fnceDictNm}, #{descContent})-->
-<!--    </insert>-->
 </mapper>
