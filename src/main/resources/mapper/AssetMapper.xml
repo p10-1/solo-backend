@@ -11,4 +11,11 @@
           AND createDate BETWEEN #{startDate} AND #{endDate}
         ORDER BY createDate DESC
     </select>
-</mapper>
+    <select id="getAllAssetData" resultType="org.solo.asset.domain.AssetVO">
+        SELECT * FROM userAsset
+        WHERE createDate = (
+            SELECT MAX(createDate)
+            FROM userAsset AS sub
+            WHERE sub.userId = userAsset.userId
+        )
+    </select></mapper>

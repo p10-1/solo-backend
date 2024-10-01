@@ -334,10 +334,52 @@ INSERT INTO `userAsset` (
              DATE_SUB(CURRENT_DATE, INTERVAL 5 MONTH),
              DATE_SUB(CURRENT_DATE, INTERVAL 5 MONTH)
          );
+INSERT INTO `userAsset` (
+    `userId`,
+    `cashBank`,
+    `cashAccount`,
+    `cash`,
+    `stockBank`,
+    `stockAccount`,
+    `stock`,
+    `propertyBank`,
+    `propertyAccount`,
+    `property`,
+    `depositBank`,
+    `depositAccount`,
+    `deposit`,
+    `consume`,
+    `loanAmount`,
+    `loanPurpose`,
+    `period`,
+    `interest`
+) VALUES (
+             '3000220000',
+             '["우리은행", "신한은행"]',  -- 현금 은행 배열
+             '["123-456-7890", "987-654-3210"]',  -- 현금 계좌 배열
+             '["100000", "110000"]',  -- 현금 자산 배열
+             '["미래에셋", "삼성증권"]',  -- 주식 은행 배열
+             '["111-222-3333", "444-555-6666"]',  -- 주식 계좌 배열
+             '["30000", "2000"]',  -- 주식 자산 배열
+             '["국민은행", "부동산은행"]',  -- 부동산 은행 배열
+             '["777-888-9999", "000-111-2222"]',  -- 부동산 계좌 배열
+             '["100000", "100000"]',  -- 부동산 자산 배열
+             '["농협은행", "하나은행"]',  -- 예적금 은행 배열
+             '["333-444-5555", "666-777-8888"]',  -- 예적금 계좌 배열
+             '["10000", "1000"]' ,  -- 예적금 자산 배열
+             '소비유형1',
+             2000000,
+             '주택구입',
+             24,
+             3
+         );
+
+
+select * from userasset;
 
 SELECT * FROM userAsset
 WHERE userId = '3721153289'
-  AND createDate BETWEEN '2024-04-30 00:00:00' AND '2024-09-30 15:57:09'
+  AND createDate BETWEEN '2024-04-30 00:00:00' AND '2024-09-30 17:50:00'
 ORDER BY createDate DESC;
 
 

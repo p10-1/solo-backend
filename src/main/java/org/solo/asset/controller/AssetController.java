@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/asset")
@@ -34,9 +35,15 @@ public class AssetController {
         String userId = (String) session.getAttribute("userId");
         System.out.println("get 수행중:" + userId);
         if (userId != null) {
-            List<AssetVO> assets = assetService.getAssetData(userId,6); //우선 6개월만
+            List<AssetVO> assets = assetService.getAssetData(userId,7); //우선 6개월만
             return ResponseEntity.ok(assets);
         }
         return ResponseEntity.notFound().build();
     }
+    @GetMapping("/average")
+    public ResponseEntity<Map<String, Double>> getAssetAverages() {
+        Map<String, Double> averages = assetService.calculateAssetAverages();
+        return ResponseEntity.ok(averages);
+    }
+
 }

@@ -14,5 +14,7 @@ public interface AssetMapper {
     List<AssetVO> getAssetData(@Param("userId") String userId,
                                @Param("startDate") LocalDate startDate,
                                @Param("endDate") LocalDate endDate);
+    List<AssetVO> getAllAssetData();
+
 }
 
