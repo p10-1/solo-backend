@@ -59,6 +59,11 @@ public class MypageServiceImpl implements MypageService {
         mypageMapper.updateUserType(params);
     }
 
+    @Override
+    public String getType(String userId) {
+        return mypageMapper.getType(userId);
+    }
+
 
 //    @Override
 //    public void insertAssetData(AssetVO assetData) {

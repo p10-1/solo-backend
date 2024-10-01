@@ -10,6 +10,7 @@ public interface MypageService {
     AssetVO checkAssetData(String userId);
     int getPoint(String userId);
     void updateUserType(String userId, String type);
+    String getType(String userId);
 
 
 //    void insertAssetData(AssetVO assetVO);

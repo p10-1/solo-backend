@@ -84,6 +84,12 @@
         WHERE userId = #{userId}
     </update>
 
+    <select id="getType" parameterType="String" resultType="String">
+        SELECT type
+        FROM userAsset
+        WHERE userId = #{userId}
+    </select>
+
 
     <!--
     <update id="updateCash" parameterType="map">

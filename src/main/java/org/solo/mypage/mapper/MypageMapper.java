@@ -28,5 +28,6 @@ public interface MypageMapper {
 //    void updateCash(Map<String, Object> params);
 
     void updateUserType(Map<String, String> params);
+    String getType(String userId);
 
 }

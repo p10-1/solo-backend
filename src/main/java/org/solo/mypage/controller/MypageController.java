@@ -28,12 +28,6 @@ public class MypageController {
         this.mypageService = mypageService;
     }
 
-//    @GetMapping({"", "/"})
-//    public String mypage() {
-//        return "mypage";
-//    }
-
-
 
     // 자산을 불러오는 API
     @GetMapping("/getAsset")
@@ -88,6 +82,24 @@ public class MypageController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패: " + e.getMessage());
         }
     }
+
+    @GetMapping("/getType")
+    public ResponseEntity<?> getType(HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+
+        // 사용자 인증 확인
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 인증이 필요합니다.");
+        }
+        try {
+            // 사용자 자산 타입 가져오기
+            String type = mypageService.getType(userId);
+            return ResponseEntity.ok(type); // 성공적으로 타입을 가져온 경우
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());
+        }
+    }
+
 
     // == point ==
 
