@@ -67,5 +67,17 @@
         FROM `option`
         WHERE finPrdtCd = #{finPrdtCd}
     </select>
+    <select id="getRecommend" resultType="org.solo.product.domain.ProductVO">
+        SELECT p.*
+        FROM product p
+        JOIN (
+        SELECT finPrdtCd, saveTrm, intrRate, intrRate2
+        FROM `option`
+        WHERE saveTrm &lt; #{period}
+        ORDER BY intrRate DESC
+        LIMIT 2
+        ) o ON p.finPrdtCd = o.finPrdtCd;
+    </select>
+
 
 </mapper>

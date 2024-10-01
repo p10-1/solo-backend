@@ -89,7 +89,6 @@ public class ProductServiceImpl implements ProductService {
 
 
                     OptionVO optionVO = new OptionVO(dclsMonth, forCoNm, finPrdtCd, saveTrm, intrRate, intrRate2,type);
-                    System.out.println("optionVO: " + optionVO);
                     options.add(optionVO);
                 }
                 saveOptions(options);
@@ -203,5 +202,9 @@ public class ProductServiceImpl implements ProductService {
 
     public List<ProductVO> getProductsByPageAndKeyword(PageRequest pageRequest, String keyword) {
         return productMapper.getProductsByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword);
+    }
+
+    public List<ProductVO> getRecommend(int period) {
+        return productMapper.getRecommend(period);
     }
 }

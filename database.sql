@@ -322,4 +322,22 @@ VALUES ('예금', '일정 기간 동안 자금을 은행에 맡기고 이자를 
 select *
 from product;
 
-select * from `option` where saveTrm < 12 order by intrRate desc;
+SELECT p.*
+FROM product p
+         JOIN (
+    SELECT finPrdtCd
+    FROM `option`
+    WHERE saveTrm < 9
+    ORDER BY intrRate DESC
+    LIMIT 2
+) o ON p.finPrdtCd = o.finPrdtCd;
+
+SELECT p.*
+FROM product p
+         JOIN (
+    SELECT finPrdtCd, saveTrm, intrRate, intrRate2
+    FROM `option`
+    WHERE saveTrm < 12
+    ORDER BY intrRate DESC
+    LIMIT 2
+) o ON p.finPrdtCd = o.finPrdtCd;

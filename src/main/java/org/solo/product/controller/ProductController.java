@@ -74,4 +74,10 @@ public class ProductController {
         List<OptionVO> options = productService.getOption(finPrdtCd);
         return ResponseEntity.ok(options);
     }
+
+    @GetMapping("/recommend/{period}")
+    public ResponseEntity<List<ProductVO>> getRecommend(@PathVariable int period) {
+        List<ProductVO> recommends = productService.getRecommend(period);
+        return ResponseEntity.ok(recommends);
+    }
 }
