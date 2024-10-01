@@ -401,3 +401,77 @@ ALTER TABLE `userAsset`
     MODIFY `deposit` JSON NULL;
 
 select * from news order by pubDate DESC;
+
+CREATE TABLE `userAsset`
+(
+    `assetNo`           INT AUTO_INCREMENT PRIMARY KEY,
+    `userId`            VARCHAR(50)   NOT NULL,
+    `cashBank`          JSON          NULL,
+    `cashAccount`       JSON          NULL,
+    `cash`              JSON          NULL,
+    `stockBank`         JSON          NULL,
+    `stockAccount`      JSON          NULL,
+    `stock`             JSON          NULL,
+    `depositBank`       JSON          NULL,
+    `depositAccount`    JSON          NULL,
+    `deposit`           JSON          NULL,
+    `insuranceCompany`  JSON          NULL,
+    `insuranceName`     JSON          NULL,
+    `insurance`         JSON          NULL,
+    `type`              VARCHAR(30)   NULL,
+    `loanAmount`        INT           NULL,
+    `loanPurpose`       VARCHAR(30)   NULL,
+    `period`            INT           NULL,
+    `interest`          DECIMAL(5, 2) NULL, -- 소수점 단위를 입력할 수 있도록 DECIMAL로 변경
+    `createDate`        DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO `userAsset` (
+    `userId`,
+    `cashBank`,
+    `cashAccount`,
+    `cash`,
+    `stockBank`,
+    `stockAccount`,
+    `stock`,
+    `depositBank`,
+    `depositAccount`,
+    `deposit`,
+    `insuranceCompany`,
+    `insuranceName`,
+    `insurance`,
+    `type`,
+    `loanAmount`,
+    `loanPurpose`,
+    `period`,
+    `interest`,
+    `createDate`
+) VALUES (
+             '3721153289',
+             '["우리은행", "신한은행", "국민은행"]',
+             '["123-456-7890", "987-654-3210", "456-789-0123"]',
+             '["300000", "30000", "2000"]',
+             '["미래에셋", "삼성증권", "키움증권"]',
+             '["111-222-3333", "444-555-6666", "777-888-9999"]',
+             '["300000", "250000", "180000"]',
+             '["농협은행", "하나은행", "카카오뱅크"]',
+             '["333-444-5555", "666-777-8888", "999-000-1111"]',
+             '["500000", "300000", "200000"]',
+             '["삼성생명", "한화생명"]',
+             '["종신보험", "암보험"]',
+             '["1000000", "500000"]',
+             '적극투자형',
+             2500000,
+             '주택구입',
+             36,
+             3.75,
+             DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
+
+         );
+
+select * from userasset;
+
+delete fuserasset
+SELECT * FROM userAsset
+WHERE userId = 3721153289
+ORDER BY createDate DESC

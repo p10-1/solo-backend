@@ -21,4 +21,5 @@
             FROM userAsset AS sub
             WHERE sub.userId = userAsset.userId
         )
-    </select></mapper>
+    </select>
+</mapper>

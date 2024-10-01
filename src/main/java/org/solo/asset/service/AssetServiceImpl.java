@@ -36,14 +36,13 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public Map<String, Double> calculateAssetAverages() {
-        List<AssetVO> allAssets = assetMapper.getAllAssetData(); // 모든 자산 데이터를 가져옴
-        Map<String, Double> averages = new HashMap<>();// 평균을 저장할 맵 생성
-
+        List<AssetVO> allAssets = assetMapper.getAllAssetData();
+        Map<String, Double> averages = new HashMap<>();
 
         averages.put("cash", calculateAverage(allAssets, AssetVO::getCash));
         averages.put("deposit", calculateAverage(allAssets, AssetVO::getDeposit));
         averages.put("stock", calculateAverage(allAssets, AssetVO::getStock));
-        averages.put("property", calculateAverage(allAssets, AssetVO::getProperty));
+        averages.put("insurance", calculateAverage(allAssets, AssetVO::getInsurance));
 
         return averages;
     }
