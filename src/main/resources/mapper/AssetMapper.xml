@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.solo.asset.mapper.AssetMapper">
+    <!-- 특정 사용자의 자산 데이터를 가져오는 SQL 쿼리 -->
 
     <select id="getAssetData" resultType="org.solo.asset.domain.AssetVO">
         SELECT * FROM userAsset
@@ -11,6 +12,8 @@
           AND createDate BETWEEN #{startDate} AND #{endDate}
         ORDER BY createDate DESC
     </select>
+    <!-- 모든 사용자의 최신 자산 데이터를 가져오는 SQL 쿼리 -->
+
     <select id="getAllAssetData" resultType="org.solo.asset.domain.AssetVO">
         SELECT * FROM userAsset
         WHERE createDate = (

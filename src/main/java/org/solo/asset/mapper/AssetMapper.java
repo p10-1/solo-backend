@@ -14,6 +14,8 @@ public interface AssetMapper {
     List<AssetVO> getAssetData(@Param("userId") String userId,
                                @Param("startDate") LocalDate startDate,
                                @Param("endDate") LocalDate endDate);
+    // 모든 사용자의 최신 자산 데이터를 가져오는 SQL 쿼리
+
     List<AssetVO> getAllAssetData();
 
 }
