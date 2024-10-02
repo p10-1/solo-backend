@@ -32,7 +32,8 @@ import java.util.TimeZone;
         "org.solo.mypage.mapper",
         "org.solo.policy.mapper",
         "org.solo.asset.mapper",
-        "org.solo.product.mapper"
+        "org.solo.product.mapper",
+        "org.solo.quiz.mapper"
 })
 @ComponentScan(basePackages = {
 //        "org.solo"
@@ -42,7 +43,8 @@ import java.util.TimeZone;
         "org.solo.mypage.service",
         "org.solo.policy.service",
         "org.solo.asset.service",
-        "org.solo.product.service"
+        "org.solo.product.service",
+        "org.solo.quiz.service"
 
 })
 public class RootConfig {

@@ -35,7 +35,7 @@ public class NewsController {
 
     @GetMapping("/fetch")
     public ResponseEntity<List<NewsVO>> fetchNews() {
-        System.out.println("news fetch 요청 들어옴 (controller)");
+//        System.out.println("news fetch 요청 들어옴 (controller)");
         List<NewsVO> newsList = newsService.getNewsALL(); // 데이터베이스에서 저장된 뉴스 가져오기
         return ResponseEntity.ok(newsList); // 가져온 뉴스 목록 반환
     }
