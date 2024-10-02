@@ -94,6 +94,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public List<BoardVO> getBestBoards() {
+        List<BoardVO> bests = boardMapper.getBest();
+        return bests;
+    }
+
+    @Override
     public List<CommentVO> getComments(Long boardNo) {
         return boardMapper.getComments(boardNo);
     }
@@ -177,5 +183,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void likeUpdate(Long boardNo, String userName) {
         boardMapper.likeUpdate(boardNo, userName);
+    }
+
+    @Override
+    public List<BoardVO> mine(String userName) {
+        return boardMapper.mine(userName);
     }
 }

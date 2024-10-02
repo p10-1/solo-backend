@@ -32,4 +32,6 @@ public interface BoardService {
     boolean likeCheck(Long boardNo, String userName);
     void likeUpdate(Long boardNo, String userName);
     List<Long> getBest();
+    List<BoardVO> getBestBoards();
+    List<BoardVO> mine(String userName);
 }
