@@ -234,6 +234,11 @@
         FROM `like`
         WHERE userName = #{userName} AND boardNo = #{boardNo}
     </select>
+    <select id="mine" resultType="org.solo.board.domain.BoardVO">
+        SELECT boardNo, title, content, updateDate, likes, comments, views
+        FROM `board`
+        WHERE userName = #{userName}
+    </select>
 
     <insert id="createComment">
         INSERT INTO comment(boardNo, userName, commentText, regDate)
