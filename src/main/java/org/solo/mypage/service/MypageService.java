@@ -21,8 +21,8 @@ public interface MypageService {
 //    void updateAssetData(AssetVO assetData);
 //    void updateMember(MemberVO memberVO);
 
-//    boolean withdrawPoints(String userId, int point);
-//    boolean updateCash(String userId, int cashAmount);
+    //boolean withdrawPoints(String userId, int point);
+    //boolean updateCash(String userId, int cashAmount);
 
 
 }

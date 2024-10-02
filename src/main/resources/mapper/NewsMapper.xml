@@ -19,7 +19,7 @@
 
         <select id="getNewsBycategory" resultType="org.solo.news.domain.NewsVO">
             SELECT *
-            FROM NEWS
+            FROM news
             WHERE category = #{category} OR #{category} IS NULL
             ORDER BY pubDate DESC
             LIMIT #{offset}, #{limit}
@@ -27,20 +27,20 @@
 
     <select id="getNewsCountBycategory" resultType="java.lang.Integer">
         SELECT count(*)
-        FROM NEWS
+        FROM news
         WHERE (category = #{category} OR #{category} IS NULL);
     </select>
 
 
     <select id="getNewsByPage" resultType="org.solo.news.domain.NewsVO">
         SELECT *
-        FROM NEWS
+        FROM news
         ORDER BY pubDate DESC
         LIMIT #{offset}, #{limit}
     </select>
     <select id="getNewsCount" resultType="java.lang.Integer">
         SELECT count(*)
-        FROM NEWS
+        FROM news
     </select>
 
 

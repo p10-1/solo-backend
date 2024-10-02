@@ -249,7 +249,7 @@ public class MypageController {
 //    }
 
 
-    // point 출금
+    //point 출금
 //    @PostMapping("/withdraw")
 //    public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data, HttpSession session) {
 //
