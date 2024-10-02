@@ -227,29 +227,8 @@ public class MypageController {
 //        }
 //    }
 //
-
 //
-//    // member 수정
-//    @PostMapping("/updateMember")
-//    public String updateUser(MemberVO memberVO, Model model, HttpSession session) {
-//
-//        String userId = (String) session.getAttribute("userId");
-//        System.out.println("user update 수행중:" + userId);
-//
-//        if (userId != null) {
-//            memberVO.setUserId(userId);
-//            mypageService.updateMember(memberVO);
-//            session.setAttribute("message", "정보가 성공적으로 수정되었습니다.");
-//        } else {
-//            session.setAttribute("message", "사용자 정보를 찾을 수 없습니다.");
-//        }
-//
-//        model.addAttribute("userData", memberVO);
-//        return "redirect:/mypage";
-//    }
-
-
-    //point 출금
+//    //point 출금 처음 포인트양, index -> service.getPoint()
 //    @PostMapping("/withdraw")
 //    public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data, HttpSession session) {
 //

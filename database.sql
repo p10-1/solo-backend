@@ -397,4 +397,47 @@ FROM board
 ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
 LIMIT 5;
 
-select * from news;
+select * from userAsset;
+
+select * from user;
+
+
+
+
+INSERT INTO `userAsset` (
+    `userId`,
+    `cashBank`,
+    `cashAccount`,
+    `cash`,
+    `stockBank`,
+    `stockAccount`,
+    `stock`,
+    `depositBank`,
+    `depositAccount`,
+    `deposit`,
+    `insuranceCompany`,
+    `insuranceName`,
+    `insurance`,
+    `loanAmount`,
+    `loanPurpose`,
+    `period`,
+    `interest`
+) VALUES (
+             '3711670018',
+             '["우리은행", "신한은행"]',  -- 현금 은행 배열
+             '["123-456-7890", "987-654-3210"]',  -- 현금 계좌 배열
+             '["50000", "20000"]',  -- 현금 자산 배열
+             '["미래에셋"]',  -- 주식 은행 배열
+             '["111-222-3333"]',  -- 주식 계좌 배열
+             '["10000", "15000"]',  -- 주식 자산 배열
+             '["농협은행", "하나은행"]',  -- 예적금 은행 배열
+             '["333-444-5555", "666-777-8888"]',  -- 예적금 계좌 배열
+             '["20000", "25000"]' ,  -- 예적금 자산 배열
+             '["KB손해보험"]',
+             '["KB 빅플러스저축보험"]',
+             '["400000"]',
+             2000000,
+             '주택구입',
+             24,
+             3.2
+         );
