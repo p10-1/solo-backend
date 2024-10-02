@@ -6,6 +6,7 @@ import org.solo.product.domain.OptionVO;
 import org.solo.product.domain.ProductVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductService {
     void fetchDeposit();
@@ -18,5 +19,11 @@ public interface ProductService {
     List<ProductVO> getProductsByPage(PageRequest pageRequest);
     List<ProductVO> getProductsByPageAndKeyword(PageRequest pageRequest, String keyword);
     List<OptionVO> getOption(String finPrdtCd);
+//    List<ProductVO> getRecommend(int period);
+
+
+
+    //simp son
     List<ProductVO> getRecommend(int period);
+
 }
