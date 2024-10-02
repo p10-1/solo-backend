@@ -12,6 +12,6 @@ import java.util.Map;
 public interface MemberMapper {
     MemberVO findByKakaoId(@Param("userId") String userId);
     void insertNewUserInfo(MemberVO member);
-    void updatePoint(Map<String, Object> params);
+    void updatePoint(Map<String, Object> params);// 포인트 차감시 UPDATE
     int checkUser(@Param("nickName") String nickName);
 }

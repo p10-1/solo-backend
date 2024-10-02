@@ -5,6 +5,7 @@ import org.solo.asset.domain.AssetVO;
 import org.solo.member.domain.MemberVO;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Mapper
@@ -26,5 +27,9 @@ public interface MypageMapper {
     int getPoint(String userId);
 
 //    void updateCash(Map<String, Object> params);
+
+    void updateUserType(Map<String, String> params);
+    String getType(String userId);
+    List<String> getBank(String userId);
 
 }

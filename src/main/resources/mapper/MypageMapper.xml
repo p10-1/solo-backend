@@ -18,7 +18,7 @@
             LIMIT 1
     </select>
 
-    <!--    자산데이터저장-->
+<!--    자산데이터저장-->
     <update id="updateAsset" parameterType="org.solo.asset.domain.AssetVO">
         UPDATE userAsset
         SET
@@ -59,18 +59,18 @@
     <update id="updateAssetData" parameterType="org.solo.asset.domain.AssetVO">
         UPDATE userAsset
         SET cash = #{cash},
-            stock = #{stock},
-            property = #{property},
-            deposit = #{deposit},
-            consume = #{consume},
-            loanAmount = #{loanAmount},
-            loanPurpose = #{loanPurpose},
-            period = #{period}
+        stock = #{stock},
+        property = #{property},
+        deposit = #{deposit},
+        consume = #{consume},
+        loanAmount = #{loanAmount},
+        loanPurpose = #{loanPurpose},
+        period = #{period}
         WHERE userId = #{userId}
     </update>
 
 
-    <!--    point -->
+<!--    point -->
     <select id="getPoint" parameterType="String" resultType="int">
         select point
         FROM user
@@ -106,15 +106,15 @@
 
     -->
 
-    <!--
-        <update id="updateMember" parameterType="org.solo.member.domain.MemberVO">
-            UPDATE user
-            SET email = #{email}
-            WHERE userId = #{userId}
-        </update>
+<!--
+    <update id="updateMember" parameterType="org.solo.member.domain.MemberVO">
+        UPDATE user
+        SET email = #{email}
+        WHERE userId = #{userId}
+    </update>
 
 
-    -->
+-->
 
 
 </mapper>
