@@ -70,8 +70,13 @@ public class PolicyServiceImpl implements PolicyService {
                 String sporCn = policyElement.getElementsByTagName("sporCn").item(0).getTextContent();
                 String rqutUrla = policyElement.getElementsByTagName("rqutUrla").item(0).getTextContent();
 
-                PolicyVO policyVO = new PolicyVO(bizId, polyBizTy, polyBizSjnm, polyItcnCn, sporCn, rqutUrla);
-                policies.add(policyVO);
+                if (rqutUrla.startsWith("https")) {
+                    PolicyVO policyVO = new PolicyVO(bizId, polyBizTy, polyBizSjnm, polyItcnCn, sporCn, rqutUrla);
+                    policies.add(policyVO);
+                } else {
+                    continue;
+                }
+
 
             }
             // 데이터베이스에 저장
@@ -107,5 +112,9 @@ public class PolicyServiceImpl implements PolicyService {
 
     public List<PolicyVO> getPoliciesByPageAndKeyword(PageRequest pageRequest, String keyword) {
         return policyMapper.getPoliciesByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword);
+    }
+
+    public List<PolicyVO> recommendPolicies() {
+        return policyMapper.recommendPolicies();
     }
 }

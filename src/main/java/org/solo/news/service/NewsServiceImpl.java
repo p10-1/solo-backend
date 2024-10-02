@@ -107,7 +107,7 @@ public class NewsServiceImpl implements NewsService {
                 // 중복되지 않는 경우에만 삽입
                 newsMapper.insertNews(Collections.singletonList(news));
             } else {
-                System.out.println("중복 데이터 발견: " + news.getNewsNo());
+//                System.out.println("중복 데이터 발견: " + news.getNewsNo());
             }
         }
         System.out.println("insertNews 실행(mapper)");

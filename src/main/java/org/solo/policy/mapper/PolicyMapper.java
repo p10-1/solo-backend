@@ -19,4 +19,5 @@ public interface PolicyMapper {
     List<PolicyVO> getPoliciesByPageAndKeyword(@Param("offset") int offset,
                                                @Param("limit") int limit,
                                                @Param("keyword") String keyword);
+    List<PolicyVO> recommendPolicies();
 }

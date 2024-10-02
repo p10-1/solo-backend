@@ -47,4 +47,10 @@ public class PolicyController {
         policyService.fetchPolicies();
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/recommend")
+    public ResponseEntity<List<PolicyVO>> recommendPolicies() {
+        List<PolicyVO> recommends = policyService.recommendPolicies();
+        return ResponseEntity.ok(recommends);
+    }
 }
