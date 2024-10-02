@@ -53,7 +53,7 @@ public class NewsServiceImpl implements NewsService {
 
     // RSS 피드에서 뉴스 가져오기
     public List<NewsVO> fetchNews(String rssUrl) {
-        System.out.println("fetchNews() 실행(service)" + rssUrl);
+        //System.out.println("fetchNews() 실행(service)" + rssUrl);
 //        String rssUrl = "https://www.mk.co.kr/rss/50300009/";
         List<NewsVO> newsList = new ArrayList<>();
 
@@ -86,7 +86,7 @@ public class NewsServiceImpl implements NewsService {
                     String formattedPubDate = outputFormat.format(pubDate);
                     news.setPubDate(formattedPubDate); // 변환된 날짜를 설정
 
-//                    System.out.println("데이터매핑 후:"+ news);
+                    System.out.println("데이터매핑 후:"+ news);
                     newsList.add(news); // 뉴스 리스트에 추가
                 }
             }
@@ -100,14 +100,14 @@ public class NewsServiceImpl implements NewsService {
 
     // 뉴스 리스트를 데이터베이스에 삽입
     public void insertNews(List<NewsVO> newsList) {
-//        System.out.println("insertNews 들어옴 (service): " + newsList);
+        System.out.println("insertNews 들어옴 (service): " + newsList);
         for (NewsVO news : newsList) {
             // 중복 체크
             if (newsMapper.getNewsByNo((int) news.getNewsNo()) == null) {
                 // 중복되지 않는 경우에만 삽입
                 newsMapper.insertNews(Collections.singletonList(news));
             } else {
-//                System.out.println("중복 데이터 발견: " + news.getNewsNo());
+                System.out.println("중복 데이터 발견: " + news.getNewsNo());
             }
         }
         System.out.println("insertNews 실행(mapper)");
