@@ -28,12 +28,6 @@ public class MypageController {
         this.mypageService = mypageService;
     }
 
-//    @GetMapping({"", "/"})
-//    public String mypage() {
-//        return "mypage";
-//    }
-
-
 
     // 자산을 불러오는 API
     @GetMapping("/getAsset")
@@ -69,6 +63,84 @@ public class MypageController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패: " + e.getMessage());
         }
     }
+
+    @PostMapping("/updateType")
+    public ResponseEntity<String> updateType(HttpSession session, @RequestBody Map<String, String> data) {
+        String userId = (String) session.getAttribute("userId");
+        System.out.println("updateType controller"+userId +"들어온값"+data);
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 인증이 필요합니다.");
+        }
+
+        String type = data.get("selectedType"); // 프론트에서 넘어온 Type 값
+
+        try {
+            mypageService.updateUserType(userId, type); // 서비스 호출
+            return ResponseEntity.ok("유형이 성공적으로 업데이트되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/getType")
+    public ResponseEntity<?> getType(HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+
+        // 사용자 인증 확인
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 인증이 필요합니다.");
+        }
+        try {
+            // 사용자 자산 타입 가져오기
+            String type = mypageService.getType(userId);
+            return ResponseEntity.ok(type); // 성공적으로 타입을 가져온 경우
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/getBank")
+    public ResponseEntity<?> getBank(HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+
+        // 사용자 인증 확인
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 인증이 필요합니다.");
+        }
+        try {
+            // 사용자 자산 타입 가져오기
+            System.out.println("getBank");
+            List<String> bankList = mypageService.getBank(userId);
+            return ResponseEntity.ok(bankList); // 성공적으로 타입을 가져온 경우
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());
+        }
+    }
+
+
+    // == point ==
+
+    // point 조회
+    @GetMapping(value = "/points", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> getPoints(HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+        System.out.println("points 조회 들어옴");
+
+        if (userId != null) {
+            Integer point = mypageService.getPoint(userId);
+            if (point != null) {
+                System.out.println(point);
+                return ResponseEntity.ok(point); // 포인트만 반환
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+
 
 
 
@@ -176,27 +248,8 @@ public class MypageController {
 //        return "redirect:/mypage";
 //    }
 
-    // == point ==
 
-    // point 조회
-    @GetMapping(value = "/points", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> getPoints(HttpSession session) {
-        String userId = (String) session.getAttribute("userId");
-        System.out.println("points 조회 들어옴");
-
-        if (userId != null) {
-            Integer point = mypageService.getPoint(userId);
-            if (point != null) {
-                System.out.println(point);
-                return ResponseEntity.ok(point); // 포인트만 반환
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
-    // point 출금
+    //point 출금
 //    @PostMapping("/withdraw")
 //    public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data, HttpSession session) {
 //

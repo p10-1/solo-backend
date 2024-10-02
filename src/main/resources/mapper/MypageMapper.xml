@@ -7,19 +7,10 @@
     <!-- 자산 데이터 조회 -->
     <select id="getAssetData" parameterType="String" resultType="org.solo.asset.domain.AssetVO">
         SELECT
-            userId,cashBank,cashAccount,cash,stockBank,stockAccount,stock,propertyBank,
-            propertyAccount,
-            property,
-            depositBank,
-            depositAccount,
-            deposit,
-            consume,
-            loanAmount,
-            loanPurpose,
-            period,
-            interest,
-            createDate,
-            updateDate
+            userId,cashBank,cashAccount,cash,stockBank,stockAccount,stock,
+            depositBank,depositAccount,deposit,
+            insuranceCompany,insuranceName,insurance,
+            loanAmount,loanPurpose,period,interest,createDate
         FROM userAsset
         WHERE userId = #{userId}
             AND MONTH(createDate) = MONTH(CURRENT_DATE)
@@ -37,12 +28,12 @@
             stockBank = #{stockBank},
             stockAccount = #{stockAccount},
             stock = #{stock},
-            propertyBank = #{propertyBank},
-            propertyAccount = #{propertyAccount},
-            property = #{property},
             depositBank = #{depositBank},
             depositAccount = #{depositAccount},
             deposit = #{deposit},
+            insuranceCompany = #{insuranceCompany},
+            insuranceName = #{insuranceName},
+            insurance = #{insurance},
             loanAmount = #{loanAmount},
             loanPurpose = #{loanPurpose},
             period = #{period},
@@ -78,12 +69,6 @@
         WHERE userId = #{userId}
     </update>
 
-    <!-- userData -->
-    <update id="updateMember" parameterType="org.solo.member.domain.MemberVO">
-        UPDATE user
-        SET email = #{email}
-        WHERE userId = #{userId}
-    </update>
 
 <!--    point -->
     <select id="getPoint" parameterType="String" resultType="int">
@@ -92,11 +77,44 @@
         WHERE userId = #{userId}
     </select>
 
+
+    <update id="updateUserType" parameterType="map">
+        UPDATE userAsset
+        SET type = #{type}
+        WHERE userId = #{userId}
+    </update>
+
+    <select id="getType" parameterType="String" resultType="String">
+        SELECT type
+        FROM userAsset
+        WHERE userId = #{userId}
+    </select>
+
+    <select id="getBank" parameterType="String" resultType="java.lang.String">
+        SELECT cashBank
+        FROM userAsset
+        WHERE userId = #{userId}
+    </select>
+
+
+    <!--
     <update id="updateCash" parameterType="map">
         UPDATE userAsset
         SET cash = #{updatedCash}
         WHERE userId = #{userId}
     </update>
+
+    -->
+
+<!--
+    <update id="updateMember" parameterType="org.solo.member.domain.MemberVO">
+        UPDATE user
+        SET email = #{email}
+        WHERE userId = #{userId}
+    </update>
+
+
+-->
 
 
 </mapper>
