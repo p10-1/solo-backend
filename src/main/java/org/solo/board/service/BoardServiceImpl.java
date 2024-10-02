@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 @Transactional
@@ -87,8 +85,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardVO> getBest() {
-        return boardMapper.getBest();
+    public List<Long> getBest() {
+        List<BoardVO> bests = boardMapper.getBest();
+        List<Long> bestIds = new ArrayList<>();
+        for (BoardVO boardVO : bests) {
+            bestIds.add(boardVO.getBoardNo());
+        }
+        return bestIds;
     }
 
     @Override

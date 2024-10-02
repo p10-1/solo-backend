@@ -12,4 +12,5 @@ public interface PolicyService {
     int getTotalCntByKeyword(String keyword);
     List<PolicyVO> getPoliciesByPage(PageRequest pageRequest);
     List<PolicyVO> getPoliciesByPageAndKeyword(PageRequest pageRequest, String keyword);
+    List<PolicyVO> recommendPolicies();
 }
