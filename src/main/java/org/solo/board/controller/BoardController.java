@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -31,8 +32,9 @@ public class BoardController {
                                                  @RequestParam(required = false) String category,
                                                  @RequestParam(required = false) String keyword,
                                                  @RequestParam String sort) {
-        PageRequest pageRequest = PageRequest.of(page, amount); // 페이지 번호는 0부터 시작하므로 -1 필요
         List<BoardVO> boards;
+        List<BoardVO> bestBoards = (page == 1) ? boardService.getBestBoards() : Collections.emptyList();
+        PageRequest pageRequest = PageRequest.of(page, amount);
         switch (sort) {
             case "likes":
                 System.out.println("좋아요");
@@ -59,6 +61,10 @@ public class BoardController {
                         : boardService.getBoardsByPageOrderByregDate(pageRequest);
                 break;
         }
+        if (page == 1 && !bestBoards.isEmpty()) {
+            boards.addAll(0, bestBoards);
+        }
+
         int totalBoardsCount = (keyword != null && !keyword.isEmpty())
                 ? boardService.getTotalCntByKeyword(category, keyword)
                 : boardService.getTotalCnt();
@@ -69,7 +75,7 @@ public class BoardController {
     }
 
     @GetMapping("/best")
-    public ResponseEntity<List<BoardVO>> getBest(){
+    public ResponseEntity<List<Long>> getBest(){
         return ResponseEntity.ok(boardService.getBest());
     }
 
@@ -126,6 +132,11 @@ public class BoardController {
         } else {
             return ResponseEntity.ok("fail");
         }
+    }
 
+    @GetMapping("/mine")
+    public ResponseEntity<List<BoardVO>> mine(@RequestParam String userName) {
+        List<BoardVO> myBoards = boardService.mine(userName);
+        return ResponseEntity.ok(myBoards);
     }
 }

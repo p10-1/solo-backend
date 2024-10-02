@@ -1,5 +1,6 @@
 package org.solo.news.service;
 
+import org.solo.common.pagination.PageRequest;
 import org.solo.news.domain.NewsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,31 +31,9 @@ public class NewsServiceImpl implements NewsService {
         this.restTemplate = new RestTemplate();
     }
 
-    /*
-    @Override
-    public List<NewsVO> getNewsALL() {
-        System.out.println("getNewsALL호출됨(service)");
-        return newsMapper.getNewsALL();
-    }
-    */
-
-
-    @Override
-    public List<NewsVO> getNewsALL() {
-        System.out.println("getNewsALL 호출됨 (service)");
-        try {
-            return newsMapper.getNewsALL()  ;
-        } catch (Exception e) {
-            // 로그를 남기거나 적절한 예외 처리를 수행
-            e.printStackTrace();
-            throw e; // 또는 새로운 예외를 던질 수 있음
-        }
-    }
-
     // RSS 피드에서 뉴스 가져오기
     public List<NewsVO> fetchNews(String rssUrl) {
         System.out.println("fetchNews() 실행(service)" + rssUrl);
-//        String rssUrl = "https://www.mk.co.kr/rss/50300009/";
         List<NewsVO> newsList = new ArrayList<>();
 
         try {
@@ -86,8 +65,7 @@ public class NewsServiceImpl implements NewsService {
                     String formattedPubDate = outputFormat.format(pubDate);
                     news.setPubDate(formattedPubDate); // 변환된 날짜를 설정
 
-//                    System.out.println("데이터매핑 후:"+ news);
-                    newsList.add(news); // 뉴스 리스트에 추가
+                    newsList.add(news);
                 }
             }
 
@@ -100,16 +78,40 @@ public class NewsServiceImpl implements NewsService {
 
     // 뉴스 리스트를 데이터베이스에 삽입
     public void insertNews(List<NewsVO> newsList) {
-//        System.out.println("insertNews 들어옴 (service): " + newsList);
         for (NewsVO news : newsList) {
             // 중복 체크
             if (newsMapper.getNewsByNo((int) news.getNewsNo()) == null) {
-                // 중복되지 않는 경우에만 삽입
                 newsMapper.insertNews(Collections.singletonList(news));
             } else {
-                System.out.println("중복 데이터 발견: " + news.getNewsNo());
+//                System.out.println("중복 데이터 발견: " + news.getNewsNo());
             }
         }
-        System.out.println("insertNews 실행(mapper)");
     }
+
+    // 뉴스 조회
+    @Override
+    public List<NewsVO> getNewsBycategory(PageRequest pageRequest, String category) {
+        return newsMapper.getNewsBycategory(pageRequest.getOffset(), pageRequest.getAmount(), category); // 페이지와 항목 수에 따라 데이터 가져오기
+    }
+
+    // 카테고리별 뉴스 개수 조회
+    @Override
+    public int getNewsCountBycategory(String category) {
+        return newsMapper.getNewsCountBycategory(category); // 전체 뉴스 수 가져오기
+    }
+
+    // 카테고리별 조회
+    @Override
+    public List<NewsVO> getNewsByPage(PageRequest pageRequest) {
+        return newsMapper.getNewsByPage(pageRequest.getOffset(), pageRequest.getAmount()); // 페이지와 항목 수에 따라 데이터 가져오기
+    }
+
+    // 카테고리별 뉴스 개수 조회
+    @Override
+    public int getNewsCount() {
+        return newsMapper.getNewsCount(); // 전체 뉴스 수 가져오기
+    }
+
+
+
 }

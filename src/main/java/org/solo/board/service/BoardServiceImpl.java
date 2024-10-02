@@ -12,15 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 @Transactional
 //@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    private final static String BASE_DIR = "/Users/junyoung/Documents/upload/board";
+//    private final static String BASE_DIR = "/Users/junyoung/Documents/upload/board";
+    private final static String BASE_DIR = "C:\\upload\\board";
     private final BoardMapper boardMapper;
 
     @Autowired
@@ -86,8 +85,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardVO> getBest() {
-        return boardMapper.getBest();
+    public List<Long> getBest() {
+        List<BoardVO> bests = boardMapper.getBest();
+        List<Long> bestIds = new ArrayList<>();
+        for (BoardVO boardVO : bests) {
+            bestIds.add(boardVO.getBoardNo());
+        }
+        return bestIds;
+    }
+
+    @Override
+    public List<BoardVO> getBestBoards() {
+        List<BoardVO> bests = boardMapper.getBest();
+        return bests;
     }
 
     @Override
@@ -174,5 +184,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void likeUpdate(Long boardNo, String userName) {
         boardMapper.likeUpdate(boardNo, userName);
+    }
+
+    @Override
+    public List<BoardVO> mine(String userName) {
+        return boardMapper.mine(userName);
     }
 }

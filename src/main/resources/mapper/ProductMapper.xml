@@ -5,8 +5,13 @@
 
 <mapper namespace="org.solo.product.mapper.ProductMapper">
     <insert id="fetchProducts" parameterType="org.solo.product.domain.ProductVO">
-        INSERT INTO product (dclsMonth, korCoNm, finPrdtNm, joinWay, mtrtInt, spclCnd, joinMember, etcNote, type)
-        VALUES (#{dclsMonth}, #{korCoNm}, #{finPrdtNm}, #{joinWay}, #{mtrtInt}, #{spclCnd}, #{joinMember}, #{etcNote}, #{type})
+        INSERT INTO product (dclsMonth, finCoNo, korCoNm, finPrdtCd, finPrdtNm, joinWay, mtrtInt, spclCnd, joinMember, etcNote, type)
+        VALUES (#{dclsMonth}, #{finCoNo}, #{korCoNm}, #{finPrdtCd}, #{finPrdtNm}, #{joinWay}, #{mtrtInt}, #{spclCnd}, #{joinMember}, #{etcNote}, #{type})
+    </insert>
+
+    <insert id="fetchOptions" parameterType="org.solo.product.domain.OptionVO">
+        INSERT INTO `option` (dclsMonth, finCoNo, finPrdtCd, saveTrm, intrRate, intrRate2, type)
+        VALUES (#{dclsMonth}, #{finCoNo}, #{finPrdtCd}, #{saveTrm}, #{intrRate}, #{intrRate2}, #{type})
     </insert>
 
     <select id="findByToken" parameterType="map" resultType="java.lang.Integer">
@@ -17,6 +22,16 @@
           AND etcNote = #{etcNote}
           AND type = #{type}
     </select>
+
+    <select id="findByOptionToken" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM `option`
+        WHERE dclsMonth = #{dclsMonth}
+          AND finCoNo = #{finCoNo}
+          AND finPrdtCd = #{finPrdtCd}
+          AND saveTrm = #{saveTrm}
+    </select>
+
     <select id="getKbProducts" resultType="org.solo.product.domain.ProductVO">
         SELECT *
         FROM product
@@ -47,4 +62,22 @@
            OR spclCnd LIKE CONCAT('%', #{keyword}, '%')
             LIMIT #{offset}, #{limit}
     </select>
+    <select id="getOption" resultType="org.solo.product.domain.OptionVO">
+        SELECT dclsMonth, finCoNo, finPrdtCd, saveTrm, intrRate, intrRate2, type
+        FROM `option`
+        WHERE finPrdtCd = #{finPrdtCd}
+    </select>
+    <select id="getRecommend" resultType="org.solo.product.domain.ProductVO">
+        SELECT p.*
+        FROM product p
+        JOIN (
+        SELECT finPrdtCd, saveTrm, intrRate, intrRate2
+        FROM `option`
+        WHERE saveTrm &lt; #{period}
+        ORDER BY intrRate DESC
+        LIMIT 2
+        ) o ON p.finPrdtCd = o.finPrdtCd;
+    </select>
+
+
 </mapper>
