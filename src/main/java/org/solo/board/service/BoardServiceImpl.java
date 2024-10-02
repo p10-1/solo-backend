@@ -18,7 +18,8 @@ import java.util.*;
 @Transactional
 //@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    private final static String BASE_DIR = "/Users/junyoung/Documents/upload/board";
+//    private final static String BASE_DIR = "/Users/junyoung/Documents/upload/board";
+    private final static String BASE_DIR = "C:\\upload\\board";
     private final BoardMapper boardMapper;
 
     @Autowired
@@ -91,6 +92,12 @@ public class BoardServiceImpl implements BoardService {
             bestIds.add(boardVO.getBoardNo());
         }
         return bestIds;
+    }
+
+    @Override
+    public List<BoardVO> getBestBoards() {
+        List<BoardVO> bests = boardMapper.getBest();
+        return bests;
     }
 
     @Override
@@ -177,5 +184,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void likeUpdate(Long boardNo, String userName) {
         boardMapper.likeUpdate(boardNo, userName);
+    }
+
+    @Override
+    public List<BoardVO> mine(String userName) {
+        return boardMapper.mine(userName);
     }
 }
