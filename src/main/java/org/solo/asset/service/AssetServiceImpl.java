@@ -51,13 +51,31 @@ public class AssetServiceImpl implements AssetService {
     private Double calculateAverage(List<AssetVO> assets, Function<AssetVO, String> getter) {
         return assets.stream()
                 .mapToDouble(asset -> {
-                    String value = getter.apply(asset);// 자산 데이터를 가져옴
-                    return Arrays.stream(value.replaceAll("[\\[\\]\"]", "").split(","))// 배열 형식으로 자산 데이터 파싱
-                            .mapToDouble(Double::parseDouble)// String을 Double로 변환
-                            .sum();
+                    String value = getter.apply(asset);
+                    if (value == null || value.isEmpty()) {
+                        System.out.println("Null or empty value found for asset: " + asset);
+                        return 0.0; // null이거나 빈 문자열인 경우 0으로 처리
+                    }
+                    try {
+                        return Arrays.stream(value.replaceAll("[\\[\\]\"]", "").split(","))
+                                .filter(s -> !s.trim().isEmpty()) // 빈 문자열 필터링
+                                .mapToDouble(s -> {
+                                    try {
+                                        return Double.parseDouble(s.trim());
+                                    } catch (NumberFormatException e) {
+                                        System.err.println("Error parsing value: " + s);
+                                        return 0.0; // 파싱 실패 시 0으로 처리
+                                    }
+                                })
+                                .sum();
+                    } catch (Exception e) {
+                        System.err.println("Error processing asset value: " + value);
+                        e.printStackTrace();
+                        return 0.0; // 예외 발생 시 0으로 처리
+                    }
                 })
                 .average()
-                .orElse(0.0);// 데이터가 없으면 0.0 반환
+                .orElse(0.0); // 데이터가 없으면 0.0 반환
     }
 
 }
