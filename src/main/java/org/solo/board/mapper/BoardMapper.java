@@ -6,6 +6,7 @@ import org.solo.board.domain.BoardAttachmentVO;
 import org.solo.board.domain.BoardVO;
 import org.solo.board.domain.CommentVO;
 import org.solo.common.pagination.PageRequest;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -55,6 +56,8 @@ public interface BoardMapper {
     void likeUpdate(@Param("boardNo") Long boardNo, @Param("userName") String userName);
 
     List<BoardVO> getBest();
+
+    List<BoardVO> mine(@Param("userName") String userName);
 }
 
 
