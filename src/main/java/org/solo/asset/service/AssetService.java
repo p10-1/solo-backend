@@ -14,4 +14,6 @@ public interface AssetService {
     // 모든 사용자의 평균 자산을 계산하는 메서드
 
     Map<String, Double> calculateAssetAverages();
+
+
 }

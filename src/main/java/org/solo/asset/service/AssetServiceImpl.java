@@ -62,30 +62,5 @@ public class AssetServiceImpl implements AssetService {
                 .average()
                 .orElse(0.0);
     }
-//    private Double calculateAverage(List<AssetVO> assets, Function<AssetVO, String> getter) {
-//        return assets.stream()
-//                .map(asset -> Optional.ofNullable(getter.apply(asset)).orElse("0"))
-//                .mapToDouble(value -> {
-//                    try {
-//                        return Arrays.stream(value.replaceAll("[\\[\\]\"]", "").split(","))
-//                                .filter(s -> !s.trim().isEmpty())
-//                                .mapToDouble(s -> {
-//                                    try {
-//                                        return Double.parseDouble(s.trim());
-//                                    } catch (NumberFormatException e) {
-//                                        System.err.println("Error parsing value: " + s);
-//                                        return 0.0;
-//                                    }
-//                                })
-//                                .sum();
-//                    } catch (Exception e) {
-//                        System.err.println("Error processing asset value: " + value);
-//                        e.printStackTrace();
-//                        return 0.0;
-//                    }
-//                })
-//                .average()
-//                .orElse(0.0);
-//    }
 
 }
