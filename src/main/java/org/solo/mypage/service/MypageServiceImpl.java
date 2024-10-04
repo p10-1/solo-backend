@@ -118,25 +118,24 @@ public class MypageServiceImpl implements MypageService {
 //    }
 
 
-
-    @Override
-    public boolean withdrawPoints(String userId, int point) {
-        MemberVO member = memberMapper.findByKakaoId(userId);
-
-        System.out.println("withdrawPoints 서비스 실행");
-        if (member != null && member.getPoint() >= point) {
-            int newPoint = member.getPoint() - point;
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("userId", userId);
-            params.put("newPoint", newPoint);
-
-            memberMapper.updatePoint(params);
-            return true;
-        }
-
-        return false; // 출금 실패 (회원 정보가 없거나 포인트가 부족한 경우)
-    }
+//    @Override
+//    public boolean withdrawPoints(String userId, int point) {
+//        MemberVO member = memberMapper.findByKakaoId(userId);
+//
+//        System.out.println("withdrawPoints 서비스 실행");
+//        if (member != null && member.getPoint() >= point) {
+//            int newPoint = member.getPoint() - point;
+//
+//            Map<String, Object> params = new HashMap<>();
+//            params.put("userId", userId);
+//            params.put("newPoint", newPoint);
+//
+//            memberMapper.updatePoint(params);
+//            return true;
+//        }
+//
+//        return false; // 출금 실패 (회원 정보가 없거나 포인트가 부족한 경우)
+//    }
 
 
 

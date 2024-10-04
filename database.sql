@@ -441,3 +441,7 @@ INSERT INTO `userAsset` (
              24,
              3.2
          );
+
+select * from news where DATE(pubDate) ='2024-10-04';
+
+select * from news;
