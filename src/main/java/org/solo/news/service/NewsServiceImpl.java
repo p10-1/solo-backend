@@ -26,47 +26,27 @@ public class NewsServiceImpl implements NewsService {
     private final NewsMapper newsMapper;
     private final RestTemplate restTemplate;
 
+    private static final String[] CATEGORIES = {"경제", "증권", "부동산"};
+
     @Autowired
     public NewsServiceImpl(NewsMapper newsMapper) {
         this.newsMapper = newsMapper;
         this.restTemplate = new RestTemplate();
     }
-
     // RSS 피드에서 뉴스 가져오기
     public List<NewsVO> fetchNews(String rssUrl) {
-        System.out.println("fetchNews() 실행(service)" + rssUrl);
         List<NewsVO> newsList = new ArrayList<>();
 
         try {
-            // RestTemplate을 사용하여 RSS 피드 가져오기
             String rssFeed = restTemplate.getForObject(rssUrl, String.class);
-            //System.out.println("RSS Feed: " + rssFeed);
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new ByteArrayInputStream(rssFeed.getBytes()));
-
+            Document doc = parseRssFeed(rssFeed);
             NodeList itemList = doc.getElementsByTagName("item");
+
             for (int i = 0; i < itemList.getLength(); i++) {
                 Node itemNode = itemList.item(i);
                 if (itemNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element itemElement = (Element) itemNode;
-
-                    NewsVO news = new NewsVO();
-                    news.setNewsNo(Integer.parseInt(itemElement.getElementsByTagName("no").item(0).getTextContent()));
-                    news.setTitle(itemElement.getElementsByTagName("title").item(0).getTextContent());
-                    news.setLink(itemElement.getElementsByTagName("link").item(0).getTextContent());
-                    news.setCategory(itemElement.getElementsByTagName("category").item(0).getTextContent());
-
-                    // pubDate 변환
-                    String pubDateString = itemElement.getElementsByTagName("pubDate").item(0).getTextContent();
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss XXX", Locale.ENGLISH); // XXX를 사용
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // MySQL DATETIME 형식으로 변환
-                    Date pubDate = inputFormat.parse(pubDateString);
-                    String formattedPubDate = outputFormat.format(pubDate);
-                    news.setPubDate(formattedPubDate); // 변환된 날짜를 설정
-
-                    newsList.add(news);
+                    newsList.add(parseNewsItem(itemElement));
                 }
             }
 
@@ -74,17 +54,39 @@ public class NewsServiceImpl implements NewsService {
             e.printStackTrace();
             throw new RuntimeException("뉴스 데이터를 가져오는 데 실패했습니다.");
         }
-        return newsList; // 가져온 뉴스 리스트 반환
+        return newsList;
+    }
+
+    // rss 파싱
+    private Document parseRssFeed(String rssFeed) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        return builder.parse(new ByteArrayInputStream(rssFeed.getBytes()));
+    }
+    // 뉴스 태그별로 매핑
+    private NewsVO parseNewsItem(Element itemElement) throws Exception {
+        NewsVO news = new NewsVO();
+        news.setNewsNo(Integer.parseInt(itemElement.getElementsByTagName("no").item(0).getTextContent()));
+        news.setTitle(itemElement.getElementsByTagName("title").item(0).getTextContent());
+        news.setLink(itemElement.getElementsByTagName("link").item(0).getTextContent());
+        news.setCategory(itemElement.getElementsByTagName("category").item(0).getTextContent());
+        news.setPubDate(formatPubDate(itemElement.getElementsByTagName("pubDate").item(0).getTextContent()));
+        return news;
+    }
+
+    // 날짜 포맷팅
+    private String formatPubDate(String pubDateString) throws Exception {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss XXX", Locale.ENGLISH);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date pubDate = inputFormat.parse(pubDateString);
+        return outputFormat.format(pubDate);
     }
 
     // 뉴스 리스트를 데이터베이스에 삽입
     public void insertNews(List<NewsVO> newsList) {
         for (NewsVO news : newsList) {
-            // 중복 체크
             if (newsMapper.getNewsByNo((int) news.getNewsNo()) == null) {
                 newsMapper.insertNews(Collections.singletonList(news));
-            } else {
-//                System.out.println("중복 데이터 발견: " + news.getNewsNo());
             }
         }
     }
@@ -92,56 +94,52 @@ public class NewsServiceImpl implements NewsService {
     // 뉴스 조회
     @Override
     public List<NewsVO> getNewsBycategory(PageRequest pageRequest, String category) {
-        return newsMapper.getNewsBycategory(pageRequest.getOffset(), pageRequest.getAmount(), category); // 페이지와 항목 수에 따라 데이터 가져오기
-    }
-
-    // 카테고리별 뉴스 개수 조회
-    @Override
-    public int getNewsCountBycategory(String category) {
-        return newsMapper.getNewsCountBycategory(category); // 전체 뉴스 수 가져오기
+        return getNews(pageRequest, category);
     }
 
     // 카테고리별 조회
     @Override
     public List<NewsVO> getNewsByPage(PageRequest pageRequest) {
-        return newsMapper.getNewsByPage(pageRequest.getOffset(), pageRequest.getAmount()); // 페이지와 항목 수에 따라 데이터 가져오기
+        return getNews(pageRequest, null);
+    }
+
+    private List<NewsVO> getNews(PageRequest pageRequest, String category) {
+        return category == null
+                ? newsMapper.getNewsByPage(pageRequest.getOffset(), pageRequest.getAmount())
+                : newsMapper.getNewsBycategory(pageRequest.getOffset(), pageRequest.getAmount(), category);
     }
 
     // 카테고리별 뉴스 개수 조회
     @Override
-    public int getNewsCount() {
-        return newsMapper.getNewsCount(); // 전체 뉴스 수 가져오기
+    public int getNewsCountBycategory(String category) {
+        return newsMapper.getNewsCountBycategory(category);
     }
 
+    // 전체 뉴스 수 가져오기
+    @Override
+    public int getNewsCount() {
+        return newsMapper.getNewsCount();
+    }
+
+    // 오늘의 뉴스 가져오기
     @Override
     public Map<String, List<NewsVO>> getTodayNews(LocalDate date) {
-        // 오늘의 뉴스 목록을 가져옵니다.
         List<NewsVO> todayNews = newsMapper.getTodayNews(date);
         Map<String, List<NewsVO>> selectedNews = new HashMap<>();
 
-
         // 각 카테고리 초기화
-        for (String category : new String[]{"경제", "증권", "부동산"}) {
-            selectedNews.put(category, new ArrayList<>()); // 각 카테고리의 리스트 초기화
+        for (String category : CATEGORIES) {
+            selectedNews.put(category, new ArrayList<>());
         }
 
-        // 뉴스 항목을 카테고리에 따라 분류합니다.
+        // 카테고리 별로 분류
         for (NewsVO news : todayNews) {
             String category = news.getCategory();
             if (selectedNews.containsKey(category)) {
-                selectedNews.get(category).add(news); // 해당 카테고리 리스트에 뉴스 추가
+                selectedNews.get(category).add(news);
             }
         }
 
-
         return selectedNews;
     }
-
-
-
-
-
-
-
-
 }

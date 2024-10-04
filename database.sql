@@ -409,3 +409,7 @@ where userId = 3711364352;
 
 select * from user;
 
+SELECT *
+FROM news
+WHERE DATE(pubDate) = #{date}
+

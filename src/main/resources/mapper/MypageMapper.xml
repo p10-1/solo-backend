@@ -43,13 +43,6 @@
             AND YEAR(createDate) = YEAR(CURRENT_DATE());
     </update>
 
-    <!-- 자산 데이터 존재 여부 확인 -->
-    <select id="findAssetData" parameterType="String" resultType="boolean">
-        SELECT COUNT(*) > 0
-        FROM userAsset
-        WHERE userId = #{userId}
-    </select>
-
     <!-- 포인트 출금 시 자산 데이터 확인 -->
     <select id="checkAssetData" parameterType="java.lang.String" resultType="org.solo.asset.domain.AssetVO">
         SELECT * FROM userAsset
