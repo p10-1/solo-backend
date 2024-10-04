@@ -6,6 +6,7 @@ import org.solo.news.domain.NewsVO;
 import org.solo.policy.domain.PolicyVO;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
@@ -19,5 +20,9 @@ public interface NewsMapper {
 
     List<NewsVO> getNewsByPage(@Param("offset") int offset, @Param("limit") int limit);
     int getNewsCount();
+
+    List<NewsVO> getTodayNews(LocalDate date);
+
+
 
 }

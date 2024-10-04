@@ -16,6 +16,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -111,6 +112,37 @@ public class NewsServiceImpl implements NewsService {
     public int getNewsCount() {
         return newsMapper.getNewsCount(); // 전체 뉴스 수 가져오기
     }
+
+    @Override
+    public Map<String, List<NewsVO>> getTodayNews(LocalDate date) {
+        // 오늘의 뉴스 목록을 가져옵니다.
+        List<NewsVO> todayNews = newsMapper.getTodayNews(date);
+        Map<String, List<NewsVO>> selectedNews = new HashMap<>();
+
+        System.out.println("서비스: " + todayNews);
+
+        // 각 카테고리 초기화
+        for (String category : new String[]{"경제", "증권", "부동산"}) {
+            selectedNews.put(category, new ArrayList<>()); // 각 카테고리의 리스트 초기화
+        }
+
+        // 뉴스 항목을 카테고리에 따라 분류합니다.
+        for (NewsVO news : todayNews) {
+            String category = news.getCategory();
+            if (selectedNews.containsKey(category)) {
+                selectedNews.get(category).add(news); // 해당 카테고리 리스트에 뉴스 추가
+            }
+        }
+
+        System.out.println("선택된 뉴스: " + selectedNews);
+
+        return selectedNews;
+    }
+
+
+
+
+
 
 
 
