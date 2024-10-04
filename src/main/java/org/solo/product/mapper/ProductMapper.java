@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.solo.policy.domain.PolicyVO;
 import org.solo.product.domain.OptionVO;
 import org.solo.product.domain.ProductVO;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,5 +31,8 @@ public interface ProductMapper {
 
 
     ////simpson
-    List<ProductVO> getRecommend(@Param("period") int period);
+//    List<ProductVO> getRecommend(@Param("period") int period);
+    List<ProductVO> getRecommend(@Param("userId") String userId);
+    int haveLoan(@Param("userId") String userId);
+    List<ProductVO> getKbRand();
 }

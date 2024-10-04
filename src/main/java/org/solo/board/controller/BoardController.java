@@ -75,8 +75,8 @@ public class BoardController {
     }
 
     @GetMapping("/best")
-    public ResponseEntity<List<Long>> getBest(){
-        return ResponseEntity.ok(boardService.getBest());
+    public ResponseEntity<List<BoardVO>> getBest(){
+        return ResponseEntity.ok(boardService.getBestBoards());
     }
 
     @GetMapping("/{no}")
