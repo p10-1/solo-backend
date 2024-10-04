@@ -230,20 +230,21 @@ public class MypageController {
 //    public ResponseEntity<?> getById(@PathVariable int accountIndex, HttpSession session) {
 //
 //    }
-    //point 출금 처음 포인트양, index -> service.getPoint()
-//    @PostMapping("/withdraw")
-//    public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data,
-//                                            @RequestParam Integer accountIndex,
-//                                            HttpSession session) {
-//        // 세션에서 userId 가져오기
-//        String userId = (String) session.getAttribute("userId");
-//        if (userId != null) {
-//            // 서비스 메서드 호출
-//            return mypageService.withdrawPoints(userId, accountIndex, data.getPoint());
-//        } else {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자");
-//        }
-//    }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data,
+                                            @RequestParam Integer idx,
+                                            HttpSession session) {
+        System.out.println("withdraw요청 들어옴");
+        // 세션에서 userId 가져오기
+        String userId = (String) session.getAttribute("userId");
+        if (userId != null) {
+            // 서비스 메서드 호출
+            return mypageService.withdrawPoints(userId, idx, data.getPoint());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자");
+        }
+    }
 
 }
 
