@@ -31,8 +31,8 @@ public interface ProductMapper {
 
 
     ////simpson
-    List<ProductVO> getRecommend(@Param("period") int period);
-//    List<ProductVO> getRecommend(@Param("userId") String userId);
+//    List<ProductVO> getRecommend(@Param("period") int period);
+    List<ProductVO> getRecommend(@Param("userId") String userId);
     int haveLoan(@Param("userId") String userId);
     List<ProductVO> getKbRand();
 }
