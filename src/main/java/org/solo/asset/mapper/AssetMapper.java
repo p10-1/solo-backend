@@ -18,5 +18,8 @@ public interface AssetMapper {
 
     List<AssetVO> getAllAssetData();
 
+
+
+
 }
 

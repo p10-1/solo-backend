@@ -27,7 +27,12 @@ public interface ProductMapper {
     int findByOptionToken(Map<String, Object> optionToken);
     void fetchOptions(OptionVO optionVO);
     List<OptionVO> getOption(@Param("finPrdtCd") String finPrdtCd);
-    List<ProductVO> getRecommend(@Param("userId") String userId);
+
+
+
+    ////simpson
+    List<ProductVO> getRecommend(@Param("period") int period);
+//    List<ProductVO> getRecommend(@Param("userId") String userId);
     int haveLoan(@Param("userId") String userId);
     List<ProductVO> getKbRand();
 }

@@ -33,4 +33,5 @@ public class AssetVO {
     private Double interest;      // 이자율 (정수형)
 
     private Date createDate;     // 생성일 (문자열 형식)
+
 }

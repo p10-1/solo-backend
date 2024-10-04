@@ -75,9 +75,17 @@ public class ProductController {
         return ResponseEntity.ok(options);
     }
 
-    @GetMapping("/recommend")
-    public ResponseEntity<List<ProductVO>> getRecommend(@RequestParam String userId) {
-        List<ProductVO> recommends = productService.getRecommend(userId);
-        return ResponseEntity.ok(recommends);
+//    @GetMapping("/recommend/{period}")
+//    public ResponseEntity<List<ProductVO>> getRecommend(@PathVariable int period) {
+//        List<ProductVO> recommends = productService.getRecommend(period);
+//        return ResponseEntity.ok(recommends);
+//    }
+
+
+    //// simpspon 수정
+    @GetMapping("/recommend/{period}")
+    public ResponseEntity<List<ProductVO>> getRecommend(@PathVariable int period) {
+        List<ProductVO> recommendedProducts = productService.getRecommend(period);
+        return ResponseEntity.ok(recommendedProducts);
     }
 }
