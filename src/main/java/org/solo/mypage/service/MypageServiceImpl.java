@@ -73,9 +73,11 @@ public class MypageServiceImpl implements MypageService {
         if (currentPoints != null && currentPoints >= withdrawAmount) {
             // 출금 처리
             boolean withdrawSuccess = withdrawPoint(userId, withdrawAmount);
+            System.out.println("포인트출금"+withdrawSuccess);
             if (withdrawSuccess) {
                 // 현금 업데이트
                 boolean updateCashSuccess = updateCash(userId, withdrawAmount, idx);
+                System.out.println(updateCashSuccess);
                 if (updateCashSuccess) {
                     return ResponseEntity.ok("출금 및 현금 추가가 성공적으로 완료되었습니다.");
                 } else {
@@ -103,10 +105,14 @@ public class MypageServiceImpl implements MypageService {
 
     private boolean updateCash(String userId, Integer withdrawAmount, Integer idx) {
         // 현재 사용자의 cash 값을 가져옵니다.
+
+        System.out.println("updatecash들어옴"+userId);
         AssetVO asset = mypageMapper.checkAssetData(userId);
+        System.out.println(asset);
         if (asset == null || asset.getCash() == null) {
             return false; // 자산 데이터가 없거나 cash가 없는 경우
         }
+
 
         // cash 값을 JSON 배열로 변환
         String cashJson = asset.getCash(); // 예: ["50000", "20000"]

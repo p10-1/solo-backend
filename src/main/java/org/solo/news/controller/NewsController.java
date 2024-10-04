@@ -44,7 +44,6 @@ public class NewsController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int amount) {
 
-        System.out.println("전체 뉴스 fetch 요청 들어옴 (controller)");
 
         PageRequest pageRequest = PageRequest.of(page, amount);
         List<NewsVO> newsList = newsService.getNewsByPage(pageRequest);
@@ -61,7 +60,6 @@ public class NewsController {
             @RequestParam(defaultValue = "20") int amount,
             @RequestParam(required = false) String category) {
 
-        System.out.println("news fetch 요청 들어옴 (controller)");
 
         // PageRequest 객체 생성
         PageRequest pageRequest = PageRequest.of(page, amount);
@@ -77,7 +75,6 @@ public class NewsController {
     @GetMapping("/recommend")
     public Map<String, List<NewsVO>> getTodayNews() {
         Map<String, List<NewsVO>> result = newsService.getTodayNews(LocalDate.now());
-        System.out.println("Returned News: " + result); // 로그 추가
         return result;
     }
 

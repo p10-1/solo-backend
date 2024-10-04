@@ -119,7 +119,6 @@ public class NewsServiceImpl implements NewsService {
         List<NewsVO> todayNews = newsMapper.getTodayNews(date);
         Map<String, List<NewsVO>> selectedNews = new HashMap<>();
 
-        System.out.println("서비스: " + todayNews);
 
         // 각 카테고리 초기화
         for (String category : new String[]{"경제", "증권", "부동산"}) {
@@ -134,7 +133,6 @@ public class NewsServiceImpl implements NewsService {
             }
         }
 
-        System.out.println("선택된 뉴스: " + selectedNews);
 
         return selectedNews;
     }

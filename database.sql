@@ -209,6 +209,37 @@ INSERT INTO `userAsset` (
              24,
              3.2
          );
+
+
+INSERT INTO `userAsset` (
+    `userId`,
+    `cashBank`,
+    `cashAccount`,
+    `cash`,
+    `stockBank`,
+    `stockAccount`,
+    `stock`,
+    `depositBank`,
+    `depositAccount`,
+    `deposit`,
+    `insuranceCompany`,
+    `insuranceName`,
+    `insurance`
+) VALUES (
+             '3711364352',
+             '["우리은행", "신한은행"]',  -- 현금 은행 배열
+             '["123-456-7890", "987-654-3210"]',  -- 현금 계좌 배열
+             '[50000, 20000]',  -- 현금 자산 배열
+             '["미래에셋", "삼성증권"]',  -- 주식 은행 배열
+             '["111-222-3333", "444-555-6666"]',  -- 주식 계좌 배열
+             '[10000, 3900]',  -- 주식 자산 배열
+             '["농협은행", "하나은행"]',  -- 예적금 은행 배열
+             '["333-444-5555", "666-777-8888"]',  -- 예적금 계좌 배열
+             '[200000, 250000]' ,  -- 예적금 자산 배열
+             '["KB손해보험"]',
+             '["KB 빅플러스저축보험"]',
+             '[400000]'
+         );
 select * from policy;
 
 update user set todayQuiz = 0;
@@ -368,6 +399,13 @@ LIMIT 5;
 select * from news;
 
 
-delete from userAsset where assetNo = 22;
+delete from userAsset where assetNo = 30;
 
 select * from userAsset;
+
+update user
+set point = 20000
+where userId = 3711364352;
+
+select * from user;
+
