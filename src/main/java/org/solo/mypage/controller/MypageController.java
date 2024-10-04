@@ -67,7 +67,7 @@ public class MypageController {
     @PostMapping("/updateType")
     public ResponseEntity<String> updateType(HttpSession session, @RequestBody Map<String, String> data) {
         String userId = (String) session.getAttribute("userId");
-        System.out.println("updateType controller"+userId +"들어온값"+data);
+        System.out.println("updateType controller" + userId + "들어온값" + data);
 
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 인증이 필요합니다.");
@@ -141,10 +141,7 @@ public class MypageController {
     }
 
 
-
-
-
-//    @PostMapping("/insertAsset")
+    //    @PostMapping("/insertAsset")
 //    public ResponseEntity<String> saveUserData(HttpSession session, @RequestBody Map<String, Object> data) {
 //        String userId = (String) session.getAttribute("userId");
 //        System.out.println("insert 수행중: " + userId);
@@ -227,58 +224,27 @@ public class MypageController {
 //        }
 //    }
 //
+//
 
+    //    @GetMapping("/{accountIndex}")
+//    public ResponseEntity<?> getById(@PathVariable int accountIndex, HttpSession session) {
 //
-//    // member 수정
-//    @PostMapping("/updateMember")
-//    public String updateUser(MemberVO memberVO, Model model, HttpSession session) {
-//
-//        String userId = (String) session.getAttribute("userId");
-//        System.out.println("user update 수행중:" + userId);
-//
-//        if (userId != null) {
-//            memberVO.setUserId(userId);
-//            mypageService.updateMember(memberVO);
-//            session.setAttribute("message", "정보가 성공적으로 수정되었습니다.");
-//        } else {
-//            session.setAttribute("message", "사용자 정보를 찾을 수 없습니다.");
-//        }
-//
-//        model.addAttribute("userData", memberVO);
-//        return "redirect:/mypage";
 //    }
 
-
-    //point 출금
-//    @PostMapping("/withdraw")
-//    public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data, HttpSession session) {
-//
-//        String userId = (String) session.getAttribute("userId");
-//        if (userId != null) {
-//            Integer point = mypageService.getPoint(userId);
-//            // 출금 처리 로직: data.getPoint() : 서버에서 요청한 출금 값
-//            if (point != null && point >= data.getPoint()) {
-//                boolean withdrawSuccess = mypageService.withdrawPoints(userId, data.getPoint());
-//                if (withdrawSuccess) {
-//                    System.out.println("withdraw success");
-//
-//                    // cash를 업데이트하는 메서드 호출 (서비스에서 처리됨)
-//                    boolean addCashSuccess = mypageService.updateCash(userId, data.getPoint());
-//
-//                    if (addCashSuccess) {
-//                        return ResponseEntity.ok("출금 및 현금 추가가 성공적으로 완료되었습니다.");
-//                    } else {
-//                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("현금 추가 실패");
-//                    }
-//                } else {
-//                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("출금 실패");
-//                }
-//            } else {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("출금할 포인트가 부족하거나 유효하지 않음");
-//            }
-//        } else {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자");
-//        }
-//    }
+    @PostMapping("/withdraw")
+    public ResponseEntity<?> withdrawPoints(@RequestBody MemberVO data,
+                                            @RequestParam Integer idx,
+                                            HttpSession session) {
+        System.out.println("withdraw요청 들어옴");
+        // 세션에서 userId 가져오기
+        String userId = (String) session.getAttribute("userId");
+        if (userId != null) {
+            // 서비스 메서드 호출
+            return mypageService.withdrawPoints(userId, idx, data.getPoint());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자");
+        }
+    }
 
 }
+

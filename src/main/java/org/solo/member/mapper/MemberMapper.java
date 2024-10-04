@@ -14,4 +14,7 @@ public interface MemberMapper {
     void insertNewUserInfo(MemberVO member);
     void updatePoint(Map<String, Object> params);// 포인트 차감시 UPDATE
     int checkUser(@Param("nickName") String nickName);
+
+    //출금요청 시 현재 포인트 조회
+    int getPoint(String userId);
 }
