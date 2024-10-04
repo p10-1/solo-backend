@@ -421,18 +421,20 @@ INSERT INTO `userAsset` (
     `loanAmount`,
     `loanPurpose`,
     `period`,
-    `interest`
+    `interest`,
+
+
 ) VALUES (
              '3711364352',
              '["우리은행", "신한은행","국민은행"]',  -- 현금 은행 배열
              '["123-456-7890", "987-654-3210","135-247-5679"]',  -- 현금 계좌 배열
-             '[50000, 20000,300000]',  -- 현금 자산 배열
+             '["50000", "20000","300000"]',  -- 현금 자산 배열
              '["미래에셋"]',  -- 주식 은행 배열
              '["111-222-3333"]',  -- 주식 계좌 배열
-             '[10000, 15000]',  -- 주식 자산 배열
+             '["10000", "15000"]',  -- 주식 자산 배열
              '["농협은행", "하나은행"]',  -- 예적금 은행 배열
              '["333-444-5555", "666-777-8888"]',  -- 예적금 계좌 배열
-             '[20000, 25000]' ,  -- 예적금 자산 배열
+             '["20000", "25000"]' ,  -- 예적금 자산 배열
              '["KB손해보험"]',
              '["KB 빅플러스저축보험"]',
              '["400000"]',
@@ -447,12 +449,16 @@ select * from news where DATE(pubDate) ='2024-10-04';
 select * from userAsset;
 select * from user;
 delete from userAsset where userId = 3711364352;
-delete from userAsset where assetNo=23;
+delete from userAsset where assetNo=25;
 UPDATE user
 SET point = 30000
 WHERE userId = 3711364352;
 
 update userAsset
-set insurance = '[400000]'
-where assetNo= 25;
+set createDate = '2024-10-03 02:22:35'
+where assetNo= 26;
 
+SELECT * FROM userAsset
+WHERE userId = 3711364352
+  AND createDate BETWEEN '2024-04-04' AND '2024-10-04'
+ORDER BY createDate DESC;
