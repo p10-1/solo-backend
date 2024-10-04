@@ -84,7 +84,7 @@
             SELECT finPrdtCd, saveTrm, intrRate, intrRate2
             FROM `option`
             WHERE saveTrm &lt; (select period from userAsset where userId = #{userId} order by createDate desc limit 1)
-        ORDER BY intrRate DESC
+        ORDER BY intrRate2 DESC
             LIMIT 2
         ) o ON p.finPrdtCd = o.finPrdtCd;
     </select>
