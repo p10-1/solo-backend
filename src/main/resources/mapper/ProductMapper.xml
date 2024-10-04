@@ -5,7 +5,7 @@
 
 <mapper namespace="org.solo.product.mapper.ProductMapper">
     <insert id="fetchProducts" parameterType="org.solo.product.domain.ProductVO">
-        INSERT INTO product (dclsMonth, finCoNo, korCoNm, finPrdtCd, finPrdtNm, joinWay, mtrtInt, spclCnd, joinMember, etcNote, type)
+        INSERT INTO `product` (dclsMonth, finCoNo, korCoNm, finPrdtCd, finPrdtNm, joinWay, mtrtInt, spclCnd, joinMember, etcNote, type)
         VALUES (#{dclsMonth}, #{finCoNo}, #{korCoNm}, #{finPrdtCd}, #{finPrdtNm}, #{joinWay}, #{mtrtInt}, #{spclCnd}, #{joinMember}, #{etcNote}, #{type})
     </insert>
 
@@ -16,7 +16,7 @@
 
     <select id="findByToken" parameterType="map" resultType="java.lang.Integer">
         SELECT count(*)
-        FROM product
+        FROM `product`
         WHERE finPrdtNm = #{finPrdtNm}
           AND mtrtInt = #{mtrtInt}
           AND etcNote = #{etcNote}
@@ -34,16 +34,16 @@
 
     <select id="getKbProducts" resultType="org.solo.product.domain.ProductVO">
         SELECT *
-        FROM product
-        WHERE korCoNm LIKE '%국민%'
+        FROM `product`
+        WHERE finCoNo = '0010927'
     </select>
     <select id="getTotalCnt" resultType="java.lang.Integer">
         SELECT count(*)
-        FROM product
+        FROM `product`
     </select>
     <select id="getTotalCntByKeyword" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT count(*)
-        FROM product
+        FROM `product`
         WHERE korCoNm LIKE CONCAT('%', #{keyword}, '%')
            OR finPrdtNm LIKE CONCAT('%', #{keyword}, '%')
            OR mtrtInt LIKE CONCAT('%', #{keyword}, '%')
@@ -51,11 +51,11 @@
     </select>
     <select id="getProductsByPage" resultType="org.solo.product.domain.ProductVO">
         SELECT *
-        FROM product LIMIT #{offset}, #{limit}
+        FROM `product` LIMIT #{offset}, #{limit}
     </select>
     <select id="getProductsByPageAndKeyword" resultType="org.solo.product.domain.ProductVO">
         SELECT *
-        FROM product
+        FROM `product`
         WHERE korCoNm LIKE CONCAT('%', #{keyword}, '%')
            OR finPrdtNm LIKE CONCAT('%', #{keyword}, '%')
            OR mtrtInt LIKE CONCAT('%', #{keyword}, '%')
@@ -67,16 +67,34 @@
         FROM `option`
         WHERE finPrdtCd = #{finPrdtCd}
     </select>
+
     <select id="getRecommend" resultType="org.solo.product.domain.ProductVO">
         SELECT p.*
-        FROM product p
+        FROM `product` p
         JOIN (
         SELECT finPrdtCd, saveTrm, intrRate, intrRate2
         FROM `option`
-        WHERE saveTrm &lt; #{period}
+        WHERE saveTrm &lt; (select period from userAsset where userId = #{userId} order by createDate desc limit 1)
         ORDER BY intrRate DESC
         LIMIT 2
         ) o ON p.finPrdtCd = o.finPrdtCd;
+    </select>
+
+    <select id="haveLoan" resultType="java.lang.Integer">
+        SELECT CASE
+                   WHEN loanAmount IS NULL THEN 0
+                   ELSE 1
+                   END AS loanAmount_status
+        FROM `userAsset`
+        WHERE userId = #{userId}
+        ORDER BY createDate DESC LIMIT 1;
+    </select>
+
+    <select id="getKbRand" resultType="org.solo.product.domain.ProductVO">
+        SELECT *
+        FROM `product`
+        WHERE finCoNo = '0010927'
+        ORDER BY RAND() LIMIT 2;
     </select>
 
 
