@@ -26,5 +26,9 @@ public interface ProductMapper {
     int findByOptionToken(Map<String, Object> optionToken);
     void fetchOptions(OptionVO optionVO);
     List<OptionVO> getOption(@Param("finPrdtCd") String finPrdtCd);
+
+
+
+    ////simpson
     List<ProductVO> getRecommend(@Param("period") int period);
 }
