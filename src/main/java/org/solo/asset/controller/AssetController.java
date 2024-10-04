@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,8 @@ public class AssetController {
 
         if (userId != null) {
             List<AssetVO> assets = assetService.getAssetData(userId,7); //우선 6개월만
+            System.out.println("AssetController: Retrieved assets: " + assets);
+
             return ResponseEntity.ok(assets);
         }
         return ResponseEntity.notFound().build();
@@ -49,7 +52,11 @@ public class AssetController {
 
     @GetMapping("/average")
     public ResponseEntity<Map<String, Double>> getAssetAverages() {
+        System.out.println("AssetController: getAssetAverages method called");
+
         Map<String, Double> averages = assetService.calculateAssetAverages();
+        System.out.println("AssetController: Calculated averages: " + averages);
+
         return ResponseEntity.ok(averages);
     }
 
