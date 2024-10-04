@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -205,11 +204,14 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.getProductsByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword);
     }
 
-
-    ///simpson
-
-    @Override
-    public List<ProductVO> getRecommend(int period) {
-        return productMapper.getRecommend(period);
+//    public List<ProductVO> getRecommend(int period) {
+//        return productMapper.getRecommend(period);
+//    }
+    public List<ProductVO> getRecommend(String userId) {
+        if (productMapper.haveLoan(userId) > 0) {
+            return productMapper.getRecommend(userId);
+        } else {
+            return productMapper.getKbRand();
+        }
     }
 }
