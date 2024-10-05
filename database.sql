@@ -371,3 +371,4 @@ select * from news;
 delete from userAsset where assetNo = 22;
 
 select * from userAsset;
+
