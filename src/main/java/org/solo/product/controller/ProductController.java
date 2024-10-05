@@ -35,12 +35,14 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // 국민은행 예적금 상품 API
     @GetMapping("/kb")
     public ResponseEntity<List<ProductVO>> kb() {
         List<ProductVO> kbProducts = productService.getKbProducts();
         return ResponseEntity.ok(kbProducts);
     }
 
+    // 정책 리스트 API
     @GetMapping("/list")
     public ResponseEntity<Page<ProductVO>> getProducts(
             @RequestParam(defaultValue = "1") int page,
@@ -62,6 +64,7 @@ public class ProductController {
         return ResponseEntity.ok(productsPage);
     }
 
+    // open API 패치
     @GetMapping("/fetch")
     public ResponseEntity<Void> fetchProducts(){
         productService.fetchDeposit();
@@ -69,24 +72,17 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
+    // 상품의 옵션 정보 API
     @GetMapping("/option/{finPrdtCd}")
     public ResponseEntity<List<OptionVO>> getOption(@PathVariable String finPrdtCd) {
         List<OptionVO> options = productService.getOption(finPrdtCd);
         return ResponseEntity.ok(options);
     }
 
-
+    // 사용자 맞춤 추천 상품 API
     @GetMapping("/recommend")
     public ResponseEntity<List<ProductVO>> getRecommend(@RequestParam String userId) {
         List<ProductVO> recommends = productService.getRecommend(userId);
         return ResponseEntity.ok(recommends);
     }
-
-
-//    //// simpspon 수정
-//    @GetMapping("/recommend/{period}")
-//    public ResponseEntity<List<ProductVO>> getRecommend(@PathVariable int period) {
-//        List<ProductVO> recommendedProducts = productService.getRecommend(period);
-//        return ResponseEntity.ok(recommendedProducts);
-//    }
 }

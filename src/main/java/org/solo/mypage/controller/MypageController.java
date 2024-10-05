@@ -22,12 +22,10 @@ public class MypageController {
 
     private final MypageService mypageService;
 
-
     @Autowired
     public MypageController(MypageService mypageService) {
         this.mypageService = mypageService;
     }
-
 
     // 자산을 불러오는 API
     @GetMapping("/getAsset")

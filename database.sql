@@ -47,7 +47,8 @@ CREATE TABLE `policy`
     `polyBizSjnm` varchar(1000) DEFAULT NULL,
     `polyItcnCn`  varchar(2000) DEFAULT NULL,
     `sporCn`      varchar(3000) DEFAULT NULL,
-    `rqutUrla`    varchar(1000) DEFAULT NULL
+    `rqutUrla`    varchar(1000) DEFAULT NULL,
+    `polyRlmCd`   varchar(45)  NOT NULL
 );
 
 DROP TABLE IF EXISTS `product`;
@@ -157,16 +158,25 @@ values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
        ('8704441237','차범근', '차범근', 'cha@237','2009-03-30',0);
 
 
-select * from news;
+SELECT count(*)
+FROM (select * from policy where '0' = '0' or polyRlmCd = '0') a
+WHERE polyBizSjnm LIKE '%울산%'
+          OR polyItcnCn LIKE '%울산%'
+          OR sporCn LIKE '%울산%';
 
-select * from user;
+select * from policy where polyRlmCd = '일자리';
 
+SELECT *
+FROM `policy`;
+WHERE (#{category} = '0' OR polyRlmCd = #{category})
+          AND polyBizSjnm LIKE CONCAT('%', #{keyword}, '%')
+          OR polyItcnCn LIKE CONCAT('%', #{keyword}, '%')
+          OR sporCn LIKE CONCAT('%', #{keyword}, '%')
+          LIMIT #{offset}, #{limit}
 
-
-select * from userAsset where userId = '3704999150' order by createDate desc limit 1;
-select * from product;
-
-select * from product where finCoNo = '0010927' ORDER BY RAND() LIMIT 2;
+SELECT * FROM `policy` WHERE polyBizSjnm LIKE '%울산%'
+                          OR polyItcnCn LIKE '%울산%'
+                          OR sporCn LIKE '%울산%';
 
 update user
 set point = 1000
@@ -361,13 +371,18 @@ VALUES ('예금', '일정 기간 동안 자금을 은행에 맡기고 이자를 
 
 
 SELECT *
-FROM board
-ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
-LIMIT 5;
+FROM policy;
 
-select * from news;
-
+delete from policy;
+select *
+from policy;
 
 delete from userAsset where assetNo = 22;
 
-select * from userAsset;
+select * from `option`;
+
+SELECT @@global.time_zone, @@session.time_zone;
+
+
+
+

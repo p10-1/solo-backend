@@ -23,7 +23,7 @@ public class BoardVO {
     private String content;
     private String userName;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    LocalDateTime regDate; // LOCALDATETIME
+    LocalDateTime regDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime updateDate;
     private int likes;

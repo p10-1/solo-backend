@@ -19,6 +19,5 @@ public interface ProductService {
     List<ProductVO> getProductsByPage(PageRequest pageRequest);
     List<ProductVO> getProductsByPageAndKeyword(PageRequest pageRequest, String keyword);
     List<OptionVO> getOption(String finPrdtCd);
-//    List<ProductVO> getRecommend(int period);
     List<ProductVO> getRecommend(String userId);
 }

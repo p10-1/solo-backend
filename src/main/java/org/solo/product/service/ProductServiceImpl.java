@@ -83,10 +83,9 @@ public class ProductServiceImpl implements ProductService {
                     String finPrdtCd = (String) option.get("fin_prdt_cd");
                     String saveTrm = (String) option.get("save_trm");
                     Object intrRateObj = option.get("intr_rate");
-                    Double intrRate = (intrRateObj instanceof Number) ? ((Number) intrRateObj).doubleValue() : null; // 안전하게 변환
+                    Double intrRate = (intrRateObj instanceof Number) ? ((Number) intrRateObj).doubleValue() : null;
                     Object intrRate2Obj = option.get("intr_rate2");
-                    Double intrRate2 = (intrRate2Obj instanceof Number) ? ((Number) intrRate2Obj).doubleValue() : null; // 안전하게 변환
-
+                    Double intrRate2 = (intrRate2Obj instanceof Number) ? ((Number) intrRate2Obj).doubleValue() : null;
 
                     OptionVO optionVO = new OptionVO(dclsMonth, forCoNm, finPrdtCd, saveTrm, intrRate, intrRate2,type);
                     options.add(optionVO);
@@ -94,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
                 saveOptions(options);
             }
         } catch (Exception e) {
-            e.printStackTrace(); // 예외를 출력하여 문제를 확인
+            e.printStackTrace();
         }
     }
 
@@ -150,7 +149,7 @@ public class ProductServiceImpl implements ProductService {
                 saveOptions(options);
             }
         } catch (Exception e) {
-            e.printStackTrace(); // 예외를 출력하여 문제를 확인
+            e.printStackTrace();
         }
     }
 
@@ -204,9 +203,6 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.getProductsByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword);
     }
 
-//    public List<ProductVO> getRecommend(int period) {
-//        return productMapper.getRecommend(period);
-//    }
     public List<ProductVO> getRecommend(String userId) {
         if (productMapper.haveLoan(userId) > 0) {
             return productMapper.getRecommend(userId);

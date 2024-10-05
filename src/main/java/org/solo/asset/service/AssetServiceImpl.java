@@ -24,8 +24,9 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public List<AssetVO> getAssetData(String userId, int months) {
         System.out.println("AssetServiceImpl: getAssetData called for userId: " + userId);
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusMonths(months -1);
+        LocalDate endDate_ = LocalDate.now();
+        LocalDate startDate = endDate_.minusMonths(months -1);
+        LocalDate endDate = endDate_.plusDays(1);
         List<AssetVO> asset = assetMapper.getAssetData(userId, startDate, endDate);
         System.out.println("AssetServiceImpl: Retrieved assets: " + asset);
         return asset;

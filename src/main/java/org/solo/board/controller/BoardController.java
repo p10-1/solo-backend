@@ -26,6 +26,7 @@ public class BoardController {
         this.boardService = boardService;
     }
 
+    // 게시판을 페이지에 맞게 리스트
     @GetMapping({"", "/"})
     public ResponseEntity<Page<BoardVO>> getList(@RequestParam(defaultValue = "1") int page,
                                                  @RequestParam(defaultValue = "10") int amount,
@@ -37,25 +38,21 @@ public class BoardController {
         PageRequest pageRequest = PageRequest.of(page, amount);
         switch (sort) {
             case "likes":
-                System.out.println("좋아요");
                 boards = (keyword != null && !keyword.isEmpty())
                         ? boardService.getBoardsByPageAndKeywordOrderBylike(pageRequest, category, keyword)
                         : boardService.getBoardsByPageOrderBylike(pageRequest);
                 break;
             case "comments":
-                System.out.println("댓글");
                 boards = (keyword != null && !keyword.isEmpty())
                         ? boardService.getBoardsByPageAndKeywordOrderBycomment(pageRequest, category, keyword)
                         : boardService.getBoardsByPageOrderBycomment(pageRequest);
                 break;
             case "views":
-                System.out.println("조회수");
                 boards = (keyword != null && !keyword.isEmpty())
                         ? boardService.getBoardsByPageAndKeywordOrderByview(pageRequest, category, keyword)
                         : boardService.getBoardsByPageOrderByview(pageRequest);
                 break;
-            default: // sort가 다른 값일 때의 기본 동작
-                System.out.println("최신순");
+            default:
                 boards = (keyword != null && !keyword.isEmpty())
                         ? boardService.getBoardsByPageAndKeywordOrderByregDate(pageRequest, category, keyword)
                         : boardService.getBoardsByPageOrderByregDate(pageRequest);
@@ -74,42 +71,55 @@ public class BoardController {
         return ResponseEntity.ok(boardsPage);
     }
 
+    // 인기글만 추출
     @GetMapping("/best")
     public ResponseEntity<List<BoardVO>> getBest(){
         return ResponseEntity.ok(boardService.getBestBoards());
     }
 
+    // 게시물 상세보기
     @GetMapping("/{no}")
     public ResponseEntity<BoardVO> getById(@PathVariable Long no) {
         return ResponseEntity.ok(boardService.get(no));
     }
 
+    // 해당 게시물에 달린 댓글 리스트
     @GetMapping("/{no}/comments")
     public ResponseEntity<List<CommentVO>> getComment(@PathVariable Long no) {
         List<CommentVO> comments = boardService.getComments(no);
         return ResponseEntity.ok(comments);
     }
 
+    // 댓글 작성
     @PostMapping("/comment")
     public ResponseEntity<String> createComment(@RequestBody CommentVO commentVO) {
-        boardService.createComment(commentVO);
-        return ResponseEntity.ok("댓글이 성공적으로 작성되었습니다.");
+        try {
+            boardService.createComment(commentVO);
+            return ResponseEntity.ok("success");
+        } catch (Exception e) {
+            return ResponseEntity.ok("fail");
+        }
     }
 
+    // 게시물 생성
     @PostMapping({"","/"})
     public ResponseEntity<BoardVO> create(BoardVO boardVO) {
         return ResponseEntity.ok(boardService.create(boardVO));
     }
 
+    // 게시물 수정
     @PutMapping("/{no}")
     public ResponseEntity<BoardVO> update(@PathVariable Long no, BoardVO boardVO) {
         return ResponseEntity.ok(boardService.update(boardVO));
     }
+
+    // 게시물 삭제
     @DeleteMapping("/{no}")
     public ResponseEntity<BoardVO> delete(@PathVariable Long no) {
         return ResponseEntity.ok(boardService.delete(no));
     }
 
+    // 첨부파일 다운로드
     @GetMapping("/download/{no}")
     public void download(@PathVariable Long no,  HttpServletResponse response) throws Exception {
         BoardAttachmentVO attachment = boardService.getAttachment(no);
@@ -117,11 +127,13 @@ public class BoardController {
         UploadFiles.download(response, file, attachment.getFilename());
     }
 
+    // 첨부파일 삭제
     @DeleteMapping("/deleteAttachment/{no}")
     public ResponseEntity<Boolean> deleteAttachment(@PathVariable Long no) throws Exception {
         return ResponseEntity.ok(boardService.deleteAttachment(no));
     }
 
+    // 좋아요
     @GetMapping("/like")
     public ResponseEntity<String> like(@RequestParam Long boardNo, @RequestParam String userName) {
         System.out.println("boardNo: " + boardNo + " userName: " + userName);
@@ -134,6 +146,7 @@ public class BoardController {
         }
     }
 
+    // 내가 쓴 게시물
     @GetMapping("/mine")
     public ResponseEntity<List<BoardVO>> mine(@RequestParam String userName) {
         List<BoardVO> myBoards = boardService.mine(userName);
