@@ -18,6 +18,8 @@ public interface AssetMapper {
 
     List<AssetVO> getAllAssetData();
 
+    List<AssetVO> getAssetDataByType(String type);
+
 
 
 

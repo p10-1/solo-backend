@@ -39,6 +39,7 @@ public class MemberController {
         this.memberService = memberServiceImpl;
     }
 
+    // 카카오 로그인
     @GetMapping("/login")
     public ResponseEntity<String> login(HttpSession session) {
         session.invalidate();
@@ -49,6 +50,7 @@ public class MemberController {
         return ResponseEntity.ok(loginUrl);
     }
 
+    // 카카오 로그인
     @RequestMapping(value= "/login/callback", produces = "application/json", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<?> loginCallback(@RequestParam("code") String code, HttpSession session) throws IOException {
         try {
@@ -60,19 +62,15 @@ public class MemberController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Failed to retrieve user info.");
             }
 
-    //        Long userIdLong = (Long) userInfoMap.get("id");
-    //        String userId = String.valueOf(userIdLong);
             String userId = String.valueOf(userInfoMap.get("id"));
-
-            // 디비에 해당 카카오 아이디를 가진 사용자가 이미 있는지 검사
             MemberVO memberVO = memberService.findByKakaoId(userId);
 
             if (memberVO == null) {
                 session.setAttribute("newUserInfo", userInfoMap);
-                return ResponseEntity.status(HttpStatus.CREATED).body("{\"status\": \"newUser\"}"); // JSON 형태로 변경
+                return ResponseEntity.status(HttpStatus.CREATED).body("{\"status\": \"newUser\"}");
             } else {
                 session.setAttribute("userInfo", memberVO);
-                return ResponseEntity.ok(memberVO); // 기존 사용자 정보 반환
+                return ResponseEntity.ok(memberVO);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred.");
@@ -80,6 +78,7 @@ public class MemberController {
 
     }
 
+    // 카카오 사용자 토큰을 받는 함수
     private String getKakaoAccessToken(String code) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -94,7 +93,6 @@ public class MemberController {
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
         try {
             ResponseEntity<String> response = restTemplate.exchange(KAKAO_TOKEN_URL, HttpMethod.POST, requestEntity, String.class);
-            // JSON 응답에서 액세스 토큰 추출
             Map<String, Object> responseMap = objectMapper.readValue(response.getBody(), new TypeReference<Map<String, Object>>() {});
             return (String) responseMap.get("access_token");
         } catch (HttpClientErrorException e) {
@@ -103,11 +101,12 @@ public class MemberController {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace(); // 다른 예외 처리
+            e.printStackTrace();
         }
-        return null; // 에러 처리
+        return null;
     }
 
+    // 카카오 사용자 정보를 받는 함수
     private Map<String, Object> getKakaoUserInfo(String accessToken, HttpSession session) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -117,20 +116,18 @@ public class MemberController {
 
         try {
             ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, requestEntity, String.class);
-            // JSON 응답에서 사용자 정보 추출
             Map<String, Object> userInfoMap = objectMapper.readValue(response.getBody(), new TypeReference<Map<String, Object>>() {});
 
-            // kakaoId를 Long에서 String으로 변환
-            Long userIdLong = (Long) userInfoMap.get("id"); // Long 타입으로 가져오기
-            String userId = String.valueOf(userIdLong); // String으로 변환
+            Long userIdLong = (Long) userInfoMap.get("id");
+            String userId = String.valueOf(userIdLong);
 
             Map<String, Object> kakaoAccount = (Map<String, Object>) userInfoMap.get("kakao_account");
             Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
             String email = (String) kakaoAccount.get("email");
-            String nickName = (String) profile.get("nickname"); // "nickname" 필드로 수정
+            String nickName = (String) profile.get("nickname");
 
             // 세션에 사용자 정보를 저장
-            session.setAttribute("userId", userId); // String으로 저장
+            session.setAttribute("userId", userId);
             session.setAttribute("nickName", nickName);
             session.setAttribute("email", email);
             return userInfoMap;
@@ -146,18 +143,17 @@ public class MemberController {
         return null;
     }
 
+    // 로그아웃
     @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
-        System.out.println("logout 호출");
-        // 세션 무효화
         session.invalidate();
-        // 카카오 로그아웃 URL
         String logoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + CLIENT_ID + "&logout_redirect_uri=" + LOGOUT_REDIRECT_URI;
         return ResponseEntity.ok(logoutUrl);
     }
 
+    // 처음 방문한 사용자의 추가 정보를 받는 함수
     @PostMapping("/firstUser")
-    public ResponseEntity<?> firstUser(@RequestBody Map<String, String> nameAndbirth, HttpSession session) {
+    public ResponseEntity<MemberVO> firstUser(@RequestBody Map<String, String> nameAndbirth, HttpSession session) {
         String userName = nameAndbirth.get("userName");
         String birthdate = nameAndbirth.get("birthdate");
         String userId = session.getAttribute("userId").toString();
@@ -166,9 +162,10 @@ public class MemberController {
 
         MemberVO newUser = memberService.insertNewUserInfo(userId, nickName, userName, email, birthdate);
         session.setAttribute("userInfo", newUser);
-        return ResponseEntity.ok(newUser); // 새 사용자 정보 반환
+        return ResponseEntity.ok(newUser);
     }
 
+    // 서비스에서 사용할 닉네임 중복체크
     @GetMapping("/checkUser")
     public ResponseEntity<Boolean> checkUser(@RequestParam("nickName") String nickName) {
         boolean isDuplicate = memberService.checkUser(nickName);
