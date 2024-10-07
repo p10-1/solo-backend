@@ -2,6 +2,7 @@ package org.solo.config;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.zaxxer.hikari.HikariDataSource;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -71,7 +72,6 @@ public class RootConfig {
     @Value("${jdbc.username}") String username;
     @Value("${jdbc.password}") String password;
 
-
     @Bean
     public DataSource dataSource() {
         HikariDataSource config = new HikariDataSource();
@@ -79,6 +79,7 @@ public class RootConfig {
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
+
         HikariDataSource dataSource = new HikariDataSource(config);
         return dataSource;
     }
