@@ -15,5 +15,10 @@ public interface AssetService {
 
     Map<String, Double> calculateAssetAverages();
 
+    Map<String, Object> compareAssetWithAverages(String type);
+
+
+
+
 
 }

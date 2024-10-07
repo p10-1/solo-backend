@@ -17,6 +17,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -25,6 +26,7 @@ import javax.sql.DataSource;
 import java.util.TimeZone;
 
 @Configuration
+@EnableScheduling
 @PropertySource({"classpath:/application.properties"})
 @MapperScan(basePackages = {
         "org.solo.member.mapper",
@@ -38,6 +40,7 @@ import java.util.TimeZone;
 })
 @ComponentScan(basePackages = {
 //        "org.solo"
+        "org.solo.scheduler",
         "org.solo.member.service",
         "org.solo.board.service",
         "org.solo.news.service",
@@ -63,7 +66,7 @@ public class RootConfig {
     @Bean
     public TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(2);
+        scheduler.setPoolSize(5);
         return scheduler;
     }
 

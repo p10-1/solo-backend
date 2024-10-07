@@ -18,6 +18,14 @@
             LIMIT 1
     </select>
 
+<!--    &lt;!&ndash; 포인트 출금 시 자산 데이터 확인 &ndash;&gt;-->
+<!--    <select id="checkAssetData" parameterType="java.lang.String" resultType="org.solo.asset.domain.AssetVO">-->
+<!--        SELECT * FROM userAsset-->
+<!--        WHERE userId = #{userId}-->
+<!--          AND MONTH(createDate) = MONTH(CURRENT_DATE())-->
+<!--          AND YEAR(createDate) = YEAR(CURRENT_DATE());-->
+<!--    </select>-->
+
     <!-- 자산 데이터 업데이트 -->
     <update id="updateAsset" parameterType="org.solo.asset.domain.AssetVO">
         UPDATE userAsset
@@ -40,16 +48,10 @@
             interest = #{interest}
         WHERE userId = #{userId}
             AND MONTH(createDate) = MONTH(CURRENT_DATE())
-          AND YEAR(createDate) = YEAR(CURRENT_DATE());
+            AND YEAR(createDate) = YEAR(CURRENT_DATE());
     </update>
 
-    <!-- 포인트 출금 시 자산 데이터 확인 -->
-    <select id="checkAssetData" parameterType="java.lang.String" resultType="org.solo.asset.domain.AssetVO">
-        SELECT * FROM userAsset
-        WHERE userId = #{userId}
-            AND MONTH(createDate) = MONTH(CURRENT_DATE())
-          AND YEAR(createDate) = YEAR(CURRENT_DATE());
-    </select>
+
 
 
     <!-- 포인트 조회 -->
@@ -64,9 +66,9 @@
         UPDATE userAsset
         SET type = #{type}
         WHERE userId = #{userId}
-            AND MONTH(createDate) = MONTH(CURRENT_DATE)
+          AND MONTH(createDate) = MONTH(CURRENT_DATE)
           AND YEAR(createDate) = YEAR(CURRENT_DATE)
-            LIMIT 1
+        LIMIT 1
     </update>
 
     <!-- 사용자 유형 조회 -->
@@ -74,9 +76,9 @@
         SELECT type
         FROM userAsset
         WHERE userId = #{userId}
-            AND MONTH(createDate) = MONTH(CURRENT_DATE)
+          AND MONTH(createDate) = MONTH(CURRENT_DATE)
           AND YEAR(createDate) = YEAR(CURRENT_DATE)
-            LIMIT 1
+        LIMIT 1
     </select>
 
     <!-- 은행 정보 조회 -->
@@ -84,9 +86,9 @@
         SELECT cashBank
         FROM userAsset
         WHERE userId = #{userId}
-            AND MONTH(createDate) = MONTH(CURRENT_DATE)
+          AND MONTH(createDate) = MONTH(CURRENT_DATE)
           AND YEAR(createDate) = YEAR(CURRENT_DATE)
-            LIMIT 1
+        LIMIT 1
     </select>
 
     <!-- 포인트 출금 처리 -->
@@ -101,8 +103,8 @@
         UPDATE userAsset
         SET cash = #{updatedCash}
         WHERE userId = #{userId}
-            AND MONTH(createDate) = MONTH(CURRENT_DATE)
-          AND YㅁㅇㅁㅇㅁEAR(createDate) = YEAR(CURRENT_DATE)
+          AND MONTH(createDate) = MONTH(CURRENT_DATE)
+          AND YEAR(createDate) = YEAR(CURRENT_DATE)
     </update>
 
 

@@ -5,7 +5,7 @@
 
 <mapper namespace="org.solo.board.mapper.BoardMapper">
     <insert id="create">
-        INSERT INTO board(title, content, userName)
+        INSERT INTO `board`(title, content, userName)
         VALUES (#{title}, #{content}, #{userName})
         <selectKey resultType="Long" keyProperty="boardNo" keyColumn="boardNo" order="AFTER">
             SELECT LAST_INSERT_ID()
@@ -13,46 +13,52 @@
     </insert>
 
     <update id="update">
-        UPDATE board
+        UPDATE `board`
         SET title = #{title}, content = #{content}, userName = #{userName}, updateDate = now()
         WHERE boardNo = #{boardNo}
     </update>
     <update id="upCommentCnt">
-        UPDATE board
+        UPDATE `board`
         SET comments = comments + 1
         WHERE boardNo = #{boardNo}
     </update>
     <update id="upViewCnt">
-        UPDATE board
+        UPDATE `board`
         SET views = views + 1
         WHERE boardNo = #{boardNo}
     </update>
     <update id="upLikeCnt">
-        UPDATE board
-        SET likes = likes + 1
-        WHERE boardNo = #{boardNo}
+        UPDATE `board`
+        SET `likes` = `likes` + 1
+        WHERE `boardNo` = #{boardNo}
+    </update>
+
+    <update id="bestBoardPointUp">
+        UPDATE `user`
+        SET `point` = `point` + 100
+        WHERE `userName` = #{userName}
     </update>
 
     <delete id="delete" parameterType="java.lang.Long">
         DELETE
-        FROM board
+        FROM `board`
         WHERE boardNo = #{boardNo}
     </delete>
 
     <select id="getTotalCnt" resultType="java.lang.Integer">
         SELECT count(*)
-        FROM board
+        FROM `board`
     </select>
 
     <select id="getTotalCntByKeyword" resultType="java.lang.Integer">
         SELECT count(*)
-        FROM board
+        FROM `board`
         WHERE #{category} LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
     <select id="getBest" resultType="org.solo.board.domain.BoardVO">
         SELECT *
-        FROM board
+        FROM `board`
         WHERE (YEAR(regDate) = YEAR(CURDATE()) AND MONTH(regDate) = MONTH(CURDATE()) - 1)
            OR (YEAR(regDate) = YEAR(CURDATE()) AND MONTH(regDate) = MONTH(CURDATE()))
            OR (MONTH(CURDATE()) = 1 AND YEAR(regDate) = YEAR(CURDATE()) - 1 AND MONTH(regDate) = 12)
@@ -62,32 +68,32 @@
 
     <select id="getBoardsByPageOrderByregDate" resultType="org.solo.board.domain.BoardVO">
         SELECT *
-        FROM board
+        FROM `board`
         ORDER BY regDate DESC
             LIMIT #{offset}, #{limit}
     </select>
     <select id="getBoardsByPageOrderBylike" resultType="org.solo.board.domain.BoardVO">
         SELECT *
-        FROM board
+        FROM `board`
         ORDER BY likes DESC
             LIMIT #{offset}, #{limit}
     </select>
     <select id="getBoardsByPageOrderByview" resultType="org.solo.board.domain.BoardVO">
         SELECT *
-        FROM board
+        FROM `board`
         ORDER BY views DESC
             LIMIT #{offset}, #{limit}
     </select>
     <select id="getBoardsByPageOrderBycomment" resultType="org.solo.board.domain.BoardVO">
         SELECT *
-        FROM board
+        FROM `board`
         ORDER BY comments DESC
             LIMIT #{offset}, #{limit}
     </select>
 
     <select id="getBoardsByPageAndKeywordOrderByregDate" resultType="org.solo.board.domain.BoardVO">
         SELECT *
-        FROM board
+        FROM `board`
         WHERE
         <choose>
             <when test="category == 'title'">
@@ -106,9 +112,10 @@
         ORDER BY regDate DESC
         LIMIT #{offset}, #{limit}
     </select>
+
     <select id="getBoardsByPageAndKeywordOrderBylike" resultType="org.solo.board.domain.BoardVO">
         SELECT *
-        FROM board
+        FROM `board`
         WHERE
         <choose>
             <when test="category == 'title'">
@@ -129,7 +136,7 @@
     </select>
     <select id="getBoardsByPageAndKeywordOrderByview" resultType="org.solo.board.domain.BoardVO">
         SELECT *
-        FROM board
+        FROM `board`
         WHERE
         <choose>
             <when test="category == 'title'">
@@ -150,7 +157,7 @@
     </select>
     <select id="getBoardsByPageAndKeywordOrderBycomment" resultType="org.solo.board.domain.BoardVO">
         SELECT *
-        FROM board
+        FROM `board`
         WHERE
         <choose>
             <when test="category == 'title'">
@@ -194,8 +201,8 @@
 
     <select id="get" resultMap="boardMap">
         SELECT b.*, a.attachmentNo, a.bno, a.filename, a.contentType, a.path, a.size, a.regDate as a_regDate
-        FROM board b
-            LEFT OUTER JOIN boardAttachment a
+        FROM `board` b
+            LEFT OUTER JOIN `boardAttachment` a
             ON b.boardNo = a.bno
         WHERE b.boardNo = #{boardNo}
         ORDER BY filename
@@ -203,30 +210,31 @@
 
     <select id="getAttachmentList" resultType="org.solo.board.domain.BoardAttachmentVO">
         SELECT *
-        FROM boardAttachment
+        FROM `boardAttachment`
         WHERE bno = #{bno}
         ORDER BY filename
     </select>
+
     <select id="getAttachment" resultType="org.solo.board.domain.BoardAttachmentVO">
         SELECT *
-        FROM boardAttachment
+        FROM `boardAttachment`
         WHERE attachmentNo = #{attachmentNo}
     </select>
 
     <insert id="createAttachment">
-        INSERT INTO boardAttachment(filename, path, contentType, size, bno)
+        INSERT INTO `boardAttachment`(filename, path, contentType, size, bno)
         VALUES (#{filename}, #{path}, #{contentType}, #{size}, #{bno})
     </insert>
 
     <delete id="deleteAttachment">
         DELETE
-        FROM boardAttachment
+        FROM `boardAttachment`
         WHERE attachmentNo = #{attachmentNo}
     </delete>
 
     <select id="getComments" resultType="org.solo.board.domain.CommentVO">
         SELECT *
-        FROM comment
+        FROM `comment`
         WHERE boardNo = #{boardNo}
     </select>
     <select id="likeCheck" resultType="java.lang.Integer">
@@ -241,7 +249,7 @@
     </select>
 
     <insert id="createComment">
-        INSERT INTO comment(boardNo, userName, commentText, regDate)
+        INSERT INTO `comment`(boardNo, userName, commentText, regDate)
         VALUES (#{boardNo}, #{userName}, #{commentText}, now())
     </insert>
     <insert id="likeUpdate">
