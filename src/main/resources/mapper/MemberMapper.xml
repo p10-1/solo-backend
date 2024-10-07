@@ -28,4 +28,11 @@
         WHERE userId = #{userId}
     </update>
 
+    <select id="getPoint" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT point
+        FROM user
+        WHERE userId = #{userId}
+
+    </select>
+
 </mapper>

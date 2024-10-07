@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,5 +21,12 @@ public class ProductVO {
     private String joinMember; // 가입 대상
     private String etcNote; // 기타 유의사항
     private String type; // 예금인지 적금인지
+
+
+
+//    private List<OptionVO> options;
+
+
+
 }
 //https://finlife.fss.or.kr/finlife/api/fdrmEntyApi/list.do?menuNo=700053

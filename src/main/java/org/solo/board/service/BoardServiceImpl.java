@@ -84,15 +84,15 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
-    @Override
-    public List<Long> getBest() {
-        List<BoardVO> bests = boardMapper.getBest();
-        List<Long> bestIds = new ArrayList<>();
-        for (BoardVO boardVO : bests) {
-            bestIds.add(boardVO.getBoardNo());
-        }
-        return bestIds;
-    }
+//    @Override
+//    public List<Long> getBest() {
+//        List<BoardVO> bests = boardMapper.getBest();
+//        List<Long> bestIds = new ArrayList<>();
+//        for (BoardVO boardVO : bests) {
+//            bestIds.add(boardVO.getBoardNo());
+//        }
+//        return bestIds;
+//    }
 
     @Override
     public List<BoardVO> getBestBoards() {
