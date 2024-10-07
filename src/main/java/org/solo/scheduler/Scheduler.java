@@ -24,12 +24,13 @@ public class Scheduler {
         this.quizService = quizService;
         this.boardService = boardService;
     }
-
+    // 초 분 시 일 월 요일
     // 매시간 0분과 30분에 두번 수행되는 작업
     @Scheduled(cron = "0 0,30 * * * *", zone = "Asia/Seoul")
     public void doEveryHour() {
         productService.fetchDeposit();
         productService.fetchSaving();
+        productService.fetchLoan();
         policyService.fetchPolicies();
     }
 

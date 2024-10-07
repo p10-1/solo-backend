@@ -1,28 +1,16 @@
 package org.solo.product.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.solo.common.pagination.Page;
 import org.solo.common.pagination.PageRequest;
-import org.solo.policy.domain.PolicyVO;
+import org.solo.product.domain.LoanVO;
 import org.solo.product.domain.OptionVO;
 import org.solo.product.domain.ProductVO;
 import org.solo.product.service.ProductService;
-import org.solo.product.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/product")
@@ -37,31 +25,48 @@ public class ProductController {
 
     // 국민은행 예적금 상품 API
     @GetMapping("/kb")
-    public ResponseEntity<List<ProductVO>> kb() {
-        List<ProductVO> kbProducts = productService.getKbProducts();
-        return ResponseEntity.ok(kbProducts);
+    public ResponseEntity<List<?>> kb(@RequestParam(defaultValue = "예금") String type) {
+        if (type.equals("대출")) {
+            List<LoanVO> kbLoans = productService.getKbLoans();
+            return ResponseEntity.ok(kbLoans);
+        } else {
+            List<ProductVO> kbProducts = productService.getKbProducts(type);
+            return ResponseEntity.ok(kbProducts);
+        }
     }
 
     // 정책 리스트 API
     @GetMapping("/list")
-    public ResponseEntity<Page<ProductVO>> getProducts(
+    public ResponseEntity<Page<?>> getProducts(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int amount,
-            @RequestParam(required = false) String keyword) {
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "예금") String type) {
 
         PageRequest pageRequest = PageRequest.of(page, amount);
+        if (type.equals("대출")) {
+            List<LoanVO> loans = (keyword != null && !keyword.isEmpty())
+                    ? productService.getLoansPageAndKeyword(pageRequest, keyword)
+                    : productService.getLoansByPage(pageRequest);
 
-        List<ProductVO> products = (keyword != null && !keyword.isEmpty())
-                ? productService.getProductsByPageAndKeyword(pageRequest, keyword)
-                : productService.getProductsByPage(pageRequest);
+            int totalLoansCount = (keyword != null && !keyword.isEmpty())
+                    ? productService.getLoanTotalCntByKeyword(keyword)
+                    : productService.getLoanTotalCnt();
 
-        int totalPoliciesCount = (keyword != null && !keyword.isEmpty())
-                ? productService.getTotalCntByKeyword(keyword)
-                : productService.getTotalCnt();
+            Page<LoanVO> loansPage = Page.of(pageRequest, totalLoansCount, loans);
+            return ResponseEntity.ok(loansPage);
+        } else {
+            List<ProductVO> products = (keyword != null && !keyword.isEmpty())
+                    ? productService.getProductsByPageAndKeyword(pageRequest, keyword, type)
+                    : productService.getProductsByPage(pageRequest, type);
 
-        Page<ProductVO> productsPage = Page.of(pageRequest, totalPoliciesCount, products);
+            int totalPoliciesCount = (keyword != null && !keyword.isEmpty())
+                    ? productService.getTotalCntByKeyword(keyword, type)
+                    : productService.getTotalCnt(type);
 
-        return ResponseEntity.ok(productsPage);
+            Page<ProductVO> productsPage = Page.of(pageRequest, totalPoliciesCount, products);
+            return ResponseEntity.ok(productsPage);
+        }
     }
 
     // open API 패치

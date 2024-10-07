@@ -102,7 +102,7 @@ public class PolicyServiceImpl implements PolicyService {
         for (PolicyVO policyVO : policies) {
             Map<String, Object> policyToken = new HashMap<>();
             policyToken.put("bizId", policyVO.getBizId());
-            policyToken.put("sporCn", policyVO.getSporCn());
+            policyToken.put("rqutUrla", policyVO.getRqutUrla());
             policyToken.put("polyBizSjnm", policyVO.getPolyBizSjnm());
             if (policyMapper.findByToken(policyToken) == 0) {
                 policyMapper.fetchPolicies(policyVO);

@@ -68,6 +68,21 @@ CREATE TABLE `product`
     `type`       VARCHAR(45)  NOT NULL
 );
 
+DROP TABLE IF EXISTS `loan`;
+CREATE TABLE `loan`
+(
+    `loanNo`      INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `dclsMonth`   VARCHAR(45)  NULL,
+    `finCoNo`     VARCHAR(45)  NULL,
+    `korCoNm`     VARCHAR(45)  NULL,
+    `finPrdtCd`   VARCHAR(45)  NULL,
+    `finPrdtNm`   VARCHAR(45)  NULL,
+    `joinWay`     VARCHAR(100) NULL,
+    `erlyRpayFee` VARCHAR(100) NULL,
+    `dlyRate`     VARCHAR(100)  NULL,
+    `loanLmt`     VARCHAR(100)  NULL
+);
+
 DROP TABLE IF EXISTS `option`;
 CREATE TABLE `option`
 (
@@ -272,6 +287,6 @@ INSERT INTO `userAsset` (
       );
 
 
-select * from policy;
+select * from policy where polyRlmCd = '참여권리';
 
-select * from user;
+select * from loan;

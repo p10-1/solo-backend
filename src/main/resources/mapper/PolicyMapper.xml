@@ -14,7 +14,7 @@
         SELECT count(*)
         FROM `policy`
         WHERE bizId = #{bizId}
-           OR (sporCn = #{sporCn} AND polyBizSjnm = #{polyBizSjnm})
+           OR (rqutUrla = #{rqutUrla} AND polyBizSjnm = #{polyBizSjnm})
     </select>
 
     <select id="getTotalCnt" resultType="java.lang.Integer">
