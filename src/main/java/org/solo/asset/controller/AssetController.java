@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,6 +59,13 @@ public class AssetController {
         System.out.println("AssetController: Calculated averages: " + averages);
 
         return ResponseEntity.ok(averages);
+    }
+    @GetMapping("/comparison/{type}")
+    public ResponseEntity<Map<String, Object>> getAssetComparison(@PathVariable String type) {
+        System.out.println("AssetController: Received request for type: " + type);
+        Map<String, Object> comparisonData = assetService.compareAssetWithAverages(type);
+        System.out.println("AssetController: Sending response: " + comparisonData);
+        return ResponseEntity.ok(comparisonData);
     }
 
 }

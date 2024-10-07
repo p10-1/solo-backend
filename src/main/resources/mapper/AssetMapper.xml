@@ -22,4 +22,9 @@
             WHERE sub.userId = userAsset.userId
         )
     </select>
+
+    <select id="getAssetDataByType" resultType="org.solo.asset.domain.AssetVO">
+        SELECT * FROM userAsset
+        WHERE type = #{type} OR (#{type} = 'null' AND type IS NULL)
+    </select>
 </mapper>
