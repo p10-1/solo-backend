@@ -62,16 +62,16 @@ public interface BoardMapper {
 
     // 정렬, 검색을 포함한 게시물 리스트 메서드들
     List<BoardVO> getBoardsByPageAndKeywordOrderByregDate(@Param("offset") int offset, @Param("limit") int limit, @Param("category") String category,
-                                                @Param("keyword") String keyword);
+                                                          @Param("keyword") String keyword);
 
     List<BoardVO> getBoardsByPageAndKeywordOrderBylike(@Param("offset") int offset, @Param("limit") int limit, @Param("category") String category,
-                                             @Param("keyword") String keyword);
+                                                       @Param("keyword") String keyword);
 
     List<BoardVO> getBoardsByPageAndKeywordOrderByview(@Param("offset") int offset, @Param("limit") int limit, @Param("category") String category,
-                                             @Param("keyword") String keyword);
+                                                       @Param("keyword") String keyword);
 
     List<BoardVO> getBoardsByPageAndKeywordOrderBycomment(@Param("offset") int offset, @Param("limit") int limit, @Param("category") String category,
-                                                @Param("keyword") String keyword);
+                                                          @Param("keyword") String keyword);
 
     // 정렬만 포함한 게시물 리스트 메서드들
     List<BoardVO> getBoardsByPageOrderByregDate(@Param("offset") int offset, @Param("limit") int limit);
@@ -96,7 +96,6 @@ public interface BoardMapper {
 
     void bestBoardPointUp(@Param("userName") String userName);
 }
-
 
 
 
