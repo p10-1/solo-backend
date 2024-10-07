@@ -13,6 +13,10 @@
         INSERT INTO `option` (dclsMonth, finCoNo, finPrdtCd, saveTrm, intrRate, intrRate2, type)
         VALUES (#{dclsMonth}, #{finCoNo}, #{finPrdtCd}, #{saveTrm}, #{intrRate}, #{intrRate2}, #{type})
     </insert>
+    <insert id="fetchLoans" parameterType="org.solo.product.domain.LoanVO">
+        INSERT INTO `loan` (dclsMonth, finCoNo, korCoNm, finPrdtCd, finPrdtNm, joinWay, erlyRpayFee, dlyRate, loanLmt)
+        VALUES (#{dclsMonth}, #{finCoNo}, #{korCoNm}, #{finPrdtCd}, #{finPrdtNm}, #{joinWay}, #{erlyRpayFee}, #{dlyRate}, #{loanLmt})
+    </insert>
 
     <select id="findByToken" parameterType="map" resultType="java.lang.Integer">
         SELECT count(*)
@@ -35,47 +39,80 @@
     <select id="getKbProducts" resultType="org.solo.product.domain.ProductVO">
         SELECT *
         FROM product
+        WHERE type = #{type}
+          AND korCoNm LIKE '%국민%'
+    </select>
+
+    <select id="getKbLoans" resultType="org.solo.product.domain.LoanVO">
+        SELECT *
+        FROM `loan`
         WHERE korCoNm LIKE '%국민%'
     </select>
+
     <select id="getTotalCnt" resultType="java.lang.Integer">
         SELECT count(*)
         FROM product
+        WHERE type = #{type}
     </select>
+
+    <select id="getLoanTotalCnt" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM `loan`
+    </select>
+
     <select id="getTotalCntByKeyword" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT count(*)
         FROM product
-        WHERE korCoNm LIKE CONCAT('%', #{keyword}, '%')
+        WHERE type = #{type}
+           AND (korCoNm LIKE CONCAT('%', #{keyword}, '%')
            OR finPrdtNm LIKE CONCAT('%', #{keyword}, '%')
            OR mtrtInt LIKE CONCAT('%', #{keyword}, '%')
-           OR spclCnd LIKE CONCAT('%', #{keyword}, '%')
+           OR spclCnd LIKE CONCAT('%', #{keyword}, '%'));
     </select>
+
+    <select id="getLoanTotalCntByKeyword" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM `loan`
+        WHERE finPrdtNm LIKE CONCAT('%', #{keyword}, '%')
+           OR korCoNm LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
     <select id="getProductsByPage" resultType="org.solo.product.domain.ProductVO">
         SELECT *
-        FROM product LIMIT #{offset}, #{limit}
+        FROM product
+        WHERE type = #{type}
+        LIMIT #{offset}, #{limit}
     </select>
     <select id="getProductsByPageAndKeyword" resultType="org.solo.product.domain.ProductVO">
         SELECT *
         FROM product
-        WHERE korCoNm LIKE CONCAT('%', #{keyword}, '%')
-           OR finPrdtNm LIKE CONCAT('%', #{keyword}, '%')
-           OR mtrtInt LIKE CONCAT('%', #{keyword}, '%')
-           OR spclCnd LIKE CONCAT('%', #{keyword}, '%')
-            LIMIT #{offset}, #{limit}
+        WHERE type = #{type}
+          AND (korCoNm LIKE CONCAT('%', #{keyword}, '%')
+            OR finPrdtNm LIKE CONCAT('%', #{keyword}, '%')
+            OR mtrtInt LIKE CONCAT('%', #{keyword}, '%')
+            OR spclCnd LIKE CONCAT('%', #{keyword}, '%'))
+        LIMIT #{offset}, #{limit}
     </select>
+
+    <select id="getLoansByPage" resultType="org.solo.product.domain.LoanVO">
+        SELECT *
+        FROM `loan`
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getLoansPageAndKeyword" resultType="org.solo.product.domain.LoanVO">
+        SELECT *
+        FROM `loan`
+        WHERE finPrdtNm LIKE CONCAT('%', #{keyword}, '%')
+           OR korCoNm LIKE CONCAT('%', #{keyword}, '%')
+        LIMIT #{offset}, #{limit}
+    </select>
+
     <select id="getOption" resultType="org.solo.product.domain.OptionVO">
         SELECT dclsMonth, finCoNo, finPrdtCd, saveTrm, intrRate, intrRate2, type
         FROM `option`
         WHERE finPrdtCd = #{finPrdtCd}
     </select>
-
-<!--    <select id="getRecommend" resultType="org.solo.product.domain.ProductVO">-->
-<!--        SELECT p.*, o.intrRate, o.intrRate2, o.saveTrm-->
-<!--        FROM product p-->
-<!--                 JOIN `option` o ON p.finPrdtCd = o.finPrdtCd-->
-<!--        WHERE CAST(o.saveTrm AS UNSIGNED) &lt; #{period}-->
-<!--        ORDER BY GREATEST(o.intrRate, o.intrRate2) DESC-->
-<!--            LIMIT 2-->
-<!--    </select>-->
 
     <select id="getRecommend" resultType="org.solo.product.domain.ProductVO">
         SELECT p.*, o.intrRate, o.intrRate2, o.saveTrm
@@ -106,5 +143,12 @@
         ORDER BY RAND() LIMIT 2;
     </select>
 
+    <select id="findByLoanToken" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM `loan`
+        WHERE finPrdtCd = #{finPrdtCd}
+        AND dlyRate = #{dlyRate}
+        AND loanLmt = #{loanLmt}
+    </select>
 
 </mapper>

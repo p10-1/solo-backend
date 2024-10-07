@@ -35,25 +35,29 @@ public class QuizServiceImpl implements QuizService {
         this.quizMapper = quizMapper;
     }
 
+    @Override
     public QuizVO createQuiz() {
         int totalCnt = quizMapper.totalCnt();
         int quizNo = (int)(Math.random() * totalCnt) + 1;
         return quizMapper.createQuiz(quizNo);
     }
+
+    @Override
     public boolean checkPoint(String userId) {
-        System.out.println("service: " + quizMapper.checkPoint(userId));
-        System.out.println("service: " + userId);
         return quizMapper.checkPoint(userId) == 1;
     }
 
+    @Override
     public void checkToday(String userId) {
         quizMapper.checkToday(userId);
     }
 
+    @Override
     public void addPoint(String userId) {
         quizMapper.addPoint(userId);
     }
 
+    @Override
     public void resetToday() {
         quizMapper.reset();
     }

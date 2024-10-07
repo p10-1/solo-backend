@@ -14,6 +14,7 @@ public class PolicyVO {
     private String polyItcnCn; // 정책 소개
     private String sporCn; // 지원 내용
     private String rqutUrla; // 사이트 주소
+    private String polyRlmCd; // 분류
 }
 
 //CREATE TABLE `policy` (

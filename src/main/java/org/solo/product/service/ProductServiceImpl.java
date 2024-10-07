@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.solo.common.pagination.PageRequest;
 import org.solo.policy.domain.PolicyVO;
+import org.solo.product.domain.LoanVO;
 import org.solo.product.domain.OptionVO;
 import org.solo.product.domain.ProductVO;
 import org.solo.product.mapper.ProductMapper;
@@ -32,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Value("${productAPI.depositUrl}") String depositUrl;
     @Value("${productAPI.savingUrl}") String savingUrl;
+    @Value("${productAPI.loanUrl}") String loanUrl;
     @Value("${productAPI.auth}") String auth;
     @Value("${productAPI.topFinGrpNo}") String topFinGrpNo;
     @Value("${productAPI.pageNo}") String pageNo;
@@ -83,10 +85,9 @@ public class ProductServiceImpl implements ProductService {
                     String finPrdtCd = (String) option.get("fin_prdt_cd");
                     String saveTrm = (String) option.get("save_trm");
                     Object intrRateObj = option.get("intr_rate");
-                    Double intrRate = (intrRateObj instanceof Number) ? ((Number) intrRateObj).doubleValue() : null; // 안전하게 변환
+                    Double intrRate = (intrRateObj instanceof Number) ? ((Number) intrRateObj).doubleValue() : null;
                     Object intrRate2Obj = option.get("intr_rate2");
-                    Double intrRate2 = (intrRate2Obj instanceof Number) ? ((Number) intrRate2Obj).doubleValue() : null; // 안전하게 변환
-
+                    Double intrRate2 = (intrRate2Obj instanceof Number) ? ((Number) intrRate2Obj).doubleValue() : null;
 
                     OptionVO optionVO = new OptionVO(dclsMonth, forCoNm, finPrdtCd, saveTrm, intrRate, intrRate2,type);
                     options.add(optionVO);
@@ -94,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
                 saveOptions(options);
             }
         } catch (Exception e) {
-            e.printStackTrace(); // 예외를 출력하여 문제를 확인
+            e.printStackTrace();
         }
     }
 
@@ -150,7 +151,44 @@ public class ProductServiceImpl implements ProductService {
                 saveOptions(options);
             }
         } catch (Exception e) {
-            e.printStackTrace(); // 예외를 출력하여 문제를 확인
+            e.printStackTrace();
+        }
+    }
+
+    public void fetchLoan() {
+        String requestSavingUrl = UriComponentsBuilder.fromHttpUrl(loanUrl)
+                .queryParam("auth", auth)
+                .queryParam("topFinGrpNo", topFinGrpNo)
+                .queryParam("pageNo", pageNo)
+                .toUriString();
+        try {
+            ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestSavingUrl, String.class);
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                String jsonResponse = responseEntity.getBody();
+                Map<String, Object> responseMap = objectMapper.readValue(jsonResponse, new TypeReference<Map<String, Object>>() {});
+                Map<String, Object> results = (Map<String, Object>) responseMap.get("result");
+                List<Object> baseList = (List<Object>) results.get("baseList");
+                List<LoanVO> loans = new ArrayList<>();
+                for (Object item : baseList) {
+                    Map<String, Object> loan = (Map<String, Object>) item;
+                    String dclsMonth = (String) loan.get("dcls_month");
+                    String finCoNo = (String) loan.get("fin_co_no");
+                    String korCoNm = (String) loan.get("kor_co_nm");
+                    String finPrdtCd = (String) loan.get("fin_prdt_cd");
+                    String finPrdtNm = (String) loan.get("fin_prdt_nm");
+                    String joinWay = (String) loan.get("join_way");
+                    String erlyRpayFee = (String) loan.get("erly_rpay_fee");
+                    String dlyRate = (String) loan.get("dly_rate");
+                    String loanLmt = (String) loan.get("loan_lmt");
+
+                    LoanVO loanVO = new LoanVO(dclsMonth, finCoNo, korCoNm, finPrdtCd, finPrdtNm, joinWay, erlyRpayFee, dlyRate, loanLmt);
+                    loans.add(loanVO);
+                }
+                saveLoans(loans);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -180,33 +218,62 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    public void saveLoans(List<LoanVO> loans) {
+        for (LoanVO loanVO : loans) {
+            Map<String, Object> loanToken = new HashMap<>();
+            loanToken.put("finPrdtCd", loanVO.getFinPrdtCd());
+            loanToken.put("dlyRate", loanVO.getDlyRate());
+            loanToken.put("loanLmt", loanVO.getLoanLmt());
+            if (productMapper.findByLoanToken(loanToken) == 0) {
+                productMapper.fetchLoans(loanVO);
+            }
+        }
+    }
+
     public List<OptionVO> getOption(String finPrdtCd) {
         return productMapper.getOption(finPrdtCd);
     }
 
-    public List<ProductVO> getKbProducts() {
-        return productMapper.getKbProducts();
+    public List<ProductVO> getKbProducts(String type) {
+        return productMapper.getKbProducts(type);
     }
 
-    public int getTotalCnt() {
-        return productMapper.getTotalCnt();
+    public List<LoanVO> getKbLoans() {
+        return productMapper.getKbLoans();
     }
 
-    public int getTotalCntByKeyword(String keyword) {
-        return productMapper.getTotalCntByKeyword(keyword);
+    public int getTotalCnt(String type) {
+        return productMapper.getTotalCnt(type);
     }
 
-    public List<ProductVO> getProductsByPage(PageRequest pageRequest) {
-        return productMapper.getProductsByPage(pageRequest.getOffset(), pageRequest.getAmount());
+    public int getTotalCntByKeyword(String keyword, String type) {
+        return productMapper.getTotalCntByKeyword(keyword, type);
     }
 
-    public List<ProductVO> getProductsByPageAndKeyword(PageRequest pageRequest, String keyword) {
-        return productMapper.getProductsByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword);
+    public int getLoanTotalCnt() {
+        return productMapper.getLoanTotalCnt();
     }
 
-//    public List<ProductVO> getRecommend(int period) {
-//        return productMapper.getRecommend(period);
-//    }
+    public int getLoanTotalCntByKeyword(String keyword) {
+        return productMapper.getLoanTotalCntByKeyword(keyword);
+    }
+
+    public List<ProductVO> getProductsByPage(PageRequest pageRequest, String type) {
+        return productMapper.getProductsByPage(pageRequest.getOffset(), pageRequest.getAmount(), type);
+    }
+
+    public List<ProductVO> getProductsByPageAndKeyword(PageRequest pageRequest, String keyword, String type) {
+        return productMapper.getProductsByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword, type);
+    }
+
+    public List<LoanVO> getLoansByPage(PageRequest pageRequest) {
+        return productMapper.getLoansByPage(pageRequest.getOffset(), pageRequest.getAmount());
+    }
+
+    public List<LoanVO> getLoansPageAndKeyword(PageRequest pageRequest, String keyword){
+        return productMapper.getLoansPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword);
+    }
+
     public List<ProductVO> getRecommend(String userId) {
         if (productMapper.haveLoan(userId) > 0) {
             return productMapper.getRecommend(userId);
