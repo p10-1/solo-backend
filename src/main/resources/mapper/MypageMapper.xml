@@ -7,10 +7,10 @@
     <!-- 자산 데이터 조회 -->
     <select id="getAssetData" parameterType="String" resultType="org.solo.asset.domain.AssetVO">
         SELECT
-            userId,cashBank,cashAccount,cash,stockBank,stockAccount,stock,
-            depositBank,depositAccount,deposit,
-            insuranceCompany,insuranceName,insurance,
-            loanAmount,loanPurpose,period,interest,createDate
+            userId, cashBank, cashAccount, cash, stockBank, stockAccount, stock,
+            depositBank, depositAccount, deposit,
+            insuranceCompany, insuranceName, insurance,
+            loanAmount, loanPurpose, period, interest, createDate
         FROM userAsset
         WHERE userId = #{userId}
             AND MONTH(createDate) = MONTH(CURRENT_DATE)
@@ -18,7 +18,7 @@
             LIMIT 1
     </select>
 
-<!--    자산데이터저장-->
+    <!-- 자산 데이터 업데이트 -->
     <update id="updateAsset" parameterType="org.solo.asset.domain.AssetVO">
         UPDATE userAsset
         SET
@@ -41,80 +41,79 @@
         WHERE userId = #{userId};
     </update>
 
+    <!-- 자산 데이터 삽입 -->
     <insert id="insertAssetData" parameterType="org.solo.asset.domain.AssetVO">
         INSERT INTO userAsset (userId, cash, stock, property, deposit, consume, loanAmount, loanPurpose, period)
-        VALUES (#{userId}, #{cash}, #{stock}, #{property}, #{deposit}, #{consume}, #{loanAmount}, #{loanPurpose},#{period})
+        VALUES (#{userId}, #{cash}, #{stock}, #{property}, #{deposit}, #{consume}, #{loanAmount}, #{loanPurpose}, #{period})
     </insert>
 
+    <!-- 자산 데이터 존재 여부 확인 -->
     <select id="findAssetData" parameterType="String" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM userAsset
         WHERE userId = #{userId}
     </select>
 
+    <!-- 자산 데이터 확인 -->
     <select id="checkAssetData" parameterType="java.lang.String" resultType="org.solo.asset.domain.AssetVO">
         SELECT * FROM userAsset WHERE userId = #{userId}
     </select>
 
+    <!-- 자산 데이터 업데이트 -->
     <update id="updateAssetData" parameterType="org.solo.asset.domain.AssetVO">
         UPDATE userAsset
         SET cash = #{cash},
-        stock = #{stock},
-        property = #{property},
-        deposit = #{deposit},
-        consume = #{consume},
-        loanAmount = #{loanAmount},
-        loanPurpose = #{loanPurpose},
-        period = #{period}
+            stock = #{stock},
+            property = #{property},
+            deposit = #{deposit},
+            consume = #{consume},
+            loanAmount = #{loanAmount},
+            loanPurpose = #{loanPurpose},
+            period = #{period}
         WHERE userId = #{userId}
     </update>
 
-
-<!--    point -->
+    <!-- 포인트 조회 -->
     <select id="getPoint" parameterType="String" resultType="int">
-        select point
+        SELECT point
         FROM user
         WHERE userId = #{userId}
     </select>
 
-
+    <!-- 사용자 유형 업데이트 -->
     <update id="updateUserType" parameterType="map">
         UPDATE userAsset
         SET type = #{type}
         WHERE userId = #{userId}
     </update>
 
+    <!-- 사용자 유형 조회 -->
     <select id="getType" parameterType="String" resultType="String">
         SELECT type
         FROM userAsset
         WHERE userId = #{userId}
     </select>
 
+    <!-- 은행 정보 조회 -->
     <select id="getBank" parameterType="String" resultType="java.lang.String">
         SELECT cashBank
         FROM userAsset
         WHERE userId = #{userId}
     </select>
 
+    <!-- 포인트 출금 처리 -->
+    <update id="withdrawPoint" parameterType="map">
+        UPDATE user
+        SET point = point - #{withdrawAmount}
+        WHERE userId = #{userId}
+    </update>
 
-    <!--
+    <!-- 현금 업데이트 -->
     <update id="updateCash" parameterType="map">
         UPDATE userAsset
         SET cash = #{updatedCash}
-        WHERE userId = #{userId}
+        WHERE userId = #{userId};
     </update>
-
-    -->
-
-<!--
-    <update id="updateMember" parameterType="org.solo.member.domain.MemberVO">
-        UPDATE user
-        SET email = #{email}
-        WHERE userId = #{userId}
-    </update>
-
-
--->
 
 
 </mapper>

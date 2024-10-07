@@ -21,7 +21,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 //@Controller
 @RestController
@@ -71,6 +73,16 @@ public class NewsController {
 
         return ResponseEntity.ok(newsPage);
     }
+
+    @GetMapping("/recommend")
+    public Map<String, List<NewsVO>> getTodayNews() {
+        Map<String, List<NewsVO>> result = newsService.getTodayNews(LocalDate.now());
+        System.out.println("Returned News: " + result); // 로그 추가
+        return result;
+    }
+
+
+
 
 
 

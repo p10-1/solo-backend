@@ -22,4 +22,51 @@
             WHERE sub.userId = userAsset.userId
         )
     </select>
+
+
+    <select id="getAssetsByType" resultType="org.solo.asset.domain.AssetVO">
+        SELECT * FROM userAsset
+        WHERE type = #{type}
+        ORDER BY createDate DESC
+            LIMIT 100
+    </select>
+
+    <select id="getAssetTrendByUserId" resultType="org.solo.asset.domain.AssetVO">
+        SELECT * FROM userAsset
+        WHERE userId = #{userId}
+          AND createDate BETWEEN #{startDate} AND #{endDate}
+        ORDER BY createDate
+    </select>
+
+    <select id="getAverageAssetsByType" resultType="org.solo.asset.domain.AssetVO">
+        SELECT
+            type,
+            AVG(JSON_LENGTH(cash)) as avgCashCount,
+            AVG(
+                    (SELECT SUM(CAST(value AS DECIMAL(10,2)))
+                     FROM JSON_TABLE(cash, '$[*]' COLUMNS (value VARCHAR(50) PATH '$')) as jt
+                    )
+            ) as avgCashTotal,
+            AVG(JSON_LENGTH(stock)) as avgStockCount,
+            AVG(
+                    (SELECT SUM(CAST(value AS DECIMAL(10,2)))
+                     FROM JSON_TABLE(stock, '$[*]' COLUMNS (value VARCHAR(50) PATH '$')) as jt
+                    )
+            ) as avgStockTotal,
+            AVG(JSON_LENGTH(deposit)) as avgDepositCount,
+            AVG(
+                    (SELECT SUM(CAST(value AS DECIMAL(10,2)))
+                     FROM JSON_TABLE(deposit, '$[*]' COLUMNS (value VARCHAR(50) PATH '$')) as jt
+                    )
+            ) as avgDepositTotal,
+            AVG(JSON_LENGTH(insurance)) as avgInsuranceCount,
+            AVG(
+                    (SELECT SUM(CAST(value AS DECIMAL(10,2)))
+                     FROM JSON_TABLE(insurance, '$[*]' COLUMNS (value VARCHAR(50) PATH '$')) as jt
+                    )
+            ) as avgInsuranceTotal,
+            AVG(loanAmount) as avgLoanAmount
+        FROM userAsset
+        GROUP BY type
+    </select>
 </mapper>

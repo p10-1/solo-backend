@@ -43,6 +43,12 @@
         FROM news
     </select>
 
+    <select id="getTodayNews" parameterType="java.time.LocalDate" resultType="org.solo.news.domain.NewsVO">
+        SELECT *
+        FROM news
+        WHERE DATE(pubDate) = #{date}
+    </select>
+
 
 
 
