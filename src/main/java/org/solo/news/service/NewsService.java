@@ -10,6 +10,7 @@ import java.util.Map;
 public interface NewsService {
 
     // rss 뉴스 가져옴
+    List<NewsVO> fetchAllNews();
     List<NewsVO> fetchNews(String rssUrl);
     // rss 뉴스 db에 저장
     void insertNews(List<NewsVO> newsList);

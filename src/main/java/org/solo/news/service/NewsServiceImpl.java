@@ -2,6 +2,7 @@ package org.solo.news.service;
 
 import org.solo.common.pagination.PageRequest;
 import org.solo.news.domain.NewsVO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,16 @@ public class NewsServiceImpl implements NewsService {
     private final NewsMapper newsMapper;
     private final RestTemplate restTemplate;
 
+    // RSS URL을 주입받기 위한 필드
+    @Value("${newsAPI.rssUrl1}")
+    private String rssUrl1;
+
+    @Value("${newsAPI.rssUrl2}")
+    private String rssUrl2;
+
+    @Value("${newsAPI.rssUrl3}")
+    private String rssUrl3;
+
     private static final String[] CATEGORIES = {"경제", "증권", "부동산"};
 
     @Autowired
@@ -33,7 +44,17 @@ public class NewsServiceImpl implements NewsService {
         this.newsMapper = newsMapper;
         this.restTemplate = new RestTemplate();
     }
+
     // RSS 피드에서 뉴스 가져오기
+    @Override
+    public List<NewsVO> fetchAllNews() {
+        List<NewsVO> combinedNewsList = new ArrayList<>();
+        combinedNewsList.addAll(fetchNews(rssUrl1));
+        combinedNewsList.addAll(fetchNews(rssUrl2));
+        combinedNewsList.addAll(fetchNews(rssUrl3));
+        return combinedNewsList;
+    }
+    @Override
     public List<NewsVO> fetchNews(String rssUrl) {
         List<NewsVO> newsList = new ArrayList<>();
 
@@ -57,7 +78,7 @@ public class NewsServiceImpl implements NewsService {
         return newsList;
     }
 
-    // rss 파싱
+    // RSS 파싱
     private Document parseRssFeed(String rssFeed) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();

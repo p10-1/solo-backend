@@ -397,7 +397,7 @@ VALUES ('예금', '일정 기간 동안 자금을 은행에 맡기고 이자를 
 
 
 select * from news;
-drop table news;
+
 
 delete from userAsset where assetNo = 33;
 
@@ -406,16 +406,19 @@ select * from user;
 
 select newsNo,title, imageUrl, pubDate from news where category='경제';
 
-DELETE FROM news WHERE DATE(pubDate) = '2024-10-06';
+DELETE FROM news WHERE DATE(pubDate) = '2024-10-07';
 
 
 
 
 select * from news where category='경제';
+
+-- 생성일 변경
 update userAsset
 set createDate='2024-10-6 14:30:00'
 where assetNo = 35;
 
+-- 포인트 설정
 update user
 set point = 5000
 where nickName='소라';

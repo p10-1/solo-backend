@@ -21,15 +21,11 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
         "org.solo.member.controller",
         "org.solo.board.controller",
         "org.solo.news.controller",
-        "org.solo.news.scheduler",
         "org.solo.mypage.controller",
         "org.solo.asset.controller",
         "org.solo.policy.controller",
-        "org.solo.policy.scheduler",
         "org.solo.product.controller",
-        "org.solo.product.scheduler",
         "org.solo.quiz.controller",
-        "org.solo.quiz.scheduler"
 
 
 })  // <- 공통 팩키지

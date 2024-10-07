@@ -18,8 +18,8 @@ import java.util.*;
 @Transactional
 //@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-//    private final static String BASE_DIR = "/Users/junyoung/Documents/upload/board";
-    private final static String BASE_DIR = "C:\\upload\\board";
+    private final static String BASE_DIR = "/Users/junyoung/Documents/upload/board";
+    //    private final static String BASE_DIR = "C:\\upload\\board";
     private final BoardMapper boardMapper;
 
     @Autowired
@@ -41,14 +41,17 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardVO> getBoardsByPageOrderByregDate(PageRequest pageRequest){
         return boardMapper.getBoardsByPageOrderByregDate(pageRequest.getOffset(), pageRequest.getAmount());
     }
+
     @Override
     public List<BoardVO> getBoardsByPageOrderBylike(PageRequest pageRequest){
         return boardMapper.getBoardsByPageOrderBylike(pageRequest.getOffset(), pageRequest.getAmount());
     }
+
     @Override
     public List<BoardVO> getBoardsByPageOrderByview(PageRequest pageRequest){
         return boardMapper.getBoardsByPageOrderByview(pageRequest.getOffset(), pageRequest.getAmount());
     }
+
     @Override
     public List<BoardVO> getBoardsByPageOrderBycomment(PageRequest pageRequest){
         return boardMapper.getBoardsByPageOrderBycomment(pageRequest.getOffset(), pageRequest.getAmount());
@@ -58,14 +61,17 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardVO> getBoardsByPageAndKeywordOrderByregDate(PageRequest pageRequest, String category, String keyword) {
         return boardMapper.getBoardsByPageAndKeywordOrderByregDate(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
     }
+
     @Override
     public List<BoardVO> getBoardsByPageAndKeywordOrderBylike(PageRequest pageRequest, String category, String keyword) {
         return boardMapper.getBoardsByPageAndKeywordOrderBylike(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
     }
+
     @Override
     public List<BoardVO> getBoardsByPageAndKeywordOrderByview(PageRequest pageRequest, String category, String keyword) {
         return boardMapper.getBoardsByPageAndKeywordOrderByview(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
     }
+
     @Override
     public List<BoardVO> getBoardsByPageAndKeywordOrderBycomment(PageRequest pageRequest, String category, String keyword) {
         return boardMapper.getBoardsByPageAndKeywordOrderBycomment(pageRequest.getOffset(), pageRequest.getAmount(), category, keyword);
@@ -84,20 +90,19 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
-//    @Override
-//    public List<Long> getBest() {
-//        List<BoardVO> bests = boardMapper.getBest();
-//        List<Long> bestIds = new ArrayList<>();
-//        for (BoardVO boardVO : bests) {
-//            bestIds.add(boardVO.getBoardNo());
-//        }
-//        return bestIds;
-//    }
-
     @Override
     public List<BoardVO> getBestBoards() {
         List<BoardVO> bests = boardMapper.getBest();
         return bests;
+    }
+
+    @Override
+    public void bestBoardPointUp() {
+        List<BoardVO> bests = boardMapper.getBest();
+        for (BoardVO board : bests) {
+            String userName = board.getUserName();
+            boardMapper.bestBoardPointUp(userName);
+        }
     }
 
     @Override
@@ -112,19 +117,12 @@ public class BoardServiceImpl implements BoardService {
         boardMapper.createComment(commentVO);
     }
 
-
-    @Transactional // 2개 이상의 insert 문이 실행될 수 있으므로 트랜잭션 처리 필요
+    @Transactional
     @Override
     public BoardVO create(BoardVO boardVO) {
-        System.out.println("Board create: " + boardVO);
         boardMapper.create(boardVO);
-
-        // 파일 업로드 처리
-        List<MultipartFile> files = boardVO.getFiles(); // BoardVO에 getFiles() 메서드가 있어야 함
+        List<MultipartFile> files = boardVO.getFiles();
         if (files != null && !files.isEmpty()) {
-            for (MultipartFile file : files) {
-//                System.out.println("Uploaded file: " + file.getOriginalFilename());
-            }
             upload(boardVO.getBoardNo(), files);
         }
         return get(boardVO.getBoardNo());
@@ -146,8 +144,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardVO update(BoardVO boardVO) {
         int result = boardMapper.update(boardVO);
-        // 파일 업로드 처리
-        List<MultipartFile> files = boardVO.getFiles(); // BoardVO에 getFiles() 메서드가 있어야 함
+        List<MultipartFile> files = boardVO.getFiles();
         if (files != null && !files.isEmpty()) {
             upload(boardVO.getBoardNo(), files);
         }
