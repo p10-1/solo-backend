@@ -1,5 +1,8 @@
 package org.solo.asset.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.solo.asset.domain.AssetVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +27,9 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public List<AssetVO> getAssetData(String userId, int months) {
         System.out.println("AssetServiceImpl: getAssetData called for userId: " + userId);
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusMonths(months -1);
+        LocalDate endDate_ = LocalDate.now();
+        LocalDate startDate = endDate_.minusMonths(months -1);
+        LocalDate endDate = endDate_.plusDays(1);
         List<AssetVO> asset = assetMapper.getAssetData(userId, startDate, endDate);
         System.out.println("AssetServiceImpl: Retrieved assets: " + asset);
         return asset;
@@ -62,5 +66,52 @@ public class AssetServiceImpl implements AssetService {
                 .average()
                 .orElse(0.0);
     }
+
+    @Override
+    public Map<String, Object> compareAssetWithAverages(String type) {
+        System.out.println("AssetServiceImpl: compareAssetWithAverages called with type: " + type);
+
+        Map<String, Double> overallAverages = calculateAssetAverages();
+        System.out.println("AssetServiceImpl: Overall averages: " + overallAverages);
+
+        Map<String, Double> typeAverages;
+
+        if (type == null || type.equals("null") || type.equals("undefined")) {
+            typeAverages = overallAverages;
+            type = "전체";
+        } else {
+            typeAverages = calculateAssetAveragesByType(type);
+        }
+        System.out.println("AssetServiceImpl: Type averages for " + type + ": " + typeAverages);
+
+        Map<String, Object> comparisonData = new HashMap<>();
+        comparisonData.put("overallAverage", overallAverages);
+        comparisonData.put("typeAverage", typeAverages);
+        comparisonData.put("userType", type);
+
+        System.out.println("AssetServiceImpl: Comparison data: " + comparisonData);
+        return comparisonData;
+    }
+
+    private Map<String, Double> calculateAssetAveragesByType(String type) {
+        System.out.println("AssetServiceImpl: calculateAssetAveragesByType called for type: " + type);
+        List<AssetVO> assetsOfType = assetMapper.getAssetDataByType(type);
+        System.out.println("AssetServiceImpl: Assets of type " + type + ": " + assetsOfType);
+
+        if (assetsOfType.isEmpty()) {
+            System.out.println("AssetServiceImpl: No assets found for type " + type + ", returning overall averages");
+            return calculateAssetAverages();
+        }
+
+        Map<String, Double> averages = new HashMap<>();
+        averages.put("cash", calculateAverage(assetsOfType, AssetVO::getCash));
+        averages.put("deposit", calculateAverage(assetsOfType, AssetVO::getDeposit));
+        averages.put("stock", calculateAverage(assetsOfType, AssetVO::getStock));
+        averages.put("insurance", calculateAverage(assetsOfType, AssetVO::getInsurance));
+
+        System.out.println("AssetServiceImpl: Calculated averages for type " + type + ": " + averages);
+        return averages;
+    }
+
 
 }
