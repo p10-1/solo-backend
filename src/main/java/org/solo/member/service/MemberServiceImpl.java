@@ -16,22 +16,19 @@ public class MemberServiceImpl implements MemberService {
         this.memberMapper = memberMapper;
     }
 
+    @Override
     public MemberVO findByKakaoId(String userId) {
         return memberMapper.findByKakaoId(userId);
     }
 
+    @Override
     public MemberVO insertNewUserInfo(String userId, String nickName, String userName, String email, String birthdate) {
-        System.out.println("inserting new user info");
-        MemberVO newUser = new MemberVO();
-        newUser.setUserId(userId);
-        newUser.setNickName(nickName);
-        newUser.setUserName(userName);
-        newUser.setEmail(email);
-        newUser.setBirthdate(birthdate);
+        MemberVO newUser = new MemberVO(userId, nickName, userName, email, birthdate, 0);
         memberMapper.insertNewUserInfo(newUser);
         return newUser;
     }
 
+    @Override
     public boolean checkUser(String nickName) {
         return memberMapper.checkUser(nickName) > 0;
     }

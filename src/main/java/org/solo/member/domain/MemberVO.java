@@ -15,12 +15,3 @@ public class MemberVO {
     private String birthdate; // 생년월일
     private int point;
 }
-
-//CREATE TABLE `kakaoMember` (
-//        `kakaoId` varchar(100) NOT NULL,
-//  `nickName` varchar(50) NOT NULL,
-//  `name` varchar(50) NOT NULL,
-//  `email` varchar(100) NOT NULL,
-//  `birthdate` date NOT NULL,
-//PRIMARY KEY (`kakaoId`)
-//)

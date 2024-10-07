@@ -6,25 +6,26 @@
 <mapper namespace="org.solo.policy.mapper.PolicyMapper">
 
     <insert id="fetchPolicies" parameterType="org.solo.policy.domain.PolicyVO">
-        INSERT INTO `policy` (bizId, polyBizTy, polyBizSjnm, polyItcnCn, sporCn, rqutUrla)
-        VALUES (#{bizId}, #{polyBizTy}, #{polyBizSjnm}, #{polyItcnCn}, #{sporCn}, #{rqutUrla})
+        INSERT INTO `policy` (bizId, polyBizTy, polyBizSjnm, polyItcnCn, sporCn, rqutUrla, polyRlmCd)
+        VALUES (#{bizId}, #{polyBizTy}, #{polyBizSjnm}, #{polyItcnCn}, #{sporCn}, #{rqutUrla}, #{polyRlmCd})
     </insert>
 
     <select id="findByToken" parameterType="map" resultType="java.lang.Integer">
         SELECT count(*)
         FROM `policy`
         WHERE bizId = #{bizId}
-           OR (sporCn = #{sporCn} AND polyBizSjnm = #{polyBizSjnm})
+           OR (rqutUrla = #{rqutUrla} AND polyBizSjnm = #{polyBizSjnm})
     </select>
 
     <select id="getTotalCnt" resultType="java.lang.Integer">
         SELECT count(*)
         FROM `policy`
+        WHERE (#{category} = '0' OR polyRlmCd = #{category})
     </select>
 
     <select id="getTotalCntByKeyword" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT count(*)
-        FROM `policy`
+        FROM (SELECT * FROM `policy` WHERE (#{category} = '0' OR polyRlmCd = #{category})) p
         WHERE polyBizSjnm LIKE CONCAT('%', #{keyword}, '%')
            OR polyItcnCn LIKE CONCAT('%', #{keyword}, '%')
            OR sporCn LIKE CONCAT('%', #{keyword}, '%')
@@ -32,21 +33,25 @@
 
     <select id="getPoliciesByPage" resultType="org.solo.policy.domain.PolicyVO">
         SELECT *
-        FROM `policy` LIMIT #{offset}, #{limit}
+        FROM `policy`
+        WHERE (#{category} = '0' OR polyRlmCd = #{category})
+        LIMIT #{offset}, #{limit}
     </select>
 
     <select id="getPoliciesByPageAndKeyword" resultType="org.solo.policy.domain.PolicyVO">
         SELECT *
-        FROM `policy`
+        FROM (SELECT * FROM `policy` WHERE (#{category} = '0' OR polyRlmCd = #{category})) p
         WHERE polyBizSjnm LIKE CONCAT('%', #{keyword}, '%')
            OR polyItcnCn LIKE CONCAT('%', #{keyword}, '%')
            OR sporCn LIKE CONCAT('%', #{keyword}, '%')
-            LIMIT #{offset}, #{limit}
+        LIMIT #{offset}, #{limit}
     </select>
+
     <select id="recommendPolicies" resultType="org.solo.policy.domain.PolicyVO">
         SELECT *
         FROM `policy`
         LIMIT 5
     </select>
+
 
 </mapper>

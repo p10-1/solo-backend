@@ -2,7 +2,8 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/database.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/PolicyMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/PolicyMapper.xml" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/ProductMapper.xml" dialect="MySQL" />
     <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>

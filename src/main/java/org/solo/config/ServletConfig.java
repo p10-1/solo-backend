@@ -17,7 +17,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 @ComponentScan(basePackages = {
         "org.solo.controller",
-        "org.solo.exception",
         "org.solo.member.controller",
         "org.solo.board.controller",
         "org.solo.news.controller",
@@ -25,10 +24,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
         "org.solo.asset.controller",
         "org.solo.policy.controller",
         "org.solo.product.controller",
-        "org.solo.quiz.controller",
-
-
-})  // <- 공통 팩키지
+        "org.solo.quiz.controller"
+})  // <- 공통패키지
 public class ServletConfig implements WebMvcConfigurer {
 
     @Bean   // <- object 생성
