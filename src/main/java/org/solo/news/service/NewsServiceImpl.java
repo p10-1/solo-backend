@@ -96,8 +96,11 @@ public class NewsServiceImpl implements NewsService {
         NodeList mediaContentList = itemElement.getElementsByTagName("media:content");
         if (mediaContentList.getLength() > 0) {
             Element mediaContent = (Element) mediaContentList.item(0);
+            System.out.println(mediaContent);
             news.setImageUrl(mediaContent.getAttribute("url")); // 이미지 URL 저장
+            System.out.println(mediaContent.getAttribute("url"));
         }
+
 
         return news;
     }

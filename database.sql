@@ -156,19 +156,7 @@ values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
        ('2004991237','김하성', '김하성', 'kim@237','2009-03-30',0),
        ('1004539485','유재석', '유재석', 'you@485','2004-01-19',0),
        ('8704441237','차범근', '차범근', 'cha@237','2009-03-30',0);
-
-
-
-
-select * from userAsset where userId = '3704999150' order by createDate desc limit 1;
-select * from product;
-
-select * from product where finCoNo = '0010927' ORDER BY RAND() LIMIT 2;
-
-update user
-set point = 1000
-where userId = 3711364352;
-
+-- 대출 O
 INSERT INTO `userAsset` (
     `userId`,
     `cashBank`,
@@ -207,7 +195,7 @@ INSERT INTO `userAsset` (
              3.2
          );
 
-
+-- 대출 X
 INSERT INTO `userAsset` (
     `userId`,
     `cashBank`,
@@ -221,11 +209,7 @@ INSERT INTO `userAsset` (
     `deposit`,
     `insuranceCompany`,
     `insuranceName`,
-    `insurance`,
-    `loanAmount`,
-    `loanPurpose`,
-    `period`,
-    `interest`
+    `insurance`
 ) VALUES (
              '3716739676',
              '["우리은행", "신한은행"]',  -- 현금 은행 배열
@@ -239,16 +223,17 @@ INSERT INTO `userAsset` (
              '[200000, 250000]' ,  -- 예적금 자산 배열
              '["KB손해보험"]',
              '["KB 빅플러스저축보험"]',
-             '[400000]',
-             2000000,
-             '주택구입',
-             24,
-             3.2
+             '[400000]'
          );
-select * from policy;
 
-update user set todayQuiz = 0;
-
+UPDATE userAsset
+SET
+    loanAmount = 2000000,     -- 수정할 새로운 대출 금액
+    loanPurpose = '생활비',    -- 수정할 새로운 대출 목적
+    period = 6,                 -- 수정할 새로운 기간
+    interest = 2.8              -- 수정할 새로운 이자율
+WHERE
+    assetNo = 31;
 
 
 INSERT INTO quiz (term, description)
@@ -396,22 +381,13 @@ VALUES ('예금', '일정 기간 동안 자금을 은행에 맡기고 이자를 
        ('패시브 펀드', '시장 지수를 추종하도록 설계된 펀드로, 장기적으로 안정적인 수익을 목표로 함');
 
 
-select * from news;
+-- 데이터 확인
+SELECT * FROM news
+WHERE  pubDate < NOW() - INTERVAL 3 DAY;
 
-
-delete from userAsset where assetNo = 33;
-
-select * from userAsset;
-select * from user;
-
-select newsNo,title, imageUrl, pubDate from news where category='경제';
-
-DELETE FROM news WHERE DATE(pubDate) = '2024-10-07';
-
-
-
-
-select * from news where category='경제';
+-- 3일전 데이터 삭제
+DELETE FROM news
+WHERE  pubDate < NOW() - INTERVAL 3 DAY;
 
 -- 생성일 변경
 update userAsset
@@ -423,6 +399,19 @@ update user
 set point = 5000
 where nickName='소라';
 
-SELECT @@global.time_zone, @@session.time_zone;
+select * from news;
+
+select * from userAsset;
+
+select * from user;
+
+select newsNo,title, imageUrl, pubDate from news where category='경제';
+
+DELETE FROM news WHERE DATE(pubDate) = '2024-10-07';
+
+select * from news where category='경제';
+
+
+
 
 
