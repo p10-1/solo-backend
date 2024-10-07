@@ -19,7 +19,7 @@ public interface MypageMapper {
     void updateAsset(AssetVO assetVO);
 
     // 자산 데이터 확인 메서드
-    AssetVO checkAssetData(String userId);
+//    AssetVO checkAssetData(String userId);
 
 
     // 사용자 유형 업데이트 메서드

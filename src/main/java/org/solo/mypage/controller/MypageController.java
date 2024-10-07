@@ -78,6 +78,7 @@ public class MypageController {
     @PostMapping("/updateType")
     public ResponseEntity<String> updateType(HttpSession session, @RequestBody Map<String, String> data) {
         String userId = getUserId(session);
+        System.out.println("updateType controller");
 
         if (userId != null) {
             String type = data.get("selectedType");

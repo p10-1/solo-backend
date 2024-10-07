@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.solo.asset.domain.AssetVO;
-import org.solo.member.domain.MemberVO;
 import org.solo.member.mapper.MemberMapper;
 import org.solo.mypage.mapper.MypageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,134 +21,113 @@ import java.util.Map;
 public class MypageServiceImpl implements MypageService {
     private final MypageMapper mypageMapper;
     private final MemberMapper memberMapper;
+    private final ObjectMapper objectMapper;
+
+    // 오류 메세지 정의
+    private static final String WITHDRAW_FAILURE_MESSAGE = "출금 실패";
+    private static final String INSUFFICIENT_POINTS_MESSAGE = "출금할 포인트가 부족하거나 유효하지 않음";
+    private static final String CASH_UPDATE_FAILURE_MESSAGE = "현금 추가 실패";
 
     @Autowired
-    public MypageServiceImpl(MypageMapper mypageMapper, MemberMapper memberMapper) {
+    public MypageServiceImpl(MypageMapper mypageMapper, MemberMapper memberMapper, ObjectMapper objectMapper) {
         this.mypageMapper = mypageMapper;
         this.memberMapper = memberMapper;
+        this.objectMapper = objectMapper;
     }
 
-    // 자산을 가져오는 서비스
+    // 사용자 자산 불러오기
     @Override
     public AssetVO getAssetData(String userId) {
         return mypageMapper.getAssetData(userId);
     }
 
-    // 자산을 저장하는 서비스
+    // 사용자 자산 업데이트
     @Override
     public void updateAsset(AssetVO assetVO) {
         mypageMapper.updateAsset(assetVO);
     }
 
+    // 사용자 유형 불러오기
     @Override
-    public AssetVO checkAssetData(String userId) {
-        return mypageMapper.checkAssetData(userId);
+    public String getType(String userId) {
+        return mypageMapper.getType(userId);
     }
 
+    // 사용자 유형 업데이트
     @Override
     public void updateUserType(String userId, String type) {
+        System.out.println("updateuserType service");
         Map<String, String> params = new HashMap<>();
         params.put("userId", userId);
         params.put("type", type);
         mypageMapper.updateUserType(params);
     }
 
-    @Override
-    public String getType(String userId) {
-        return mypageMapper.getType(userId);
-    }
-
+    // 사용자 계좌 불러오기 (포인트 출금용)
     @Override
     public List<String> getBank(String userId) {
         return mypageMapper.getBank(userId);
     }
 
-    @Override
-    public ResponseEntity<?> withdrawPoints(String userId, Integer idx, Integer withdrawAmount) {
-        // 유저의 포인트 가져오기
-        Integer currentPoints = getPoint(userId);
-
-        // 유효성 검사
-        if (currentPoints != null && currentPoints >= withdrawAmount) {
-            // 출금 처리
-            boolean withdrawSuccess = withdrawPoint(userId, withdrawAmount);
-            System.out.println("포인트출금"+withdrawSuccess);
-            if (withdrawSuccess) {
-                // 현금 업데이트
-                boolean updateCashSuccess = updateCash(userId, withdrawAmount, idx);
-                System.out.println(updateCashSuccess);
-                if (updateCashSuccess) {
-                    return ResponseEntity.ok("출금 및 현금 추가가 성공적으로 완료되었습니다.");
-                } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("현금 추가 실패");
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("출금 실패");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("출금할 포인트가 부족하거나 유효하지 않음");
-        }
-    }
-
+    // 포인트 받아오기
     public int getPoint(String userId) {
         return memberMapper.getPoint(userId);
     }
 
+    // 포인트 출금 전체 메소드
+    @Override
+    public ResponseEntity<?> withdrawPoints(String userId, Integer idx, Integer withdrawAmount) {
+        // 포인트 출금
+        if (withdrawPoint(userId, withdrawAmount)) {
+            updateCash(userId, withdrawAmount, idx); // 현금 업데이트
+            return ResponseEntity.ok("success"); // 성공 시 "success" 반환
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(WITHDRAW_FAILURE_MESSAGE);
+        }
+    }
+
+    // 포인트 출금 처리
     private boolean withdrawPoint(String userId, Integer withdrawAmount) {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
-        params.put("withdrawAmount", withdrawAmount);  // withdrawAmount 추가
-
-        return mypageMapper.withdrawPoint(params); // MyBatis Mapper 호출
+        params.put("withdrawAmount", withdrawAmount);
+        return mypageMapper.withdrawPoint(params);
     }
 
-    private boolean updateCash(String userId, Integer withdrawAmount, Integer idx) {
-        // 현재 사용자의 cash 값을 가져옵니다.
-
-        System.out.println("updatecash들어옴"+userId);
-        AssetVO asset = mypageMapper.checkAssetData(userId);
-        System.out.println(asset);
-        if (asset == null || asset.getCash() == null) {
-            return false; // 자산 데이터가 없거나 cash가 없는 경우
-        }
-
-
-        // cash 값을 JSON 배열로 변환
-        String cashJson = asset.getCash(); // 예: ["50000", "20000"]
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Integer> cashList;
-
-        try {
-            // JSON 문자열을 List로 변환
-            cashList = objectMapper.readValue(cashJson, new TypeReference<List<Integer>>() {});
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return false; // JSON 파싱 오류
-        }
-
-        // accountIndex가 유효한지 확인
-        if (idx < 0 || idx >= cashList.size()) {
-            return false; // 인덱스 범위 초과
-        }
-
-        // 해당 인덱스의 현금에 withdrawAmount를 더함
+    // 현금자산 업데이트 처리
+    private void updateCash(String userId, Integer withdrawAmount, Integer idx) {
+        // DB에서 자산 데이터 가져와서 해당 계좌의 금액만 currentCash에 할당
+        AssetVO asset = mypageMapper.getAssetData(userId);
+        List<Integer> cashList = (List<Integer>) convertCashData(asset.getCash()); // JSON 문자열을 List로 변환
         int currentCash = cashList.get(idx);
-        cashList.set(idx, currentCash + withdrawAmount); // 현금 업데이트
+        cashList.set(idx, currentCash + withdrawAmount);
 
-        // 변경된 리스트를 다시 JSON 문자열로 변환
-        String updatedCashJson;
+        // 업데이트된 현금 리스트를 DB에 저장
+        saveUpdatedCash(userId, cashList);
+    }
+
+    // JSON <-> List
+    private Object convertCashData(Object cashData) {
         try {
-            updatedCashJson = objectMapper.writeValueAsString(cashList);
+            if (cashData instanceof String) {
+                // JSON 문자열을 List로 변환
+                return objectMapper.readValue((String) cashData, new TypeReference<List<Integer>>() {});
+            } else if (cashData instanceof List) {
+                // List를 JSON 문자열로 변환
+                return objectMapper.writeValueAsString(cashData);
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            return false; // JSON 변환 오류
         }
+        return null; // 변환 오류 또는 잘못된 타입
+    }
 
-        // DB에 업데이트
+    // 업데이트 된 현금자산 DB에 저장
+    private void saveUpdatedCash(String userId, List<Integer> cashList) {
+        String updatedCashJson = (String) convertCashData(cashList); // List를 JSON으로 변환
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
         params.put("updatedCash", updatedCashJson);
-
-        return mypageMapper.updateCash(params);
+        mypageMapper.updateCash(params);
     }
 }
