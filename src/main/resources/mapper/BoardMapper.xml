@@ -29,8 +29,14 @@
     </update>
     <update id="upLikeCnt">
         UPDATE `board`
-        SET likes = likes + 1
-        WHERE boardNo = #{boardNo}
+        SET `likes` = `likes` + 1
+        WHERE `boardNo` = #{boardNo}
+    </update>
+
+    <update id="bestBoardPointUp">
+        UPDATE `user`
+        SET `point` = `point` + 100
+        WHERE `userName` = #{userName}
     </update>
 
     <delete id="delete" parameterType="java.lang.Long">

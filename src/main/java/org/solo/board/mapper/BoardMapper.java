@@ -93,6 +93,8 @@ public interface BoardMapper {
 
     // 내가 작성한 게시물 보여주는 메서드
     List<BoardVO> mine(@Param("userName") String userName);
+
+    void bestBoardPointUp(@Param("userName") String userName);
 }
 
 

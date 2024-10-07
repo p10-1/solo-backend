@@ -97,6 +97,15 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public void bestBoardPointUp() {
+        List<BoardVO> bests = boardMapper.getBest();
+        for (BoardVO board : bests) {
+            String userName = board.getUserName();
+            boardMapper.bestBoardPointUp(userName);
+        }
+    }
+
+    @Override
     public List<CommentVO> getComments(Long boardNo) {
         return boardMapper.getComments(boardNo);
     }
@@ -107,7 +116,6 @@ public class BoardServiceImpl implements BoardService {
         boardMapper.upCommentCnt(boardNo);
         boardMapper.createComment(commentVO);
     }
-
 
     @Transactional
     @Override

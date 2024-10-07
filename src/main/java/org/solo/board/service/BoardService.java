@@ -33,4 +33,5 @@ public interface BoardService {
     void likeUpdate(Long boardNo, String userName);
     List<BoardVO> getBestBoards();
     List<BoardVO> mine(String userName);
+    void bestBoardPointUp();
 }
