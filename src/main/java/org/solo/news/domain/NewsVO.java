@@ -13,5 +13,6 @@ public class NewsVO {
     private String link;
     private String category;
     private String pubDate;
+    private String imageUrl;
 
 }

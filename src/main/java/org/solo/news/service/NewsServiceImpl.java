@@ -63,6 +63,7 @@ public class NewsServiceImpl implements NewsService {
         DocumentBuilder builder = factory.newDocumentBuilder();
         return builder.parse(new ByteArrayInputStream(rssFeed.getBytes()));
     }
+
     // 뉴스 태그별로 매핑
     private NewsVO parseNewsItem(Element itemElement) throws Exception {
         NewsVO news = new NewsVO();
@@ -71,6 +72,12 @@ public class NewsServiceImpl implements NewsService {
         news.setLink(itemElement.getElementsByTagName("link").item(0).getTextContent());
         news.setCategory(itemElement.getElementsByTagName("category").item(0).getTextContent());
         news.setPubDate(formatPubDate(itemElement.getElementsByTagName("pubDate").item(0).getTextContent()));
+        NodeList mediaContentList = itemElement.getElementsByTagName("media:content");
+        if (mediaContentList.getLength() > 0) {
+            Element mediaContent = (Element) mediaContentList.item(0);
+            news.setImageUrl(mediaContent.getAttribute("url")); // 이미지 URL 저장
+        }
+
         return news;
     }
 

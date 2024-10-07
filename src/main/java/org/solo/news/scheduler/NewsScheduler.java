@@ -26,21 +26,18 @@ public class NewsScheduler {
 
     @PostConstruct
     public void scheduleFetchNews(){
-        System.out.println("scheduling fetch news");
         taskScheduler.scheduleAtFixedRate(() -> {
             try {
                 List<NewsVO> newsList1 = newsService.fetchNews(rssUrl1);
                 List<NewsVO> newsList2 = newsService.fetchNews(rssUrl2);
                 List<NewsVO> newsList3 = newsService.fetchNews(rssUrl3);
 
-                // 뉴스 리스트 합치기 및 DB에 저장
                 List<NewsVO> combinedNewsList = new ArrayList<>();
                 combinedNewsList.addAll(newsList1);
                 combinedNewsList.addAll(newsList2);
                 combinedNewsList.addAll(newsList3);
 
                 newsService.insertNews(combinedNewsList);
-                System.out.println("Fetched news at: " + System.currentTimeMillis());
             } catch (Exception e) {
                 System.err.println("Error fetching news: " + e.getMessage());
             }
