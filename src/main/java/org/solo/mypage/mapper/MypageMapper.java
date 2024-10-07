@@ -18,17 +18,9 @@ public interface MypageMapper {
     // 자산 데이터를 업데이트하는 메서드
     void updateAsset(AssetVO assetVO);
 
-    // 자산 데이터를 삽입하는 메서드
-    void insertAssetData(AssetVO assetVO);
-
-    // 특정 사용자의 자산 데이터 존재 여부 확인
-    boolean findAssetData(String userId);
-
     // 자산 데이터 확인 메서드
-    AssetVO checkAssetData(String userId);
+//    AssetVO checkAssetData(String userId);
 
-    // 자산 데이터 업데이트 메서드
-    void updateAssetData(AssetVO assetData);
 
     // 사용자 유형 업데이트 메서드
     void updateUserType(Map<String, String> params);

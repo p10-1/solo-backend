@@ -39,58 +39,70 @@ public class PolicyServiceImpl implements PolicyService {
         this.restTemplate = restTemplate;
     }
 
+    @Override
     public void fetchPolicies() {
-        // URL 빌드
         String requestUrl = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("openApiVlak", openApiVlak)
                 .queryParam("display", display)
                 .queryParam("pageIndex", pageIndex)
                 .toUriString();
 
-        // API 호출
         String xmlResponse = restTemplate.getForObject(requestUrl, String.class);
         List<PolicyVO> policies = new ArrayList<>();
 
         try {
-            // XML 파싱
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new ByteArrayInputStream(xmlResponse.getBytes(StandardCharsets.UTF_8)));
 
-            // youthPolicy 노드 추출
             NodeList policyList = document.getElementsByTagName("youthPolicy");
             for (int i = 0; i < policyList.getLength(); i++) {
                 Element policyElement = (Element) policyList.item(i);
 
-                // 필요한 필드만 추출
                 String bizId = policyElement.getElementsByTagName("bizId").item(0).getTextContent();
                 String polyBizTy = policyElement.getElementsByTagName("polyBizTy").item(0).getTextContent();
                 String polyBizSjnm = policyElement.getElementsByTagName("polyBizSjnm").item(0).getTextContent();
                 String polyItcnCn = policyElement.getElementsByTagName("polyItcnCn").item(0).getTextContent();
                 String sporCn = policyElement.getElementsByTagName("sporCn").item(0).getTextContent();
                 String rqutUrla = policyElement.getElementsByTagName("rqutUrla").item(0).getTextContent();
-
+                String polyRlmCd = policyElement.getElementsByTagName("polyRlmCd").item(0).getTextContent();
+                switch (polyRlmCd) {
+                    case "023010":
+                        polyRlmCd = "일자리";
+                        break;
+                    case "023020":
+                        polyRlmCd = "주거";
+                        break;
+                    case "023030":
+                        polyRlmCd = "교육";
+                        break;
+                    case "023040":
+                        polyRlmCd = "복지문화";
+                        break;
+                    case "023050":
+                        polyRlmCd = "참여권리";
+                        break;
+                }
                 if (rqutUrla.startsWith("https")) {
-                    PolicyVO policyVO = new PolicyVO(bizId, polyBizTy, polyBizSjnm, polyItcnCn, sporCn, rqutUrla);
+                    PolicyVO policyVO = new PolicyVO(bizId, polyBizTy, polyBizSjnm, polyItcnCn, sporCn, rqutUrla,polyRlmCd);
                     policies.add(policyVO);
                 } else {
                     continue;
                 }
-
-
             }
-            // 데이터베이스에 저장
             savePolicies(policies);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    @Override
     public void savePolicies(List<PolicyVO> policies) {
         for (PolicyVO policyVO : policies) {
             Map<String, Object> policyToken = new HashMap<>();
             policyToken.put("bizId", policyVO.getBizId());
-            policyToken.put("sporCn", policyVO.getSporCn());
+            policyToken.put("rqutUrla", policyVO.getRqutUrla());
             policyToken.put("polyBizSjnm", policyVO.getPolyBizSjnm());
             if (policyMapper.findByToken(policyToken) == 0) {
                 policyMapper.fetchPolicies(policyVO);
@@ -98,22 +110,27 @@ public class PolicyServiceImpl implements PolicyService {
         }
     }
 
-    public int getTotalCnt() {
-        return policyMapper.getTotalCnt();
+    @Override
+    public int getTotalCnt(String category) {
+        return policyMapper.getTotalCnt(category);
     }
 
-    public int getTotalCntByKeyword(String keyword) {
-        return policyMapper.getTotalCntByKeyword(keyword);
+    @Override
+    public int getTotalCntByKeyword(String keyword, String category) {
+        return policyMapper.getTotalCntByKeyword(keyword, category);
     }
 
-    public List<PolicyVO> getPoliciesByPage(PageRequest pageRequest) {
-        return policyMapper.getPoliciesByPage(pageRequest.getOffset(), pageRequest.getAmount());
+    @Override
+    public List<PolicyVO> getPoliciesByPage(PageRequest pageRequest, String category) {
+        return policyMapper.getPoliciesByPage(pageRequest.getOffset(), pageRequest.getAmount(), category);
     }
 
-    public List<PolicyVO> getPoliciesByPageAndKeyword(PageRequest pageRequest, String keyword) {
-        return policyMapper.getPoliciesByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword);
+    @Override
+    public List<PolicyVO> getPoliciesByPageAndKeyword(PageRequest pageRequest, String keyword, String category) {
+        return policyMapper.getPoliciesByPageAndKeyword(pageRequest.getOffset(), pageRequest.getAmount(), keyword, category);
     }
 
+    @Override
     public List<PolicyVO> recommendPolicies() {
         return policyMapper.recommendPolicies();
     }
