@@ -132,7 +132,8 @@ CREATE TABLE `news`
     `title`    VARCHAR(255) NOT NULL,
     `link`     VARCHAR(255) NOT NULL,
     `category` VARCHAR(50)  NOT NULL,
-    `pubDate`  DATETIME     NOT NULL
+    `pubDate`  DATETIME     NOT NULL,
+    `imageUrl` VARCHAR(255) NULL
 );
 
 DROP TABLE IF EXISTS `quiz`;
@@ -156,10 +157,6 @@ values ('5704999188','오타니', '오타니', 'oh@188','2022-01-01',0),
        ('1004539485','유재석', '유재석', 'you@485','2004-01-19',0),
        ('8704441237','차범근', '차범근', 'cha@237','2009-03-30',0);
 
-
-select * from news;
-
-select * from user;
 
 
 
@@ -204,6 +201,45 @@ INSERT INTO `userAsset` (
              '["KB손해보험"]',
              '["KB 빅플러스저축보험"]',
              '["400000"]',
+             2000000,
+             '주택구입',
+             24,
+             3.2
+         );
+
+
+INSERT INTO `userAsset` (
+    `userId`,
+    `cashBank`,
+    `cashAccount`,
+    `cash`,
+    `stockBank`,
+    `stockAccount`,
+    `stock`,
+    `depositBank`,
+    `depositAccount`,
+    `deposit`,
+    `insuranceCompany`,
+    `insuranceName`,
+    `insurance`,
+    `loanAmount`,
+    `loanPurpose`,
+    `period`,
+    `interest`
+) VALUES (
+             '3716739676',
+             '["우리은행", "신한은행"]',  -- 현금 은행 배열
+             '["123-456-7890", "987-654-3210"]',  -- 현금 계좌 배열
+             '[50000, 20000]',  -- 현금 자산 배열
+             '["미래에셋", "삼성증권"]',  -- 주식 은행 배열
+             '["111-222-3333", "444-555-6666"]',  -- 주식 계좌 배열
+             '[10000, 3900]',  -- 주식 자산 배열
+             '["농협은행", "하나은행"]',  -- 예적금 은행 배열
+             '["333-444-5555", "666-777-8888"]',  -- 예적금 계좌 배열
+             '[200000, 250000]' ,  -- 예적금 자산 배열
+             '["KB손해보험"]',
+             '["KB 빅플러스저축보험"]',
+             '[400000]',
              2000000,
              '주택구입',
              24,
@@ -360,14 +396,33 @@ VALUES ('예금', '일정 기간 동안 자금을 은행에 맡기고 이자를 
        ('패시브 펀드', '시장 지수를 추종하도록 설계된 펀드로, 장기적으로 안정적인 수익을 목표로 함');
 
 
-SELECT *
-FROM board
-ORDER BY (views * 0.2 + comments * 0.4 + likes * 0.4) DESC
-LIMIT 5;
-
 select * from news;
 
 
-delete from userAsset where assetNo = 22;
+delete from userAsset where assetNo = 33;
 
 select * from userAsset;
+select * from user;
+
+select newsNo,title, imageUrl, pubDate from news where category='경제';
+
+DELETE FROM news WHERE DATE(pubDate) = '2024-10-07';
+
+
+
+
+select * from news where category='경제';
+
+-- 생성일 변경
+update userAsset
+set createDate='2024-10-6 14:30:00'
+where assetNo = 35;
+
+-- 포인트 설정
+update user
+set point = 5000
+where nickName='소라';
+
+SELECT @@global.time_zone, @@session.time_zone;
+
+

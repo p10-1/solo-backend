@@ -37,6 +37,7 @@ import java.util.TimeZone;
 })
 @ComponentScan(basePackages = {
 //        "org.solo"
+        "org.solo.scheduler",
         "org.solo.member.service",
         "org.solo.board.service",
         "org.solo.news.service",
