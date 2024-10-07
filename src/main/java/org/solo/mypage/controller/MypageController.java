@@ -49,7 +49,7 @@ public class MypageController {
         }
     }
 
-    @PostMapping("/updateData")
+    @PostMapping("/updateAsset")
     public ResponseEntity<String> updateData(HttpSession session, @RequestBody AssetVO data) {
         String userId = (String) session.getAttribute("userId");
         System.out.println("getAsset 수행중: " + userId);
