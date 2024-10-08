@@ -35,7 +35,7 @@ public class Scheduler {
     }
 
     // 매일 수행되는 작업
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 12 * * *", zone = "Asia/Seoul")
     public void doEveryDay() {
         List<NewsVO> combinedNewsList = newsService.fetchAllNews();
         newsService.insertNews(combinedNewsList);
