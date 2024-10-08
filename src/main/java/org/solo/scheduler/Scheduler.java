@@ -26,7 +26,7 @@ public class Scheduler {
         this.quizService = quizService;
         this.boardService = boardService;
     }
-    @Scheduled(cron = "0 0,30 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 * * * * *", zone = "Asia/Seoul")
     public void doEveryHour() {
         productService.fetchDeposit();
         productService.fetchSaving();
