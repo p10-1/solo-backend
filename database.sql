@@ -163,63 +163,63 @@
 
 
 # -----------------------------------------------------------------------------
-
-select * from userAsset;
-
-INSERT INTO `userAsset` (
-    `userId`,
-    `cashBank`,
-    `cashAccount`,
-    `cash`,
-    `stockBank`,
-    `stockAccount`,
-    `stock`,
-    `depositBank`,
-    `depositAccount`,
-    `deposit`,
-    `insuranceCompany`,
-    `insuranceName`,
-    `insurance`,
-    `type`,
-    `loanAmount`,
-    `loanPurpose`,
-    `period`,
-    `interest`
-) VALUES
-    (
-        '3704999150',
-        '["우리은행", "신한은행"]',
-        '["123-456-7890", "987-654-3210"]',
-        '[50000, 20000]',
-        '["미래에셋", "삼성증권"]',
-        '["111-222-3333", "444-555-6666"]',
-        '[10000, 15000]',
-        '["농협은행", "하나은행"]',
-        '["333-444-5555", "666-777-8888"]',
-        '[20000, 25000]',
-        '["KB손해보험"]',
-        '["KB 빅플러스저축보험"]',
-        '[400000]',
-        '자산 분산형',
-        2000000,
-        '주택구입',
-        24,
-        3.2
-    );
-
-
-select * from userAsset;
-
-
-SELECT *
-#     SUM(CAST(value AS UNSIGNED)) AS total_cash
-FROM userAsset,
-     JSON_TABLE(cash, '$[*]' COLUMNS (cash_sum JSON PATH '$')) AS ct,
-     JSON_TABLE(stock, '$[*]' COLUMNS (stock_sum JSON PATH '$')) AS st,
-     JSON_TABLE(deposit, '$[*]' COLUMNS (deposit_sum JSON PATH '$')) AS dt,
-     JSON_TABLE(insurance, '$[*]' COLUMNS (insurance_sum JSON PATH '$')) AS it
-WHERE type = '자산 분산형';
-
-SELECT SUM(JSON_UNQUOTE(JSON_EXTRACT(cash, '$[*]'))) AS total_sum
-FROM userAsset;
+#
+# select * from userAsset;
+#
+# INSERT INTO `userAsset` (
+#     `userId`,
+#     `cashBank`,
+#     `cashAccount`,
+#     `cash`,
+#     `stockBank`,
+#     `stockAccount`,
+#     `stock`,
+#     `depositBank`,
+#     `depositAccount`,
+#     `deposit`,
+#     `insuranceCompany`,
+#     `insuranceName`,
+#     `insurance`,
+#     `type`,
+#     `loanAmount`,
+#     `loanPurpose`,
+#     `period`,
+#     `interest`
+# ) VALUES
+#     (
+#         '3704999150',
+#         '["우리은행", "신한은행"]',
+#         '["123-456-7890", "987-654-3210"]',
+#         '[50000, 20000]',
+#         '["미래에셋", "삼성증권"]',
+#         '["111-222-3333", "444-555-6666"]',
+#         '[10000, 15000]',
+#         '["농협은행", "하나은행"]',
+#         '["333-444-5555", "666-777-8888"]',
+#         '[20000, 25000]',
+#         '["KB손해보험"]',
+#         '["KB 빅플러스저축보험"]',
+#         '[400000]',
+#         '자산 분산형',
+#         2000000,
+#         '주택구입',
+#         24,
+#         3.2
+#     );
+#
+#
+# select * from userAsset;
+#
+#
+# SELECT *
+# #     SUM(CAST(value AS UNSIGNED)) AS total_cash
+# FROM userAsset,
+#      JSON_TABLE(cash, '$[*]' COLUMNS (cash_sum JSON PATH '$')) AS ct,
+#      JSON_TABLE(stock, '$[*]' COLUMNS (stock_sum JSON PATH '$')) AS st,
+#      JSON_TABLE(deposit, '$[*]' COLUMNS (deposit_sum JSON PATH '$')) AS dt,
+#      JSON_TABLE(insurance, '$[*]' COLUMNS (insurance_sum JSON PATH '$')) AS it
+# WHERE type = '자산 분산형';
+#
+# SELECT SUM(JSON_UNQUOTE(JSON_EXTRACT(cash, '$[*]'))) AS total_sum
+# FROM userAsset;
 
