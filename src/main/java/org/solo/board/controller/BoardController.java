@@ -34,7 +34,7 @@ public class BoardController {
                                                  @RequestParam(required = false) String keyword,
                                                  @RequestParam String sort) {
         List<BoardVO> boards;
-        List<BoardVO> bestBoards = (page == 1) ? boardService.getBestBoards() : Collections.emptyList();
+//        List<BoardVO> bestBoards = (page == 1) ? boardService.getBestBoards() : Collections.emptyList();
         PageRequest pageRequest = PageRequest.of(page, amount);
         switch (sort) {
             case "likes":
@@ -58,9 +58,9 @@ public class BoardController {
                         : boardService.getBoardsByPageOrderByregDate(pageRequest);
                 break;
         }
-        if (page == 1 && !bestBoards.isEmpty()) {
-            boards.addAll(0, bestBoards);
-        }
+//        if (page == 1 && !bestBoards.isEmpty()) {
+//            boards.addAll(0, bestBoards);
+//        }
 
         int totalBoardsCount = (keyword != null && !keyword.isEmpty())
                 ? boardService.getTotalCntByKeyword(category, keyword)
