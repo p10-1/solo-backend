@@ -1,6 +1,6 @@
 USE solo_db;
 SHOW TABLES;
-
+/*
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
 (
@@ -160,6 +160,8 @@ CREATE TABLE `quiz`
     `description` TEXT         NOT NULL
 );
 
+*/
+
 
 
 # -----------------------------------------------------------------------------
@@ -211,7 +213,7 @@ INSERT INTO `userAsset` (
              3.2
          );
 
--- 대출 X
+-- 대출 O
 INSERT INTO `userAsset` (
     `userId`,
     `cashBank`,
@@ -225,9 +227,13 @@ INSERT INTO `userAsset` (
     `deposit`,
     `insuranceCompany`,
     `insuranceName`,
-    `insurance`
+    `insurance`,
+    `loanAmount`,
+    `loanPurpose`,
+    `period`,
+    `interest`
 ) VALUES (
-             '3716739676',
+             '3711670018',
              '["우리은행", "신한은행"]',  -- 현금 은행 배열
              '["123-456-7890", "987-654-3210"]',  -- 현금 계좌 배열
              '[50000, 20000]',  -- 현금 자산 배열
@@ -239,7 +245,11 @@ INSERT INTO `userAsset` (
              '[200000, 250000]' ,  -- 예적금 자산 배열
              '["KB손해보험"]',
              '["KB 빅플러스저축보험"]',
-             '[400000]'
+             '[400000]',
+             2000000,
+             '주택구입',
+             24,
+             3.2
          );
 
 UPDATE userAsset
@@ -428,6 +438,14 @@ DELETE FROM news WHERE DATE(pubDate) = '2024-10-07';
 select * from news where category='경제';
 
 
+DROP TABLE IF EXISTS `news`;
 
-
-
+CREATE TABLE `news`
+(
+    `newsNo`   INT          NOT NULL PRIMARY KEY ,
+    `title`    VARCHAR(255) NOT NULL,
+    `link`     VARCHAR(255) NOT NULL,
+    `category` VARCHAR(50)  NOT NULL,
+    `pubDate`  DATETIME     NOT NULL,
+    `imageUrl` VARCHAR(255) NULL
+);

@@ -29,21 +29,22 @@ public class Scheduler {
         this.boardService = boardService;
     }
 
-    @PostConstruct
-    public void init() {
-        dofetchnews();
-    }
+//    @PostConstruct
+//    public void init() {
+//        dofetchnews();
+//    }
 
     // 매시간 0분과 30분에 수행되는 작업
     @Scheduled(cron = "0 0,30 * * * *", zone = "Asia/Seoul")
     public void doEveryHour() {
         productService.fetchDeposit();
         productService.fetchSaving();
+        productService.fetchLoan();
         policyService.fetchPolicies();
     }
 
     // 매일 수행되는 작업
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 12 * * *", zone = "Asia/Seoul")
     public void doEveryDay() {
         List<NewsVO> combinedNewsList = newsService.fetchAllNews();
         newsService.insertNews(combinedNewsList);
@@ -57,13 +58,12 @@ public class Scheduler {
         boardService.bestBoardPointUp();
     }
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
-    public void dofetchnews() {
-        List<NewsVO> combinedNewsList = newsService.fetchAllNews();
-        newsService.insertNews(combinedNewsList);
 
-        quizService.resetToday();
-    }
-
+//    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+//    public void dofetchnews() {
+//        List<NewsVO> combinedNewsList = newsService.fetchAllNews();
+//        newsService.insertNews(combinedNewsList);
+//
+//    }
 
 }
