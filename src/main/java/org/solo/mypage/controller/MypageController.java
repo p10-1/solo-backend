@@ -114,7 +114,6 @@ public class MypageController {
     @GetMapping("/getBank")
     public ResponseEntity<?> getBank(HttpSession session) {
         String userId = getUserId(session);
-
         if (userId != null) {
             try {
                 List<String> bankList = mypageService.getBank(userId);
