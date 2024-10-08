@@ -56,7 +56,6 @@ public class MypageServiceImpl implements MypageService {
     // 사용자 유형 업데이트
     @Override
     public void updateUserType(String userId, String type) {
-        System.out.println("updateuserType service");
         Map<String, String> params = new HashMap<>();
         params.put("userId", userId);
         params.put("type", type);

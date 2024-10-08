@@ -39,7 +39,7 @@ public class NewsController {
 
     // 뉴스페이지 -> 전체뉴스
     @GetMapping("/getNews")
-    public ResponseEntity<Page<NewsVO>> fetchAllNews(
+    public ResponseEntity<Page<NewsVO>> getAllNews(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int amount) {
 
@@ -54,7 +54,7 @@ public class NewsController {
 
     // 뉴스페이지 -> 카테고리 별 필터링
     @GetMapping("/getNewsBycategory")
-    public ResponseEntity<Page<NewsVO>> fetchNews(
+    public ResponseEntity<Page<NewsVO>> getNews(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int amount,
             @RequestParam Optional<String> category) {
