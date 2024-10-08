@@ -59,11 +59,4 @@ public class Scheduler {
     }
 
 
-//    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
-//    public void dofetchnews() {
-//        List<NewsVO> combinedNewsList = newsService.fetchAllNews();
-//        newsService.insertNews(combinedNewsList);
-//
-//    }
-
 }
