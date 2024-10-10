@@ -38,26 +38,26 @@
         ORDER BY pubDate DESC
         LIMIT #{offset}, #{limit}
     </select>
+
     <select id="getNewsCount" resultType="java.lang.Integer">
         SELECT count(*)
         FROM news
     </select>
 
 
-<!--    <select id="getTodayNews" parameterType="java.time.LocalDate" resultType="org.solo.news.domain.NewsVO">-->
-<!--        SELECT *-->
-<!--        FROM news-->
-<!--        WHERE DATE(pubDate) = #{date}-->
-
-<!--    </select>-->
-
-
-<!--자정지나서 테스트용-->
-    <select id="getTodayNews" parameterType="java.time.LocalDate" resultType="org.solo.news.domain.NewsVO">
+    <select id="getTodayNews"  resultType="org.solo.news.domain.NewsVO">
         SELECT *
         FROM news
-        WHERE DATE(pubDate) = DATE_SUB(#{date}, INTERVAL 1 DAY);
+        WHERE DATE(pubDate) = (
+            SELECT DATE(pubDate)
+            FROM news
+            ORDER BY pubDate DESC
+            LIMIT 1
+        )
+        ORDER BY pubDate DESC;
+
     </select>
+
 
 
 </mapper>

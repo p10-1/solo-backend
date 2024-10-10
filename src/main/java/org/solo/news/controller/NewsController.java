@@ -23,8 +23,6 @@ public class NewsController {
 
     private final NewsService newsService;
 
-//    private static final int DEFAULT_PAGE = 1;
-//    private static final int DEFAULT_AMOUNT = 10;
 
     @Autowired
     public NewsController(NewsService newsService) {
@@ -67,11 +65,10 @@ public class NewsController {
         return ResponseEntity.ok(newsPage);
     }
 
-
-    // 홈화면 -> 오늘의 뉴스 추천
+    // 홈화면 -> 오늘의 뉴스 추천 (최근뉴스로 보여줌)
     @GetMapping("/recommend")
     public ResponseEntity<Map<String, List<NewsVO>>> getTodayNews() {
-        Map<String, List<NewsVO>> result = newsService.getTodayNews(LocalDate.now());
+        Map<String, List<NewsVO>> result = newsService.getTodayNews();
         if (result.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
