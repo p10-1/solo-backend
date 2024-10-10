@@ -1,5 +1,6 @@
 package org.solo.news.controller;
 
+import io.swagger.annotations.Api;
 import org.solo.news.domain.NewsVO;
 import org.solo.news.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/news")
+@Api(value = "MyController", tags = "마이페이지 API")
 public class NewsController {
 
     private final NewsService newsService;
 
-//    private static final int DEFAULT_PAGE = 1;
-//    private static final int DEFAULT_AMOUNT = 10;
 
     @Autowired
     public NewsController(NewsService newsService) {
@@ -39,7 +39,7 @@ public class NewsController {
 
     // 뉴스페이지 -> 전체뉴스
     @GetMapping("/getNews")
-    public ResponseEntity<Page<NewsVO>> fetchAllNews(
+    public ResponseEntity<Page<NewsVO>> getAllNews(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int amount) {
 
@@ -54,7 +54,7 @@ public class NewsController {
 
     // 뉴스페이지 -> 카테고리 별 필터링
     @GetMapping("/getNewsBycategory")
-    public ResponseEntity<Page<NewsVO>> fetchNews(
+    public ResponseEntity<Page<NewsVO>> getNews(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int amount,
             @RequestParam Optional<String> category) {
@@ -67,11 +67,10 @@ public class NewsController {
         return ResponseEntity.ok(newsPage);
     }
 
-
-    // 홈화면 -> 오늘의 뉴스 추천
+    // 홈화면 -> 오늘의 뉴스 추천 (최근뉴스로 보여줌)
     @GetMapping("/recommend")
     public ResponseEntity<Map<String, List<NewsVO>>> getTodayNews() {
-        Map<String, List<NewsVO>> result = newsService.getTodayNews(LocalDate.now());
+        Map<String, List<NewsVO>> result = newsService.getTodayNews();
         if (result.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
