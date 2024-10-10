@@ -1,13 +1,18 @@
 package org.solo.asset.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.solo.asset.domain.AssetVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.solo.asset.mapper.AssetMapper;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 
 @Service
 @Transactional
@@ -18,10 +23,6 @@ public class AssetServiceImpl implements AssetService {
     public AssetServiceImpl(AssetMapper assetMapper) {
         this.assetMapper = assetMapper;
     }
-//    @Override
-//    public List<AssetVO> getAllAssetData() {
-//        return assetMapper.getAllAssetData();
-//    }
     // 특정 사용자의 자산 데이터를 기간에 맞게 가져오는 메서드
 
     @Override
@@ -36,23 +37,46 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public Map<String, Double> calculateAssetAverages() {
-        List<AssetVO> allAssets = assetMapper.getAllAssetData(); // 모든 사용자의 최신 데이터를 가져옴
-        int totalUserCount = assetMapper.getTotalUserCount(); // 전체 사용자 수
-//        System.out.println("----------------------------------- " +calculateAverages(allAssets, totalUserCount));
+        List<AssetVO> allAssets = assetMapper.getAllAssetData();
+        Map<String, Double> averages = new HashMap<>();
 
-        return calculateAverages(allAssets, totalUserCount);
+        averages.put("cash", calculateAverage(allAssets, AssetVO::getCash));
+        averages.put("deposit", calculateAverage(allAssets, AssetVO::getDeposit));
+        averages.put("stock", calculateAverage(allAssets, AssetVO::getStock));
+        averages.put("insurance", calculateAverage(allAssets, AssetVO::getInsurance));
+
+        return averages;
+    }
+    // 주어진 자산 리스트에서 특정 자산 유형의 평균을 계산하는 메서드
+    private Double calculateAverage(List<AssetVO> assets, Function<AssetVO, String> getter) {
+
+        return assets.stream()
+                .mapToDouble(asset -> {
+                    String value = getter.apply(asset);
+                    if (value == null || value.isEmpty()) {
+                        return 0.0;
+                    }
+                    return Arrays.stream(value.replaceAll("[\\[\\]\"]", "").split(","))
+                            .filter(s -> !s.trim().isEmpty())
+                            .mapToDouble(s -> Double.parseDouble(s.trim()))
+                            .sum();
+                })
+                .average()
+                .orElse(0.0);
     }
 
     @Override
     public Map<String, Object> compareAssetWithAverages(String type) {
-        Map<String, Double> overallAverages = calculateAssetAverages(); // 전체 평균
+
+        Map<String, Double> overallAverages = calculateAssetAverages();
+
         Map<String, Double> typeAverages;
 
         if (type == null || type.equals("null") || type.equals("undefined")) {
-            typeAverages = overallAverages; // 기본적으로 전체 평균 사용
+            typeAverages = overallAverages;
             type = "전체";
         } else {
-            typeAverages = calculateAssetAveragesByType(type); // 특정 유형 평균 계산
+            typeAverages = calculateAssetAveragesByType(type);
         }
 
         Map<String, Object> comparisonData = new HashMap<>();
@@ -62,70 +86,22 @@ public class AssetServiceImpl implements AssetService {
 
         return comparisonData;
     }
-    @Override
-    public Map<String, Double> calculateAssetAveragesByType(String type) {
+
+    private Map<String, Double> calculateAssetAveragesByType(String type) {
         List<AssetVO> assetsOfType = assetMapper.getAssetDataByType(type);
-        int userCountByType = assetMapper.getUserCountByType(type);
-//        System.out.println("----------------------------------- " +calculateAverages(assetsOfType, userCountByType));
 
-        return calculateAverages(assetsOfType, userCountByType);
-    }
-
-    private Map<String, Double> calculateAverages(List<AssetVO> assets, int userCount) {
-//        System.out.println("[calculateAverages] Calculating averages, user count: " + userCount);
-        Map<String, Double> totals = new HashMap<>();
-        Map<String, Integer> counts = new HashMap<>();
-        totals.put("cash", 0.0);
-        totals.put("deposit", 0.0);
-        totals.put("stock", 0.0);
-        totals.put("insurance", 0.0);
-        counts.put("cash", 0);
-        counts.put("deposit", 0);
-        counts.put("stock", 0);
-        counts.put("insurance", 0);
-
-        for (AssetVO asset : assets) {
-//            System.out.println("[calculateAverages] Processing asset: " + asset);
-            if (asset.getCash() != null && !asset.getCash().isEmpty()) {
-                double cashSum = sumJsonArray(asset.getCash());
-                totals.put("cash", totals.get("cash") + cashSum);
-                counts.put("cash", counts.get("cash") + 1);
-            }
-            if (asset.getDeposit() != null && !asset.getDeposit().isEmpty()) {
-                double depositSum = sumJsonArray(asset.getDeposit());
-                totals.put("deposit", totals.get("deposit") + depositSum);
-                counts.put("deposit", counts.get("deposit") + 1);
-            }
-            if (asset.getStock() != null && !asset.getStock().isEmpty()) {
-                double stockSum = sumJsonArray(asset.getStock());
-                totals.put("stock", totals.get("stock") + stockSum);
-                counts.put("stock", counts.get("stock") + 1);
-            }
-            if (asset.getInsurance() != null && !asset.getInsurance().isEmpty()) {
-                double insuranceSum = sumJsonArray(asset.getInsurance());
-                totals.put("insurance", totals.get("insurance") + insuranceSum);
-                counts.put("insurance", counts.get("insurance") + 1);
-            }
+        if (assetsOfType.isEmpty()) {
+            return calculateAssetAverages();
         }
 
         Map<String, Double> averages = new HashMap<>();
-        for (String key : totals.keySet()) {
-            int count = counts.get(key);
-            averages.put(key, (count > 0 ? totals.get(key) / count : 0.0));
-//            System.out.println("[calculateAverages] Calculated average for " + key + ": " + averages.get(key));
-        }
+        averages.put("cash", calculateAverage(assetsOfType, AssetVO::getCash));
+        averages.put("deposit", calculateAverage(assetsOfType, AssetVO::getDeposit));
+        averages.put("stock", calculateAverage(assetsOfType, AssetVO::getStock));
+        averages.put("insurance", calculateAverage(assetsOfType, AssetVO::getInsurance));
 
         return averages;
     }
 
-
-
-    private double sumJsonArray(String jsonArray) {
-        String[] values = jsonArray.replaceAll("[\\[\\]\"]", "").split(",");
-        return Arrays.stream(values)
-                .filter(s -> !s.trim().isEmpty())
-                .mapToDouble(Double::parseDouble)
-                .sum();
-    }
 
 }
