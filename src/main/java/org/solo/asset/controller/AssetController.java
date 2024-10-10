@@ -50,14 +50,25 @@ public class AssetController {
     public ResponseEntity<Map<String, Double>> getAssetAverages() {
 
         Map<String, Double> averages = assetService.calculateAssetAverages();
+        System.out.println("controller Calculated average for " +averages);
+
 
         return ResponseEntity.ok(averages);
     }
+
     @GetMapping("/comparison/{type}")
-    public ResponseEntity<Map<String, Object>> getAssetComparison(@PathVariable String type) {
-        Map<String, Object> comparisonData = assetService.compareAssetWithAverages(type);
+    public ResponseEntity<Map<String, Double>> getAssetComparison(@PathVariable String type) {
+        Map<String, Double> comparisonData = assetService.calculateAssetAveragesByType(type);
+
+        System.out.println("controller Calculated average for type  " +comparisonData + "for " +type);
+
         return ResponseEntity.ok(comparisonData);
     }
+//    @GetMapping("/all")
+//    public ResponseEntity<List<AssetVO>> getAllAssets() {
+//        List<AssetVO> allAssets = assetService.getAllAssetData();
+//        return ResponseEntity.ok(allAssets);
+//    }
 
 }
 //INSERT INTO `userAsset` (

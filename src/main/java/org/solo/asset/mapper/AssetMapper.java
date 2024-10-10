@@ -21,7 +21,9 @@ public interface AssetMapper {
     List<AssetVO> getAssetDataByType(String type);
 
 
+    int getTotalUserCount();
 
+    int getUserCountByType(String type);
 
 }
 

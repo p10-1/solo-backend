@@ -25,6 +25,17 @@
 
     <select id="getAssetDataByType" resultType="org.solo.asset.domain.AssetVO">
         SELECT * FROM userAsset
+        WHERE (type = #{type} OR (#{type} = 'null' AND type IS NULL))
+          AND (year(createDate) = year(curdate()) and month(createDate) = month(curdate()));
+    </select>
+
+    <select id="getTotalUserCount" resultType="int">
+        SELECT COUNT(DISTINCT userId) FROM userAsset
+    </select>
+
+    <select id="getUserCountByType" resultType="int">
+        SELECT COUNT(DISTINCT userId) FROM x
         WHERE type = #{type} OR (#{type} = 'null' AND type IS NULL)
     </select>
+
 </mapper>
