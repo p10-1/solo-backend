@@ -57,7 +57,7 @@ public class MypageController {
 
 
     // 자산 수정
-    @PostMapping("/updateAsset")
+    @PutMapping("/updateAsset")
     public ResponseEntity<String> updateAsset(HttpSession session, @RequestBody AssetVO data) {
         String userId = getUserId(session);
 
@@ -75,7 +75,7 @@ public class MypageController {
     }
 
     // 소비유형 수정
-    @PostMapping("/updateType")
+    @PutMapping("/updateType")
     public ResponseEntity<String> updateType(HttpSession session, @RequestBody Map<String, String> data) {
         String userId = getUserId(session);
         System.out.println("updateType controller");
@@ -127,7 +127,7 @@ public class MypageController {
     }
 
     // 포인트 조회
-    @GetMapping(value = "/points", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getPoints", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getPoints(HttpSession session) {
         String userId = getUserId(session);
 
