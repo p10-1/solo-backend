@@ -1,5 +1,6 @@
 package org.solo.news.controller;
 
+import io.swagger.annotations.Api;
 import org.solo.news.domain.NewsVO;
 import org.solo.news.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/news")
+@Api(value = "MyController", tags = "마이페이지 API")
 public class NewsController {
 
     private final NewsService newsService;

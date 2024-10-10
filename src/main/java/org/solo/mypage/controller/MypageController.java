@@ -1,5 +1,7 @@
 package org.solo.mypage.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.solo.asset.domain.AssetVO;
 import org.solo.member.domain.MemberVO;
 import org.solo.mypage.service.MypageService;
@@ -16,6 +18,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/api/mypage")
+@Api(value = "MyController", tags = "마이페이지 API")
 public class MypageController {
 
     private final MypageService mypageService;
@@ -39,7 +42,9 @@ public class MypageController {
     }
 
     // 자산 불러오기
+
     @GetMapping("/getAsset")
+    @ApiOperation(value = "자산 불러오기", notes = "사용자의 자산 정보를 불러옵니다.")
     public ResponseEntity<?> getAsset(HttpSession session) {
         String userId = getUserId(session);
 
@@ -58,6 +63,7 @@ public class MypageController {
 
     // 자산 수정
     @PutMapping("/updateAsset")
+    @ApiOperation(value = "자산 수정")
     public ResponseEntity<String> updateAsset(HttpSession session, @RequestBody AssetVO data) {
         String userId = getUserId(session);
 
