@@ -53,6 +53,7 @@ public class MemberController {
     // 카카오 로그인
     @RequestMapping(value= "/login/callback", produces = "application/json", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<?> loginCallback(@RequestParam("code") String code, HttpSession session) throws IOException {
+        System.out.println("code: " + code);
         try {
             String accessToken = getKakaoAccessToken(code);
             session.setAttribute("accessToken", accessToken);

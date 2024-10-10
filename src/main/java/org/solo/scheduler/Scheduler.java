@@ -39,7 +39,6 @@ public class Scheduler {
     public void doEveryDay() {
         List<NewsVO> combinedNewsList = newsService.fetchAllNews();
         newsService.insertNews(combinedNewsList);
-
         quizService.resetToday();
     }
 
