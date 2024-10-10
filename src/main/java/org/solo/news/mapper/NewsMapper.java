@@ -17,7 +17,9 @@ public interface NewsMapper {
     int getNewsCountBycategory(@Param("category") String category);
     List<NewsVO> getNewsByPage(@Param("offset") int offset, @Param("limit") int limit);
     int getNewsCount();
-    List<NewsVO> getTodayNews(LocalDate date);
+    //List<NewsVO> getTodayNews(LocalDate date);
+    List<NewsVO> getTodayNews();
+
 
 
 

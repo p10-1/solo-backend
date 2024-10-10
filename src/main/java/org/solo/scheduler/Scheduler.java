@@ -8,6 +8,8 @@ import org.solo.product.service.ProductService;
 import org.solo.quiz.service.QuizService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component
@@ -26,7 +28,14 @@ public class Scheduler {
         this.quizService = quizService;
         this.boardService = boardService;
     }
-    @Scheduled(cron = "0 * * * * *", zone = "Asia/Seoul")
+
+//    @PostConstruct
+//    public void init() {
+//        dofetchnews();
+//    }
+
+    // 매시간 0분과 30분에 수행되는 작업
+    @Scheduled(cron = "0 0,30 * * * *", zone = "Asia/Seoul")
     public void doEveryHour() {
         productService.fetchDeposit();
         productService.fetchSaving();
@@ -35,13 +44,14 @@ public class Scheduler {
     }
 
     // 매일 수행되는 작업
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 12 * * *", zone = "Asia/Seoul")
     public void doEveryDay() {
         List<NewsVO> combinedNewsList = newsService.fetchAllNews();
         newsService.insertNews(combinedNewsList);
         quizService.resetToday();
     }
 
+    // 매달 1일 0시에 수행되는 작업
     @Scheduled(cron = "0 0 0 1 * *", zone = "Asia/Seoul")
     public void doEveryMonth() {
         boardService.bestBoardPointUp();
