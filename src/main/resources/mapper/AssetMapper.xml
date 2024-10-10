@@ -25,6 +25,7 @@
 
     <select id="getAssetDataByType" resultType="org.solo.asset.domain.AssetVO">
         SELECT * FROM userAsset
-        WHERE type = #{type} OR (#{type} = 'null' AND type IS NULL)
+        WHERE (type = #{type} OR (#{type} = 'null' AND type IS NULL))
+          AND (year(createDate) = year(curdate()) and month(createDate) = month(curdate()));
     </select>
 </mapper>

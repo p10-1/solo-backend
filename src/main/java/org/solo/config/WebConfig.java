@@ -32,12 +32,21 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 
     @Override
     protected Class<?>[] getServletConfigClasses() {    // == servlet-context.xml
-        return new Class[] { ServletConfig.class };
+        return new Class[] { ServletConfig.class, SwaggerConfig.class };
     }
 
+//    @Override
+//    protected String[] getServletMappings() {   //   '/'
+//        return new String[] { "/" };
+//    }
+
     @Override
-    protected String[] getServletMappings() {   //   '/'
-        return new String[] { "/" };
+    protected String[] getServletMappings() {
+        return new String[] { "/", "*.do",
+                "/swagger-ui.html",
+                "/swagger-resources/**",
+                "/v2/api-docs",
+                "/webjars/**" };
     }
 
     @Override

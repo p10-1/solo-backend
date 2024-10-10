@@ -99,6 +99,7 @@ public class NewsServiceImpl implements NewsService {
             news.setImageUrl(mediaContent.getAttribute("url")); // 이미지 URL 저장
         }
 
+
         return news;
     }
 
@@ -149,10 +150,10 @@ public class NewsServiceImpl implements NewsService {
         return newsMapper.getNewsCount();
     }
 
-    // 오늘의 뉴스 가져오기
+    // 메인화면 뉴스
     @Override
-    public Map<String, List<NewsVO>> getTodayNews(LocalDate date) {
-        List<NewsVO> todayNews = newsMapper.getTodayNews(date);
+    public Map<String, List<NewsVO>> getTodayNews() {
+        List<NewsVO> todayNews = newsMapper.getTodayNews();
         Map<String, List<NewsVO>> selectedNews = new HashMap<>();
 
         // 각 카테고리 초기화
@@ -170,4 +171,11 @@ public class NewsServiceImpl implements NewsService {
 
         return selectedNews;
     }
+
+
+
+
+
+
+
 }

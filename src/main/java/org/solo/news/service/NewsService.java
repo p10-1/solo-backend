@@ -23,5 +23,6 @@ public interface NewsService {
     // 전체 뉴스 개수 조회
     int getNewsCount();
     // 오늘의 뉴스 가져옴
-    Map<String, List<NewsVO>> getTodayNews(LocalDate date);
+    Map<String, List<NewsVO>> getTodayNews();
+
 }
