@@ -2,6 +2,8 @@ package org.solo.member.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.solo.member.domain.MemberVO;
 import org.solo.member.service.MemberService;
 import org.solo.member.service.MemberServiceImpl;
@@ -23,6 +25,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/member")
+@Api(value = "Member Controller", tags = "멤버 API")
 public class MemberController {
 
     @Autowired
@@ -41,19 +44,19 @@ public class MemberController {
 
     // 카카오 로그인
     @GetMapping("/login")
+    @ApiOperation(value = "로그인하기", notes = "카카오 페이지로 넘어가 로그인합니다.")
     public ResponseEntity<String> login(HttpSession session) {
         session.invalidate();
         String loginUrl = "https://kauth.kakao.com/oauth/authorize?client_id=" + CLIENT_ID +
                 "&redirect_uri=" + REDIRECT_URI +
                 "&response_type=code";
-        System.out.println("로그인 들어왔음.");
         return ResponseEntity.ok(loginUrl);
     }
 
     // 카카오 로그인
     @RequestMapping(value= "/login/callback", produces = "application/json", method = {RequestMethod.GET, RequestMethod.POST})
+    @ApiOperation(value = "로그인 이후 사용자 정보를 받아오기", notes = "카카오 로그인을 한 후 사용자 정보를 받아옵니다.")
     public ResponseEntity<?> loginCallback(@RequestParam("code") String code, HttpSession session) throws IOException {
-        System.out.println("code: " + code);
         try {
             String accessToken = getKakaoAccessToken(code);
             session.setAttribute("accessToken", accessToken);
@@ -146,6 +149,7 @@ public class MemberController {
 
     // 로그아웃
     @GetMapping("/logout")
+    @ApiOperation(value = "로그아웃하기", notes = "카카오 페이지로 넘어가 로그아웃합니다.")
     public ResponseEntity<String> logout(HttpSession session) {
         session.invalidate();
         String logoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + CLIENT_ID + "&logout_redirect_uri=" + LOGOUT_REDIRECT_URI;
@@ -154,6 +158,7 @@ public class MemberController {
 
     // 처음 방문한 사용자의 추가 정보를 받는 함수
     @PostMapping("/firstUser")
+    @ApiOperation(value = "첫 사용자 정보 입력하기", notes = "처음 방문하는 사용자에게 추가적인 사용자 정보를 받아옵니다.")
     public ResponseEntity<MemberVO> firstUser(@RequestBody Map<String, String> nameAndbirth, HttpSession session) {
         String userName = nameAndbirth.get("userName");
         String birthdate = nameAndbirth.get("birthdate");
@@ -168,6 +173,7 @@ public class MemberController {
 
     // 서비스에서 사용할 닉네임 중복체크
     @GetMapping("/checkUser")
+    @ApiOperation(value = "닉네임 중복 체크하기", notes = "서비스 내에서 사용할 닉네임의 중복을 체크합니다.")
     public ResponseEntity<Boolean> checkUser(@RequestParam("nickName") String nickName) {
         boolean isDuplicate = memberService.checkUser(nickName);
         return ResponseEntity.ok(!isDuplicate);

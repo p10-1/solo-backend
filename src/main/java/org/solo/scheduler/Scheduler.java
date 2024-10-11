@@ -29,11 +29,6 @@ public class Scheduler {
         this.boardService = boardService;
     }
 
-//    @PostConstruct
-//    public void init() {
-//        dofetchnews();
-//    }
-
     // 매시간 0분과 30분에 수행되는 작업
     @Scheduled(cron = "0 0,30 * * * *", zone = "Asia/Seoul")
     public void doEveryHour() {
@@ -56,6 +51,4 @@ public class Scheduler {
     public void doEveryMonth() {
         boardService.bestBoardPointUp();
     }
-
-
 }
