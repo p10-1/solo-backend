@@ -10,9 +10,6 @@ public interface MypageService {
     // 자산 데이터를 가져오는 메서드
     AssetVO getAssetData(String userId);
 
-    // 자산 데이터를 업데이트하는 메서드
-    void updateAsset(AssetVO assetVO);
-
 
     // 특정 사용자의 포인트를 가져오는 메서드
     int getPoint(String userId);
@@ -24,7 +21,8 @@ public interface MypageService {
     String getType(String userId);
 
     // 특정 사용자의 은행 계좌 목록을 가져오는 메서드
-    List<String> getBank(String userId);
+    //List<String> getBank(String userId);
+    AssetVO getBank(String userId);
 
     // 사용자의 포인트를 출금하는 메서드
     ResponseEntity<?> withdrawPoints(String userId, Integer idx, Integer withdrawAmount);

@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/api/mypage")
-@Api(value = "MyController", tags = "마이페이지 API")
+@Api(value = "Mypage Controller", tags = "마이페이지 API")
 public class MypageController {
 
     private final MypageService mypageService;
@@ -51,27 +51,8 @@ public class MypageController {
         if (userId != null) {
             try {
                 AssetVO asset = mypageService.getAssetData(userId);
+                System.out.println(asset);
                 return ResponseEntity.ok(asset);
-            } catch (Exception e) {
-                return handleError(e);
-            }
-        } else {
-            return handleUnauthorized();
-        }
-    }
-
-
-    // 자산 수정
-    @PutMapping("/updateAsset")
-    @ApiOperation(value = "자산 수정")
-    public ResponseEntity<String> updateAsset(HttpSession session, @RequestBody AssetVO data) {
-        String userId = getUserId(session);
-
-        if (userId != null) {
-            data.setUserId(userId);
-            try {
-                mypageService.updateAsset(data);
-                return ResponseEntity.ok("success");
             } catch (Exception e) {
                 return handleError(e);
             }
@@ -115,14 +96,14 @@ public class MypageController {
         }
     }
 
-    //
+
     @GetMapping("/getBank")
     public ResponseEntity<?> getBank(HttpSession session) {
         String userId = getUserId(session);
         if (userId != null) {
             try {
-                List<String> bankList = mypageService.getBank(userId);
-                return ResponseEntity.ok(bankList);
+                AssetVO asset = mypageService.getBank(userId);
+                return ResponseEntity.ok(asset);
             } catch (Exception e) {
                 return handleError(e);
             }
