@@ -27,7 +27,7 @@ public class AssetVO {
     private String insurance;           // 보험금
 
     private String type;        // 자산 유형
-    private Integer loanAmount;    // 대출액
+    private Long loanAmount;    // 대출액
     private String loanPurpose;     // 대출 목적
     private Integer period;        // 대출 기간 (개월)
     private Double interest;      // 이자율 (정수형)
