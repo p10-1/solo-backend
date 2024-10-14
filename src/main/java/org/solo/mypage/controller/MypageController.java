@@ -43,7 +43,7 @@ public class MypageController {
     // 자산 불러오기
 
     @GetMapping("/getAsset")
-    @ApiOperation(value = "자산 불러오기", notes = "사용자의 자산 정보를 불러옵니다.")
+    @ApiOperation(value = "자산 불러오기", notes = "사용자의 자산을 불러옵니다")
     public ResponseEntity<?> getAsset(HttpSession session) {
         String userId = getUserId(session);
 
@@ -62,6 +62,7 @@ public class MypageController {
 
     // 소비유형 수정
     @PutMapping("/updateType")
+    @ApiOperation(value = "유형 수정하기", notes = "사용자의 유형을 수정합니다")
     public ResponseEntity<String> updateType(HttpSession session, @RequestBody Map<String, String> data) {
         String userId = getUserId(session);
 
@@ -80,6 +81,7 @@ public class MypageController {
 
     // 소비유형 불러오기
     @GetMapping("/getType")
+    @ApiOperation(value = "유형 불러오기", notes = "사용자의 유형을 불러옵니다")
     public ResponseEntity<?> getType(HttpSession session) {
         String userId = getUserId(session);
 
@@ -97,6 +99,7 @@ public class MypageController {
 
 
     @GetMapping("/getBank")
+    @ApiOperation(value = "계좌 불러오기", notes = "포인트 출금 시 필요한 계좌정보를 불러옵니다")
     public ResponseEntity<?> getBank(HttpSession session) {
         String userId = getUserId(session);
         if (userId != null) {
@@ -113,6 +116,7 @@ public class MypageController {
 
     // 포인트 조회
     @GetMapping(value = "/getPoint", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "포인트 불러오기", notes = "사용자의 포인트를 불러옵니다")
     public ResponseEntity<?> getPoints(HttpSession session) {
         String userId = getUserId(session);
 
@@ -127,6 +131,7 @@ public class MypageController {
 
     // 포인트 출금 메서드
     @PostMapping("/withdraw")
+    @ApiOperation(value = "포인트 차감하기", notes = "사용자의 포인트를 차감합니다")
     public ResponseEntity<String> withdrawPoints(@RequestBody MemberVO data,
                                                  @RequestParam Integer idx,
                                                  HttpSession session) {
