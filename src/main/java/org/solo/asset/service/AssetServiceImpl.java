@@ -49,6 +49,7 @@ public class AssetServiceImpl implements AssetService {
     }
     // 주어진 자산 리스트에서 특정 자산 유형의 평균을 계산하는 메서드
     private Double calculateAverage(List<AssetVO> assets, Function<AssetVO, String> getter) {
+
         return assets.stream()
                 .mapToDouble(asset -> {
                     String value = getter.apply(asset);

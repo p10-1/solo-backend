@@ -1,5 +1,7 @@
 package org.solo.mypage.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.solo.asset.domain.AssetVO;
 import org.solo.member.domain.MemberVO;
 import org.solo.mypage.service.MypageService;
@@ -11,11 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/api/mypage")
+@Api(value = "Mypage Controller", tags = "마이페이지 API")
 public class MypageController {
 
     private final MypageService mypageService;
@@ -39,13 +41,16 @@ public class MypageController {
     }
 
     // 자산 불러오기
+
     @GetMapping("/getAsset")
+    @ApiOperation(value = "자산 불러오기", notes = "사용자의 자산 정보를 불러옵니다.")
     public ResponseEntity<?> getAsset(HttpSession session) {
         String userId = getUserId(session);
 
         if (userId != null) {
             try {
                 AssetVO asset = mypageService.getAssetData(userId);
+                System.out.println(asset);
                 return ResponseEntity.ok(asset);
             } catch (Exception e) {
                 return handleError(e);
@@ -55,30 +60,10 @@ public class MypageController {
         }
     }
 
-
-    // 자산 수정
-    @PostMapping("/updateAsset")
-    public ResponseEntity<String> updateAsset(HttpSession session, @RequestBody AssetVO data) {
-        String userId = getUserId(session);
-
-        if (userId != null) {
-            data.setUserId(userId);
-            try {
-                mypageService.updateAsset(data);
-                return ResponseEntity.ok("success");
-            } catch (Exception e) {
-                return handleError(e);
-            }
-        } else {
-            return handleUnauthorized();
-        }
-    }
-
     // 소비유형 수정
-    @PostMapping("/updateType")
+    @PutMapping("/updateType")
     public ResponseEntity<String> updateType(HttpSession session, @RequestBody Map<String, String> data) {
         String userId = getUserId(session);
-        System.out.println("updateType controller");
 
         if (userId != null) {
             String type = data.get("selectedType");
@@ -110,14 +95,14 @@ public class MypageController {
         }
     }
 
-    //
+
     @GetMapping("/getBank")
     public ResponseEntity<?> getBank(HttpSession session) {
         String userId = getUserId(session);
         if (userId != null) {
             try {
-                List<String> bankList = mypageService.getBank(userId);
-                return ResponseEntity.ok(bankList);
+                AssetVO asset = mypageService.getBank(userId);
+                return ResponseEntity.ok(asset);
             } catch (Exception e) {
                 return handleError(e);
             }
@@ -127,7 +112,7 @@ public class MypageController {
     }
 
     // 포인트 조회
-    @GetMapping(value = "/points", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getPoint", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getPoints(HttpSession session) {
         String userId = getUserId(session);
 
