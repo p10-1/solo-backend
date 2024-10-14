@@ -27,21 +27,17 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public List<AssetVO> getAssetData(String userId, int months) {
-        System.out.println("AssetServiceImpl: getAssetData called for userId: " + userId);
         LocalDate endDate_ = LocalDate.now();
         LocalDate startDate = endDate_.minusMonths(months -1);
         LocalDate endDate = endDate_.plusDays(1);
         List<AssetVO> asset = assetMapper.getAssetData(userId, startDate, endDate);
-        System.out.println("AssetServiceImpl: Retrieved assets: " + asset);
         return asset;
     }
     // 모든 사용자의 평균 자산을 계산하는 메서드
 
     @Override
     public Map<String, Double> calculateAssetAverages() {
-        System.out.println("AssetServiceImpl: calculateAssetAverages called");
         List<AssetVO> allAssets = assetMapper.getAllAssetData();
-        System.out.println("AssetServiceImpl: All assets: " + allAssets);
         Map<String, Double> averages = new HashMap<>();
 
         averages.put("cash", calculateAverage(allAssets, AssetVO::getCash));
@@ -70,11 +66,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public Map<String, Object> compareAssetWithAverages(String type) {
-        System.out.println("AssetServiceImpl: compareAssetWithAverages called with type: " + type);
-
         Map<String, Double> overallAverages = calculateAssetAverages();
-        System.out.println("AssetServiceImpl: Overall averages: " + overallAverages);
-
         Map<String, Double> typeAverages;
 
         if (type == null || type.equals("null") || type.equals("undefined")) {
@@ -83,24 +75,18 @@ public class AssetServiceImpl implements AssetService {
         } else {
             typeAverages = calculateAssetAveragesByType(type);
         }
-        System.out.println("AssetServiceImpl: Type averages for " + type + ": " + typeAverages);
 
         Map<String, Object> comparisonData = new HashMap<>();
         comparisonData.put("overallAverage", overallAverages);
         comparisonData.put("typeAverage", typeAverages);
         comparisonData.put("userType", type);
-
-        System.out.println("AssetServiceImpl: Comparison data: " + comparisonData);
         return comparisonData;
     }
 
     private Map<String, Double> calculateAssetAveragesByType(String type) {
-        System.out.println("AssetServiceImpl: calculateAssetAveragesByType called for type: " + type);
         List<AssetVO> assetsOfType = assetMapper.getAssetDataByType(type);
-        System.out.println("AssetServiceImpl: Assets of type " + type + ": " + assetsOfType);
 
         if (assetsOfType.isEmpty()) {
-            System.out.println("AssetServiceImpl: No assets found for type " + type + ", returning overall averages");
             return calculateAssetAverages();
         }
 
@@ -110,7 +96,6 @@ public class AssetServiceImpl implements AssetService {
         averages.put("stock", calculateAverage(assetsOfType, AssetVO::getStock));
         averages.put("insurance", calculateAverage(assetsOfType, AssetVO::getInsurance));
 
-        System.out.println("AssetServiceImpl: Calculated averages for type " + type + ": " + averages);
         return averages;
     }
 
