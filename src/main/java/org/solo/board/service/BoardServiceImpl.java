@@ -81,11 +81,6 @@ public class BoardServiceImpl implements BoardService {
     public BoardVO get(Long boardNo) {
         BoardVO boardVO = boardMapper.get(boardNo);
         boardMapper.upViewCnt(boardNo);
-        if (boardVO == null) {
-            System.out.println("No board found for boardNo: " + boardNo);
-        } else {
-            System.out.println("boardVO: " + boardVO);
-        }
         return Optional.ofNullable(boardVO)
                 .orElseThrow(NoSuchElementException::new);
     }

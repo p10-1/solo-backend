@@ -1,5 +1,7 @@
 package org.solo.asset.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.solo.asset.domain.AssetVO;
 import org.solo.asset.service.AssetService;
 import org.solo.mypage.service.MypageService;
@@ -19,6 +21,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/asset")
+@Api(value = "Asset Controller", tags = "자산 API")
+
 public class AssetController {
     private final AssetService assetService;
 
@@ -29,6 +33,7 @@ public class AssetController {
     // 자산 데이터를 가져오는 엔드포인트
 
     @GetMapping("")
+    @ApiOperation(value = "자산 불러오기", notes = "사용자 id에 맞는 자산 데이터를 6개월 정도 가져오기.")
     public ResponseEntity<List<AssetVO>> getAsset(HttpSession session, HttpServletRequest request) {
         // 세션이 유효한지 확인
 
@@ -39,7 +44,7 @@ public class AssetController {
         // 사용자 ID가 있으면 자산 데이터를 서비스에서 가져옴
 
         if (userId != null) {
-            List<AssetVO> assets = assetService.getAssetData(userId,7); //우선 6개월만
+            List<AssetVO> assets = assetService.getAssetData(userId, 7); //우선 6개월만
             return ResponseEntity.ok(assets);
         }
         return ResponseEntity.notFound().build();
@@ -47,55 +52,16 @@ public class AssetController {
     // 평균 자산 데이터를 가져오는 엔드포인트
 
     @GetMapping("/average")
+    @ApiOperation(value = "평균 자산 불러오기", notes = "평균 데이터를 가져오기 ")
     public ResponseEntity<Map<String, Double>> getAssetAverages() {
-
         Map<String, Double> averages = assetService.calculateAssetAverages();
-
         return ResponseEntity.ok(averages);
     }
+
     @GetMapping("/comparison/{type}")
+    @ApiOperation(value = "각 타입별 평균 자산 불러오기", notes = "각 타입별 평균 자산 불러오기")
     public ResponseEntity<Map<String, Object>> getAssetComparison(@PathVariable String type) {
         Map<String, Object> comparisonData = assetService.compareAssetWithAverages(type);
         return ResponseEntity.ok(comparisonData);
     }
-
 }
-//INSERT INTO `userAsset` (
-//        `userId`,
-//        `cashBank`,
-//        `cashAccount`,
-//        `cash`,
-//        `stockBank`,
-//        `stockAccount`,
-//        `stock`,
-//        `depositBank`,
-//        `depositAccount`,
-//        `deposit`,
-//        `insuranceCompany`,
-//        `insuranceName`,
-//        `insurance`,
-//        `type`,
-//        `loanAmount`,
-//        `loanPurpose`,
-//        `period`,
-//        `interest`
-//        ) VALUES (
-//    '3000220000',
-//            '["우리은행", "신한은행", "국민은행"]',
-//            '["123-456-7890", "987-654-3210", "456-789-0123"]',
-//            '["100000", "150000", "75000"]',
-//            '["미래에셋", "삼성증권", "키움증권"]',
-//            '["111-222-3333", "444-555-6666", "777-888-9999"]',
-//            '["300000", "250000", "180000"]',
-//            '["농협은행", "하나은행", "카카오뱅크"]',
-//            '["333-444-5555", "666-777-8888", "999-000-1111"]',
-//            '["500000", "300000", "200000"]',
-//            '["삼성생명", "한화생명"]',
-//            '["종신보험", "암보험"]',
-//            '["1000000", "500000"]',
-//            '적극투자형',
-//            2500000,
-//            '주택구입',
-//            36,
-//            3.75
-//);

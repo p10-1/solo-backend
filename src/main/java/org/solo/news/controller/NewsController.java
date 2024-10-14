@@ -1,11 +1,11 @@
 package org.solo.news.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.solo.news.domain.NewsVO;
 import org.solo.news.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,14 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.solo.common.pagination.Page;
 import org.solo.common.pagination.PageRequest;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/news")
-@Api(value = "MyController", tags = "마이페이지 API")
+@Api(value = "News controller", tags = "뉴스 API")
 public class NewsController {
 
     private final NewsService newsService;
@@ -39,6 +38,7 @@ public class NewsController {
 
     // 뉴스페이지 -> 전체뉴스
     @GetMapping("/getNews")
+    @ApiOperation(value = "뉴스 불러오기", notes = "전체 뉴스를 불러옵니다")
     public ResponseEntity<Page<NewsVO>> getAllNews(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int amount) {
@@ -54,6 +54,7 @@ public class NewsController {
 
     // 뉴스페이지 -> 카테고리 별 필터링
     @GetMapping("/getNewsBycategory")
+    @ApiOperation(value = "카테고리별 뉴스 불러오기", notes = "카테고리별 뉴스를 불러옵니다")
     public ResponseEntity<Page<NewsVO>> getNews(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int amount,
@@ -69,6 +70,7 @@ public class NewsController {
 
     // 홈화면 -> 오늘의 뉴스 추천 (최근뉴스로 보여줌)
     @GetMapping("/recommend")
+    @ApiOperation(value = "최근 뉴스 불러오기", notes = "최근 뉴스를 불러옵니다")
     public ResponseEntity<Map<String, List<NewsVO>>> getTodayNews() {
         Map<String, List<NewsVO>> result = newsService.getTodayNews();
         if (result.isEmpty()) {
