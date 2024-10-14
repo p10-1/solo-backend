@@ -18,42 +18,6 @@
             LIMIT 1
     </select>
 
-<!--    &lt;!&ndash; 포인트 출금 시 자산 데이터 확인 &ndash;&gt;-->
-<!--    <select id="checkAssetData" parameterType="java.lang.String" resultType="org.solo.asset.domain.AssetVO">-->
-<!--        SELECT * FROM userAsset-->
-<!--        WHERE userId = #{userId}-->
-<!--          AND MONTH(createDate) = MONTH(CURRENT_DATE())-->
-<!--          AND YEAR(createDate) = YEAR(CURRENT_DATE());-->
-<!--    </select>-->
-
-    <!-- 자산 데이터 업데이트 -->
-    <update id="updateAsset" parameterType="org.solo.asset.domain.AssetVO">
-        UPDATE userAsset
-        SET
-            cashBank = #{cashBank},
-            cashAccount = #{cashAccount},
-            cash = #{cash},
-            stockBank = #{stockBank},
-            stockAccount = #{stockAccount},
-            stock = #{stock},
-            depositBank = #{depositBank},
-            depositAccount = #{depositAccount},
-            deposit = #{deposit},
-            insuranceCompany = #{insuranceCompany},
-            insuranceName = #{insuranceName},
-            insurance = #{insurance},
-            loanAmount = #{loanAmount},
-            loanPurpose = #{loanPurpose},
-            period = #{period},
-            interest = #{interest}
-        WHERE userId = #{userId}
-            AND MONTH(createDate) = MONTH(CURRENT_DATE())
-            AND YEAR(createDate) = YEAR(CURRENT_DATE());
-    </update>
-
-
-
-
     <!-- 포인트 조회 -->
     <select id="getPoint" parameterType="String" resultType="int">
         SELECT point
@@ -81,15 +45,17 @@
         LIMIT 1
     </select>
 
+
     <!-- 은행 정보 조회 -->
-    <select id="getBank" parameterType="String" resultType="java.lang.String">
-        SELECT cashBank
+    <select id="getBank" parameterType="String" resultType="org.solo.asset.domain.AssetVO">
+        SELECT cashBank, cashAccount
         FROM userAsset
         WHERE userId = #{userId}
           AND MONTH(createDate) = MONTH(CURRENT_DATE)
           AND YEAR(createDate) = YEAR(CURRENT_DATE)
         LIMIT 1
     </select>
+
 
     <!-- 포인트 출금 처리 -->
     <update id="withdrawPoint" parameterType="map">
