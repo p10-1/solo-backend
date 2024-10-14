@@ -17,8 +17,4 @@ public interface AssetService {
 
     Map<String, Object> compareAssetWithAverages(String type);
 
-
-
-
-
 }
