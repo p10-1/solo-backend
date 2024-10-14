@@ -57,11 +57,10 @@ public class AssetController {
     }
 
     @GetMapping("/comparison/{type}")
-    public ResponseEntity<Map<String, Double>> getAssetComparison(@PathVariable String type) {
-        Map<String, Double> comparisonData = assetService.calculateAssetAveragesByType(type);
-
-        System.out.println("controller Calculated average for type  " +comparisonData + "for " +type);
-
+    public ResponseEntity<Map<String, Object>> getAssetComparison(@PathVariable String type) {
+        System.out.println("AssetController: Received request for type: " + type);
+        Map<String, Object> comparisonData = assetService.compareAssetWithAverages(type);
+        System.out.println("AssetController: Sending response: " + comparisonData);
         return ResponseEntity.ok(comparisonData);
     }
 //    @GetMapping("/all")
