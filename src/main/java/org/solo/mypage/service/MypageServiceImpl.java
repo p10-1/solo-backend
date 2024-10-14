@@ -41,12 +41,6 @@ public class MypageServiceImpl implements MypageService {
         return mypageMapper.getAssetData(userId);
     }
 
-    // 사용자 자산 업데이트
-    @Override
-    public void updateAsset(AssetVO assetVO) {
-        mypageMapper.updateAsset(assetVO);
-    }
-
     // 사용자 유형 불러오기
     @Override
     public String getType(String userId) {
@@ -64,7 +58,7 @@ public class MypageServiceImpl implements MypageService {
 
     // 사용자 계좌 불러오기 (포인트 출금용)
     @Override
-    public List<String> getBank(String userId) {
+    public AssetVO getBank(String userId) {
         return mypageMapper.getBank(userId);
     }
 

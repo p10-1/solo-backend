@@ -17,7 +17,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -171,11 +170,6 @@ public class NewsServiceImpl implements NewsService {
 
         return selectedNews;
     }
-
-
-
-
-
 
 
 }
