@@ -5,7 +5,6 @@ import org.solo.news.domain.NewsVO;
 import org.solo.news.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,14 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.solo.common.pagination.Page;
 import org.solo.common.pagination.PageRequest;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/news")
-@Api(value = "MyController", tags = "마이페이지 API")
+@Api(value = "News controller", tags = "뉴스 API")
 public class NewsController {
 
     private final NewsService newsService;

@@ -3,7 +3,6 @@ package org.solo.mypage.service;
 import org.solo.asset.domain.AssetVO;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 
 public interface MypageService {
 

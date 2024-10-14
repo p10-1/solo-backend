@@ -3,7 +3,6 @@ package org.solo.news.service;
 import org.solo.common.pagination.PageRequest;
 import org.solo.news.domain.NewsVO;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 

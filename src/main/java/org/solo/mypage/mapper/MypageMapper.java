@@ -2,10 +2,8 @@ package org.solo.mypage.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.solo.asset.domain.AssetVO;
-import org.solo.member.domain.MemberVO;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Map;
 
 @Mapper
