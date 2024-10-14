@@ -4,7 +4,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.solo.news.domain.NewsVO;
 import org.springframework.stereotype.Repository;
-import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
