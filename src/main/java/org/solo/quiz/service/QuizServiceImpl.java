@@ -27,7 +27,7 @@ public class QuizServiceImpl implements QuizService {
     public QuizVO createQuiz() {
         int totalCnt = quizMapper.totalCnt();
         int quizNo = (int)(Math.random() * totalCnt) + 1;
-        return quizMapper.createQuiz(quizNo);
+        return quizMapper.createQuiz(37);
     }
 
     @Override
