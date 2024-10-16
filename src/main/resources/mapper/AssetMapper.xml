@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.solo.asset.mapper.AssetMapper">
+    <!-- 특정 사용자의 자산 데이터를 가져오는 SQL 쿼리 -->
+
+    <select id="getAssetData" resultType="org.solo.asset.domain.AssetVO">
+        SELECT * FROM userAsset
+        WHERE userId = #{userId}
+          AND createDate BETWEEN #{startDate} AND #{endDate}
+        ORDER BY createDate DESC
+    </select>
+    <!-- 모든 사용자의 최신 자산 데이터를 가져오는 SQL 쿼리 -->
+
+    <select id="getAllAssetData" resultType="org.solo.asset.domain.AssetVO">
+        SELECT * FROM userAsset
+        WHERE createDate = (
+            SELECT MAX(createDate)
+            FROM userAsset AS sub
+            WHERE sub.userId = userAsset.userId
+        )
+    </select>
+
+    <select id="getAssetDataByType" resultType="org.solo.asset.domain.AssetVO">
+        SELECT * FROM userAsset
+        WHERE (type = #{type} OR (#{type} = 'null' AND type IS NULL))
+          AND (year(createDate) = year(curdate()) and month(createDate) = month(curdate()));
+    </select>
+</mapper>

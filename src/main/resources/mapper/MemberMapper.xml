@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.solo.member.mapper.MemberMapper">
+
+    <select id="findByKakaoId" parameterType="java.lang.String" resultType="org.solo.member.domain.MemberVO">
+        SELECT * FROM `user` WHERE userId = #{userId}
+    </select>
+
+    <select id="checkUser" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM `user`
+        WHERE userName = #{nickName}
+    </select>
+
+    <insert id="insertNewUserInfo" parameterType="org.solo.member.domain.MemberVO">
+        INSERT INTO `user` (userId, nickName, userName, email, birthdate, point)
+        VALUES (#{userId}, #{nickName}, #{userName}, #{email}, #{birthdate}, 0)
+    </insert>
+
+    <update id="updatePoint" parameterType="map">
+        UPDATE `user`
+        SET point = #{newPoint}
+        WHERE userId = #{userId}
+    </update>
+
+    <select id="getPoint" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT point
+        FROM `user`
+        WHERE userId = #{userId}
+    </select>
+
+</mapper>

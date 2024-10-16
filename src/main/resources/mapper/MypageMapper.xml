@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.solo.mypage.mapper.MypageMapper">
+
+    <!-- 자산 데이터 조회 -->
+    <select id="getAssetData" parameterType="String" resultType="org.solo.asset.domain.AssetVO">
+        SELECT
+            userId, cashBank, cashAccount, cash, stockBank, stockAccount, stock,
+            depositBank, depositAccount, deposit,
+            insuranceCompany, insuranceName, insurance,
+            loanAmount, loanPurpose, period, interest, createDate
+        FROM userAsset
+        WHERE userId = #{userId}
+            AND MONTH(createDate) = MONTH(CURRENT_DATE)
+          AND YEAR(createDate) = YEAR(CURRENT_DATE)
+            LIMIT 1
+    </select>
+
+    <!-- 포인트 조회 -->
+    <select id="getPoint" parameterType="String" resultType="int">
+        SELECT point
+        FROM user
+        WHERE userId = #{userId}
+    </select>
+
+    <!-- 사용자 유형 업데이트 -->
+    <update id="updateUserType" parameterType="map">
+        UPDATE userAsset
+        SET type = #{type}
+        WHERE userId = #{userId}
+          AND MONTH(createDate) = MONTH(CURRENT_DATE)
+          AND YEAR(createDate) = YEAR(CURRENT_DATE)
+        LIMIT 1
+    </update>
+
+    <!-- 사용자 유형 조회 -->
+    <select id="getType" parameterType="String" resultType="String">
+        SELECT type
+        FROM userAsset
+        WHERE userId = #{userId}
+          AND MONTH(createDate) = MONTH(CURRENT_DATE)
+          AND YEAR(createDate) = YEAR(CURRENT_DATE)
+        LIMIT 1
+    </select>
+
+
+    <!-- 은행 정보 조회 -->
+    <select id="getBank" parameterType="String" resultType="org.solo.asset.domain.AssetVO">
+        SELECT cashBank, cashAccount
+        FROM userAsset
+        WHERE userId = #{userId}
+          AND MONTH(createDate) = MONTH(CURRENT_DATE)
+          AND YEAR(createDate) = YEAR(CURRENT_DATE)
+        LIMIT 1
+    </select>
+
+
+    <!-- 포인트 출금 처리 -->
+    <update id="withdrawPoint" parameterType="map">
+        UPDATE user
+        SET point = point - #{withdrawAmount}
+        WHERE userId = #{userId}
+    </update>
+
+    <!-- 현금 업데이트 -->
+    <update id="updateCash" parameterType="map">
+        UPDATE userAsset
+        SET cash = #{updatedCash}
+        WHERE userId = #{userId}
+          AND MONTH(createDate) = MONTH(CURRENT_DATE)
+          AND YEAR(createDate) = YEAR(CURRENT_DATE)
+    </update>
+
+
+</mapper>
