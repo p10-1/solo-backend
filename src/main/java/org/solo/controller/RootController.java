@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Api(value = "Root Controller", tags = "ROOT API")
 
 public class RootController {
-
-    @GetMapping("/")
-    @ApiOperation(value = "루트 컴포넌트", notes = "루트 컴포넌트")
-    public String root() {
-        return "index";
-    }
+//
+//    @GetMapping("/")
+//    @ApiOperation(value = "루트 컴포넌트", notes = "루트 컴포넌트")
+//    public String root() {
+//        return "index";
+//    }
 }
