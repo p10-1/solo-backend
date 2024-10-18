@@ -66,6 +66,10 @@ public class ServletConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/v2/api-docs")
                 .addResourceLocations("classpath:/META-INF/resources/");
 
+        //추가
+        registry.addResourceHandler("/assets/**")
+                .addResourceLocations("/resources/assets/");
+
     }
 
 //    @Bean
