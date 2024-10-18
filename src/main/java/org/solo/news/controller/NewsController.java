@@ -1,6 +1,7 @@
 package org.solo.news.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.solo.news.domain.NewsVO;
 import org.solo.news.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class NewsController {
 
     // 뉴스페이지 -> 전체뉴스
     @GetMapping("/getNews")
+    @ApiOperation(value = "뉴스 불러오기", notes = "전체 뉴스를 불러옵니다")
     public ResponseEntity<Page<NewsVO>> getAllNews(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int amount) {
@@ -52,6 +54,7 @@ public class NewsController {
 
     // 뉴스페이지 -> 카테고리 별 필터링
     @GetMapping("/getNewsBycategory")
+    @ApiOperation(value = "카테고리별 뉴스 불러오기", notes = "카테고리별 뉴스를 불러옵니다")
     public ResponseEntity<Page<NewsVO>> getNews(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int amount,
@@ -67,6 +70,7 @@ public class NewsController {
 
     // 홈화면 -> 오늘의 뉴스 추천 (최근뉴스로 보여줌)
     @GetMapping("/recommend")
+    @ApiOperation(value = "최근 뉴스 불러오기", notes = "최근 뉴스를 불러옵니다")
     public ResponseEntity<Map<String, List<NewsVO>>> getTodayNews() {
         Map<String, List<NewsVO>> result = newsService.getTodayNews();
         if (result.isEmpty()) {
